@@ -1,0 +1,50 @@
+char *cityString[4] = { "London", "New%20York", "Rome", "Tokyo"};
+int   city;
+
+void loop()
+{
+  city = random(4); // get a random city
+  if (client.connect(serverName,80)>0) {
+    Serial.print("Getting weather for ");
+    Serial.println(cityString[city]);
+    
+    client.print("GET /ig/api?weather="); 
+    client.print(cityString[city]); // print one of 4 random cities
+    client.println(" HTTP/1.0");    
+    client.println();
+  }
+  else {
+    Serial.println(" connection failed");
+  }
+  if (client.connected()) {
+     // get temperature in fahrenheit (use field "<temp_c data=\"" for Celsius)
+     if(client.find("<temp_f data=") )
+     {
+        int temperature = client.parseInt();
+        analogWrite(temperatureOutPin, temperature); // write analog output
+        Serial.print(cityString[city]);
+        Serial.print(" temperature is ");  // and echo it to the serial port
+        Serial.println(temperature);
+     }
+    else
+      Serial.println("Could not find temperature field");
+     // get temperature in fahrenheit (use field "<temp_c data=\"" for Celsius)
+     if(client.find("<humidity data=") )      
+     {
+        int humidity = client.parseInt();
+        analogWrite(humidityOutPin, humidity);   // write value to analog port
+        Serial.print("Humidity is ");  // and echo it to the serial port
+        Serial.println(humidity); 
+     }
+     else
+       Serial.println("Could not find humidity field");
+  }
+  else {
+    Serial.println("Disconnected");
+  }
+  client.stop();
+  client.flush();
+  delay(60000); // wait a minute before next update
+}
+
+// the remainder of the code is the same as the previous sketch

@@ -1,0 +1,282 @@
+SketchIndex.txt as of 160630
+
+ADXL345-FRCada 
+      adapted from Adafruit's _345 code for FRC accel breakout board to display 3 axis accel-
+      erometer values (tilt).
+      Uses: I2C, Wire lib, Adafruit unified lib, switch/case
+      
+ADXL345_FRCrow
+    demo of I2C device (I2Cdev) and ADXL345 accelerometer classes by Rowberg, adapted for
+    FRC board by AM. Read 3 axis accel values over I2C.
+    Uses: I2C, Wire, I2Cdev, ADXL345 lib, anal pins to power device
+    
+ADXL345_test
+    simple test to read single register from FRC accelerometer using I2C
+    Just uses Wire lib & its basic commands: I2C, Wire, anal pins to power device
+    
+ADXL345_test2
+    ADXL345_test2 (to read single register from accelerometer) amended to scan 0-127 for 
+    address of active device, then get its ID from reg 0x00
+    Uses: I2C, Wire
+    
+AnalInputMap2ToneA-B-c
+ input analog voltage, from pot or sonar, map to useful values, activate toner using beep
+ rate and frequency to indicate distance (inversely); when target distance reached, stop tone and
+ turn on a light; set adjacent analog pins (gnd, 5v, signal) to 0 and 5 v to power pot or US device
+ mod A worked fine but not optimal -- long delays make loop execute very slowly when AR big;
+ mod B uses timed event method to eliminate loop delays; much more complex logic, and tone quality
+ suffers from beat frequency I assume
+ mod C uses timedAction lib to make beeps run in their own thread so loop rate not affected; tone 
+ quality is fine, and I can modulate beep rate in loop, and freq by setting it in beep().
+ Uses: anal read, tone, timing events w/ millis, TimedAction lib, count: sane printing, map, constrain
+
+AnalogReadSerial
+      Reads an analog input on pin A4, prints the result to the serial monitor
+      Uses: AnalogRead
+      
+AnalogReadFltoString -- mod above and below to show use of String object for better printing
+    and take a float, which normally it won't accept. String can use printf like Java/C (not here).
+    Uses: String object, cast from int to float, dtostrf to convert float to string then to String
+
+ AnalogReadSerialString -- first mod shows use of String obj for better printing, has no 
+   float capacity;  Reads an analog input on pin A_, prints the result to the serial monitor.
+   Attach the center pin of a potentiometer to pin A_, and the outside pins to +5V and ground.
+   Uses: exit, String construct from int, analogRead, String concatenation
+
+SumoShield_Code.ino  -- code from Allan? not used by me
+
+BinaryDisplay -- experiment to read number, display binary w/ LEDs
+    Uses bitRead of a binary number to turn lite on if bit is 1
+    
+BinaryDisplayFromInput -- experiment to read number from BCD switch or other, 
+   display in binary lites; could give option of getting random # or converting a serial 
+   or switch input to binary, etc
+   Uses: bitRead, bitWrite, 3 bit BCD switch, output to 4 LEDs
+    
+CharAnalTest -- character analysis operators 
+   Send any byte and the sketch will tell you about it:
+   Uses: the character analysis operators, isAlpha, isDigit, isControl, isPrintable, isSpace...
+     
+DigitalReadSerial
+    Reads a digital input on pin 2, prints the result to the serial monitor 
+    Uses INPUT_PULLUP, aka digitalWrite(x, HIGH), digitalRead
+    
+GyroADWa
+ * Connect FRC ADW22307 Gyro analog output to some Analog Pin, Temp output pin to another 
+ *  integrate gyro angle over time to get a current angle, read Temp deg C, display both on LCD
+     Uses: LCD, anal read, reZero (manual, needs work to make auto), expon MA, print @ interval
+
+I2Cscanner
+    tests the standard 7-bit addresses 0-127 for valid device(s)
+  Uses: Wire lib and basic commands
+  
+Key Grab v0.2
+  Displays the currently pressed button on the 2 row 16 col. LCD screen; 
+  for DFR 16x2 LCD screen with 5 readable keys, made custom .cpp for my panel
+  Uses Liq Crystal, LCD_DFR libraries, using variable from .cpp processing
+  
+LCD 1602 Ultrasonic,
+    From Sainsmart for their 1602 LCD display; and to read some US device; seems to 
+    need a lot of work; doesn't use DFR library, reads keys itself
+    Uses: Liquid Crystal, ultrasonic distance calc, key read without library
+    
+LCD key 1602 -- get values from 5 keys on 1602 LCD / keypad and do things with them;
+    no need for DFR library; need to tune for each board anal values
+    Uses: Liquid Crystal libr, analRead, switch/case
+    
+Morse Tone Rand 1, from Monk's sketch 5-05 morse reader,  I modified to play tone thru tonePin;
+  enter char string into serial monitor, plays tone and led flashes
+  Uses: char string array, for loop, random with seed, making char string from ascii input, tone output
+  
+Morse Tone Rand 2, from above, added serial print of word, simplified random generation
+
+Morse Tone Rand3 added pot control of speed, minor improvement
+
+MotoKnobServMod, // Originally controlled servo position using a potentiometer 
+     by Michal Rinott <http://people.interaction-ivrea.it/m.rinott>
+    Mead's mod to control a motor speed within narrow range set by values in map function
+    for motor that takes servo type pulse width to set speed and direction
+    Uses servo lib, map anal volt to servo angle (speed)
+    
+MotoKnobServNano, mod above for Nano/Mini with pot using A pins for source
+    
+My Blink mods1&2
+ Turn on an LED for (blinkDelay), then off for (blinkDelay) repeatedly.
+ I modified to accept input from serial monitor and show what's running
+ Mod2 adds EEPROM persistent storage of delay value between restarts
+  Uses Serial.parseInt to make int from char input, EEPROM to store value 
+  between resets, clears EEPROM for initial format, or prn
+    
+On Off with Anal Pin, used as digital input to turn LED on / off
+    Uses inputPullup, digitalRead, constant
+    mod2 uses boolean var, 2 in/outs
+    
+ReadAnalogVaverage --  (expon moving) averages analog pin input, 0-5 v. (as from batt discharger 
+   device with an op-amp); 
+   maps that to the actual v. 11.5-13 being sampled; prints raw and calcul. voltage if it's changed; 
+   can thus calculate params for map function 
+   Uses: expon moving average, map, analRead
+    
+ReadAnalCurrMap - prints averaged analog pin reading when it changes; 
+    from this calculates current across R-curr; if calib wrong, can find new params
+    to use for map function.  Reads an analog input on pin X, and prints the result
+    to the serial monitor if it has changed; uses mapping values to map pin AR to
+    actual current (voltage/ 2 ohm) going to op-ampA.
+    Uses: analRead, expon moving averag, map, round
+    
+ReadAnalogVaverage - averages analog input on pin X, calcul actual 0-5000mV, and prints
+ the result to (ser. mon. +/- lcd if present) if it has changed; plot this against measured input 
+ voltage by voltmeter. 
+ Use to calculate mult or map for pin reading of voltage, checking various A pins, monitor
+ batt discharge; added tone when dc target V reached for small < 5 v batts.
+ Attach the center pin of a potentiometer to PinIn, and the outside pins to +5V and ground.
+ Uses: Liquid Crystal 8x2 display, map, analRead, expon moving average, round, toner
+    
+ReadAnalogVaverage_3 -- averages (same) analog input to 3 pins X Y Z, and prints the result to 
+    the serial monitor if it has changed.
+    Used to calibrate and check op amp I/O params, compare accuracy of different AR pins
+    based on: ReadAnalogVaverage - but using (same) voltage to 3 pins; 
+    and here we're finding the multiplier for the op-amp part of batt discharger
+
+ReadAnalogVaverage_Dig -  reads an averaged analog input on pin X, and prints the result 0-5000mV
+    (+/- ser. mon. +/- lcd if present) if it has changed.  Attach the center pin of a potentiometer 
+    to PinIn, and the outside pins to +5V and ground; or any analog source. 
+    Also takes one hi/lo input to D3 and LED displays on/off from D8 -- used to test anal and dig
+    IR sensors et. al.
+    Uses: Liquid Crystal lcd, round, expon moving avg, flt to int cast, map
+    
+ReadAnalogVavg_Dig1602 -- reads an averaged analog input on pin X, and prints the result 
+  0-5000mV (+/- ser. mon. +/- lcd if present) if it has changed. Attach the center pin of a 
+  potentiometer to PinIn, and the outside pins to +5V and ground, or any other analog input.
+  Uncomment key stuff to use keys.
+  Also takes one hi/lo input to D3 and LED displays on/off from D11. Like ReadAnalVavgDig, 
+  modif for 16x2 display
+  Uses: Liquid Crystal libr, 16x2 display, DFR keypad libr, reading key value
+    
+ReadPoToPWM_A --  reads an analog input on pin A4, converts it to voltage, 
+    and prints the result to the serial monitor if changed; sends scaled PWM 
+    to digital pin. Attach the center pin of a potentiometer to pin A4, and the 
+    outside pins to +3.3V and ground.
+    Uses: constant var, static, PWM output using analogWrite
+    
+ReadPoToPWM_B -- reads analog input on pin 0, converts it to voltage, proportional PWM output,
+    and prints the result to the serial monitor when it changes. Very basic, could be improved with
+    MA of voltage, rounding, faster loop.  Attach the center pin of a potentiometer to pin A0, and 
+    the outside pins to +5V and ground.
+    Uses: float, cast to byte, PWM output with analogWrite
+    
+ReadSerialInteger -- takes number input from keybd, converts to int, converts from C to F temp
+    Uses: Serial.parseInt
+    
+ReadSerialIntC -- takes mixed char input from keybd, extracts 1st int, converts from C to F temp;
+  orig used Serial.parseInt which is weak at parsing int mixed with other chars, so 
+  ReadSerIntB puts incoming digits into a String object then str.toInt() to convert. This v. C
+  puts input bytes into char array, extracts first group of digits from it into another array then 
+  uses atoi to make the int; memset clears array each loop
+  
+  Uses: Serial.readBytes, atoi, isDigit, strlen, isDigit, memset
+     
+SampleSyntax -- code examples of many kinds
+
+SendBinary, major mod from orig Cookbook ch4r6 which was badly flawed
+   for printing to ser. monitor, but may have worked for other devices that expect char
+   over serial.  Sends a header followed by two random integer values as binary data.
+   Uses: random, lowByte, highByte, Serial.write, BIN format
+   
+serialReadWriteAM1 -- AM revision of PY's for Ardu <-> SmartDesktop comm;
+    digi and anal inputs & reading ser bool input to display; my 2nd version added 
+    code for strcat of float var; many questions about array use here
+    Uses: char/string array, boolean input/output, Serial.readBytes
+    dtostrf (vFlt,4,3,vStr) converts float to string,
+    sprintf(tempstr,"%s;",vStr);   // put string into buffer
+    strcat(out,tempstr)  // add buffer string to array
+    
+SerialReadWriteAM2   -- AM 2nd revision of PY's for Ardu <-> SmartDesktop comm
+   v.2 adds float output & Streaming lib to print C++ style using insertions;
+   reads digital and analog pin values, prints to serial output
+   Uses: Streaming lib, boolean I/O,  strcat, sprintf, dtostrf, Serial.readBytes
+   ? still have basic questions about what char arrays actually contain after strcat, sprintf
+
+serialReadWriteAM3 -- AM 3rd revision of PY's for Ardu <-> SmartDesktop comm;
+    digi & anal inputs & reading ser bool input to control leds; uses readBytes()
+    to put full input string into char[], then for loop to read it, turn lites on/off
+    my v. 2 added code for strcat of float var;  
+    v. 3 tests various ways to re-init/clear the 'out' array each loop
+    Uses: char/string array, boolean input/output, Serial.readBytes
+    dtostrf (vFlt,4,3,vStr) convert float to string,
+    sprintf(tempstr,"%s;",vStr);   // put numbers / string into ch array buffer
+    strcat(out,tempstr)          // add buffer string to array
+       
+SeriPrintWrite -- to show output of ser.mon. using .write vs .print for a byte argument; 
+      both show same char output in ser. mon. when the argument is a string;
+      .write probably sends binary to serial port, but hard to see with ser.mon. or terminal
+     as they both show the binary input as char's
+      Uses: serial.write, serial.print
+      
+StringToIntParse -- String to Integer conversion
+ Reads serial input chars one by one, putting all digits (isDigit()) into a String; if input is Enter, 
+ seen as a newline, then prints the String; Ser. Mon. must be set to send 'newline' for this to work.
+ Simply parses all digits from input; not limited to size of int var.
+
+  Uses: String object, Serial.read, .toInt, isDigit
+
+theme.txt -- finer control of editor appearance, in app/contents/resources/java/lib/theme/ or prog folder in Win32
+
+turret_and_interruptA  -- derived from miller's code, for control of turret with detector switch
+   Revision A, putting debounce in Interrupts, probably faulty ISRs (local time var no good)
+  CW switch should go to pin 2, CCW switch to pin 3
+  
+turret_and_interruptB, adapted for LCD display of want, now= positions
+  Revision A put debounced Interrupts, but used faulty ISR variables.
+  CW switch should go to pin 2, CCW switch to pin 3
+  Uses: Servo, Liq Crystal lib, interrupt, debounce, map, 8x2 display
+  
+turret_and_interruptC, minor changes, slower redraws of display;
+  Revision A, put debounce in Interrupts, eliminating flag var, ISR on RISING, B added LCDisplay
+  CW switch should go to pin 2, CCW switch to pin 3
+
+voltSampleDischarge -- monitor voltage only, without calib, using external resistance
+  not tested yet
+
+voltSamplerB1 -- monitor batt discharge, modif from VoltageSimpler12vC
+  using while loop to check calib accuracy of measured voltage, then go
+  to live recording of voltage vs. time, printing as needed. Calculations
+  convert 0-5 v from diff. op-amps to actual ~11-13 v batt under test
+  to get better accuracy than 5 mv / tick; determine bOffset from
+  voltmeter on ref. volt, mult by trial and error?; no live update of params in code
+  Uses: while loop with typed input conditions, while(bool) to hold action
+  
+VoltSamplerB2  modif from VoltageSimpler12vC, monitors batt discharge, using while loop,
+   -- to convert 0-5 v from diff. op-amps to  source batt's ~11-13 v; setup gives calib option to
+   enable tune up of map params; loop watches batt volt as it discharges, ser. prints values, more
+   as it approaches target.
+   Uses: constant, while loop with conditional typed input, calib of map params, expon moving 
+   average, Serial.parseInt, while(bool) to pause action
+   
+voltageSamplerB3 -- modif from VoltageSamplerB2, adds curr readout
+    and other refinements, do/while loop, function for value reading;
+   -- converts 0-5 v from diff. op-amps to actual ~11-13 v from batt source
+    and Rcurr drop to current draw; calib phase for V in setup; C params
+    come from previous calib
+    
+voltageSamplerB4, modified VoltageSamplerB3, adds live LCD display; 
+    B2-3 adds curr readout and other refinements, do/while loop, function for value reading;
+   -- converts 0-5 v from diff. op-amps to actual ~11.5-13 v from batt source
+    and Rcurr drop to current draw; calib phase for V in setup; Curr params
+    come from previous calib sketch; ~ 2 mV resolution; added extended dc phase to go < 12.5
+    
+voltageSamplerB5 -- modif from VoltageSamplerB4: just reads batt V, record deeper disch;
+   -- converts 0-5 v from diff. op-amps to actual 11.5-13 v from batt source using map;
+  calib phase for V in setup; no Curr monitoring here;
+  Uses: LCD, map, expon moving avg, do/while, tone
+      
+voltageSimpler12v -- pre-op-amp attempt to monitor batt discharge, using while loop;
+   mod to read 0-5 v diff of batt v to regulated 8 v. rather than using volt divider
+   now calibrates mult first if voltRegul = 0; much improved in later Sampler versions;
+   ~ 5 mV resolution
+
+voltageSimplerNiCd -- monitor batt discharge of 8 cell NiCd, using while loop
+   modified to read 0-5 v diff of batt v to regulated 8 v. rather than using volt divider
+   now calibrates mult first if voltRegul = 0, also calib offset -- early attempt, pre-op-amp
+   
+   

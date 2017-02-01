@@ -1,0 +1,86 @@
+
+/*
+Actually, our FRC bots have used both types of PWM for motor control. The first, basic type is what the Jag controllers (commanded by roboRio over CAN) send to the main drive motors: width of pulses determines the average analog voltage the motors get, hence their speed. A positive pulse train drives forward, a negative pulse train reverses.
+
+The second type, servo style, is what the roboRio uses to control the small VEX controllers over 3 servo wires. With this type, robotRIO sending the pulse width 0.5 -- 2 ms tells the controller what voltage and what polarity to send to the smaller motors: 1.5 ms tells it to stop the motor (0 volts); 1.5-2.5 ms is to go forward (sends motor positive pulse train, first type of PWM); 0.5-1.5 ms. is reverse (sends negative pulse train, first type of PWM), as with the drive motors.
+
+We haven't used small hobby servos as they are too weak to do much on our size bots -- but good on RC craft for steering wheels, ailerons, rudder, etc. For them, the servo signal pulse width tells the onboard circuits what position to go to, roughly 0-180 degrees, tho many will go more than this. E.g. if the arduino servo object receives 90 deg. parameter, it sends 1.5 ms pulse and the servo stops mid-position, 90 degrees. If you do myservo.write(0) the arduino sends ~0.5 ms, and the servo goes full CCW. If you do myservo.write(180) the arduino sends ~2.5 ms and the servo goes full CW.
+
+So code like this could either connect to a VEX controller and drive a regular DC motor forward or reverse (like we did on Jovan's turret project last year), OR control the angle of a small hobby servo.
+
+Features of this code are customized for nano board and compact design:
+  -- nano has an additional analog port A6
+  -- to keep wiring simple, I supply voltage to 2 pots with adjacent analog ports, making one LOW and one HIGH
+  -- exponential moving average of analog inputs from pots, probably not necessary here
+*/
+
+#include <Servo.h>  // lib defaults 0 -> 544 uS, 180 -> 2400 uS; servo goes to whatever its min/max are
+
+Servo mymotoR;  // creates servo object to control something
+Servo mymotoL;
+
+int potpinR = A2;  // analog pin to read the potentiometer voltage
+float valaR;         //  variable reads the value from the analog pin R
+int valR;            // mapped int to write a variable width pulse to output pin
+
+int potpinL = A6;  // analog pin to read the potentiometer voltage
+float valaL;        //  variable reads the value from the analog pin 
+int valL;          // mapped int to write a variable width pulse to output pin
+// int prevAvg;  // use for moving avg, defined in loop
+
+void setup()
+{
+  pinMode(potpinR, INPUT);   // A2 input for R servo from R pot
+  pinMode(14, OUTPUT); // A0 is ground for pot
+  digitalWrite(14, LOW);
+  pinMode(15, OUTPUT); // A1 gives 5v for pot
+  digitalWrite(15, HIGH);
+
+  pinMode(potpinL, INPUT);   // A6 input for L servo from L pot
+  pinMode(A4, OUTPUT); // A4 works as ground for pot
+  digitalWrite(A4, LOW);
+  pinMode(A5, OUTPUT); // A5 gives 5v for pot
+  digitalWrite(A5, HIGH);
+  
+  mymotoR.attach(10);     // attach some dig pin to servo
+  mymotoL.attach(3);
+
+}
+
+void loop()
+{
+  valaR = analogRead(potpinR);       // reads the volts from the R potentiometer (0 to 1023)
+  static float prevAvgR = valaR;  // just set once, first loop, for moving avg. calc.
+   // make moving average calculation
+  int newAvgR = round((valaR + 4 * prevAvgR) * 0.2); // multip faster than divis
+  valR = map(newAvgR, 5, 1010, 180, 0); // scale it to degrees for servo (full range = 0 to 180; normally would use ... 0,180 but this works for my servos' setup better)
+  // servo position center = 90, pulse = 1500 uS; DC motor would be stopped
+  
+  mymotoR.write(valR);             // sets the servo position (or motor speed) according to the scaled value
+  //  if (Serial.available())      //type any letter to get printout of vals, mostly for debugging
+  //   { Serial.read();  // serves no purpose except to clear serial buffer
+  //     Serial.print(newAvg); Serial.print("  "); Serial.println(val);
+  //   }   //end if
+  // print out new values if different
+  //  if (newAvg != round(prevAvg))  // only print if it's changed
+  //  { //print to Ser Mon if it's on
+  //    Serial.print("pinAvg= ");
+  //    Serial.print(newAvg);
+  //    Serial.print(" angle= ");
+  //    Serial.println(val);
+  //  }
+  prevAvgR = newAvgR;
+  
+  valaL = analogRead(potpinL);       // reads the volts from the L potentiometer (0 to 1023)
+  static float prevAvgL = valaL;  // just set once, first loop
+
+  int newAvgL = round((valaL + 4 * prevAvgL) * 0.2); // faster to * 0.2 than / by 5
+  valL = map(newAvgL, 5, 1010, 180, 0); // scale it to degrees for servo (full range = 0 to 180 or partial range)
+  // servo position center = 90, pulse = 1500 uS, motor still
+
+  mymotoL.write(valL);             // sets the servo position (or motor speed) according to the scaled value
+
+  prevAvgL = newAvgL;
+  delay(100);                           // smaller delay = gets there faster
+}  // end loop
+

@@ -1,0 +1,36 @@
+#######################################
+# Syntax Coloring Map For Nunchuck
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+nunchuckSetPowerpins	KEYWORD2
+nunchuckInit	        KEYWORD2
+endTransmission		KEYWORD2
+nunchuckRequest		KEYWORD2
+nunchuckRead		KEYWORD2
+nunchuckDecode		KEYWORD2
+nunchuckGetValue	KEYWORD2
+
+#######################################
+# Instances (KEYWORD2)
+#######################################
+
+Nunchuck	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+n_joyX		LITERAL1
+n_joyY		LITERAL1 
+n_accelX	LITERAL1 
+n_accelY	LITERAL1 
+n_accelZ	LITERAL1
+n_btnZ		LITERAL1
+n_btnC		LITERAL1

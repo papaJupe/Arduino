@@ -1,0 +1,47 @@
+#include <Wire.h>
+
+int addressA = 9;  //I2C address for BlinkM
+int addressB = 10;
+int addressC = 11;
+
+int color = 0; // a value from 0 to 255 representing the hue
+byte R, G, B;  // the red, green, and blue color components
+
+void setup()
+{
+  Wire.begin(); // set up Arduino I2C support
+
+  // turn on power pins for BlinkM
+  pinMode(17, OUTPUT);    // pin 17 (analog out 4) provides +5V to BlinkM
+  digitalWrite(17, HIGH);
+  pinMode(16, OUTPUT);  // pin 16 (analog out 3) provides Ground
+  digitalWrite(16, LOW);
+}
+
+
+void loop()
+{
+  int brightness = 255; // 255 is maximum brightness
+  hueToRGB( color, brightness);  // call function to convert hue to RGB
+  // write the RGB values to each BlinkM
+  setColor(addressA, R,G,B);
+  setColor(addressB, G,B,R);
+  setColor(addressA, B,R,G);
+
+  color++;           // increment the color
+  if(color > 255)    // ensure valid value
+     color = 0;
+       delay(10);
+}
+
+void setColor(int address, byte R, byte G, byte B)
+{
+  Wire.beginTransmission(address);// join I2C, talk to BlinkM
+  Wire.write('c');                 // 'c' == fade to color
+  Wire.write(R);                   // value for red channel
+  Wire.write(B);                   // value for blue channel
+  Wire.write(G);                   // value for green channel
+  Wire.endTransmission();         // leave I2C bus
+}
+
+// Use hueToRGB function from previous sketch

@@ -1,0 +1,45 @@
+
+int c = 0;
+int f;
+void setup() 
+{
+  Serial.begin(9600);
+}           
+ this works but reads ASCII value of typed character and uses that for 
+ calculation, ie 0 read as 48 gives 118
+
+void loop() 
+{   
+  Serial.println("enter C. temp to convert");
+  delay(50);  //flaky reading of chars unless some delay
+  while(!Serial.available());  // while no serial input, hold the action
+  if (Serial.available())
+   { 
+     delay(50);  //flaky reading of chars unless some delay
+     int c = Serial.read();  // will be a 2-3 digit int coming in of temp in C.
+     int nowInF = cenToFare(c);    // call function with temp C 
+     Serial.print("F temp is "); Serial.println(nowInF);
+    }  //end if serial.avail
+  
+}  // end loop 
+  
+int cenToFare(int c)   // function works OK
+ {
+     int f = c * 9/5 + 32;
+     return f;
+ }       <--    this works, even tho syntax looks dubious, f is not defined here, etc
+ 
+ int cenToFare(int c)
+ {
+     return (f = c * 9/5 + 32);  or just:  return (c * 9/5 + 32)
+ }
+ 
+ just changing if(Serial.... ) block using .parseInt makes it work, even with (-) numbers
+ 
+   if (Serial.available())
+   { 
+     delay(50);  //flaky reading of chars unless some delay
+     int c = Serial.parseInt();  // will be a 2-3 digit int coming in of temp in C.
+     int nowInF = cenToFare(c);    // call conversion function with temp C 
+     Serial.print("F temp is "); Serial.println(nowInF);
+    }  //end if serial.avail

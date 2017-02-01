@@ -1,0 +1,32 @@
+void loop()
+{
+  client = server.available();
+  if (client) {
+    while (client.connected()) {
+      if (client.available()) {
+        if( client.find("GET ") ) {
+          // look for the page name
+		  memset(buffer,0, sizeof(buffer)); // clear the buffer
+          if(client.find( "/"))  
+            if(client.readBytesUntil('/', buffer, MAX_PAGE_NAME_LEN ))  
+            {
+              if(strcmp(buffer, "analog") == 0)
+                showAnalog();
+              else if(strcmp(buffer, "digital") == 0)
+                showDigital();
+              // add this code for new page named: update  
+              else if(strcmp(buffer, "update") == 0)
+                doUpdate();                
+              else
+                unknownPage(buffer);
+            }
+        }
+        Serial.println();
+        break;
+      }
+    }
+    // give the web browser time to receive the data
+    delay(1);
+    client.stop();
+  }
+}

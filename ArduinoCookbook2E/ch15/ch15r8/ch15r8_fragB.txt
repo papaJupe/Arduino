@@ -1,0 +1,29 @@
+void doUpdate()
+{
+  Serial.println("update");
+  sendHeader();
+  // find tokens starting with "pin" and stop on the first blank line
+  while(client.findUntil("pin", "\n\r")){
+    char type = client.read(); // D or A
+    int pin = client.parseInt();
+    int val = client.parseInt();
+    if( type == 'D') {
+      Serial.print("Digital pin ");
+      pinMode(pin, OUTPUT);
+      digitalWrite(pin, val);
+
+    }
+    else if( type == 'A'){
+      Serial.print("Analog pin ");
+      analogWrite(pin, val);
+
+    }
+    else {
+      Serial.print("Unexpected type ");
+      Serial.print(type);
+    }
+    Serial.print(pin);
+    Serial.print("=");
+    Serial.println(val);
+  }
+}

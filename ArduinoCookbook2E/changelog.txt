@@ -1,0 +1,23 @@
+changelog.txt
+
+This file identifies code in the download that has changed from the printed text
+
+File created: 5 Nov 2011 
+Last updated  10 May 2013
+
+Recipe 2.10  (CH2r10A.ino) modifed sketch to use ledPin constant
+Recipe 4.10  Processing sketch updated for release 2.x 
+Recipe 4.11  (CH4r11.ino) removed extraneous line
+Recipe 5.2   (CH5r2.ino) fixed comment to match code
+Recipe 5.3   (CH5r3.ino) fixed comment
+Recipe 5.5   (Ch5r5.ino) swapped array values for Row 3 and Col 0
+Recipe 5.10  (CH5r10.ino) fixed percent calculation for flashing
+Recipe 5.11  (CH5r11.ino) fixed resistorFactor calculation (divisor changed to multiplier) 
+Recipe 7.9   (ch7r9.ino)  changed order of LED sequenece to match numbering in figure 7.11
+Recipe 7.10  (CH7r10.ino) swapped pin numbers for segments F and G
+Recipe 7.4A  (CH11r4A.ino) code updated to use lcd.scrollDisplayLeft 
+Recipe 11.5  (CH11r5.ino)  changed lcd.print to lcd.write (as required for Arduino 1.x)
+Recipe 13.1A (ch13r1A.ino) removed power control in setup, updated setColor for addressC 
+Recipe 15.10 (ch15r10.ino) Removed lines as per errata submitted 8 March 2012
+Recipes 15.15 and 15.16 changed feedID variable type from int to unsigned long
+Recipe 18.8  (CH18r8.ino) changed calculation from int to float, fixed register initialization

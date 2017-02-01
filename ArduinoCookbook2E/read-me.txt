@@ -1,0 +1,93 @@
+Arduino Cookbook Second Edition code read-me file
+
+Unzip the code into your Arduino sketchbook directory - you can view the
+sketchbook location by clicking the File > Preferences menu option in the IDE.
+
+Restart the IDE and click:  File > Sketchbook > ArduinoCookbook2E to view the
+recipes for all of the chapters.
+
+For example, the sketch for Recipe 5 in Chapter 1 is:
+  ArduinoCookbook > CH01 > ch1r5
+
+Recipes with more than one sketch are identified with a suffix, for example
+the three sketches in Recipe 1.6 are named: ch1r6, ch1r6A, ch1r6B
+
+Processing sketches for each chapter are in a folder named Processing
+with the sketch name matching the recipe number, for example the
+Arduino sketch for Recipe 4.4 is ch04/ch4r4.ino, the Processing sketch
+for this recipe is ch04/Processing/ch4r4A.pde 
+
+The file changlog.txt indicates updates to sketches in the download.
+
+This code is for Arduino version 1.0 or later. If you are running an 
+earlier release then you can find code suitable for many of the recipes
+in the download to the first edition of the Arduino Cookbook:
+http://shop.oreilly.com/product/9780596802486.do
+
+Here are the links to 3rd party libraries used in the book:
+
+Chapter 2
+==========
+Streaming - http://www.arduino.cc/playground/Main/StreamingOut
+
+Chapter 4
+==========
+*NewSoftSerial - http://arduiniana.org/libraries/newsoftserial.
+PSX - http://www.arduino.cc/playground/Main/PSXLibrary  
+
+Chapter 6
+==========
+ps2 -  http://www.arduino.cc/playground/ComponentLib/Ps2mouse
+TinyGps - http://arduiniana.org/libraries/tinygps/
+*NewSoftSerial - http://arduiniana.org/libraries/newsoftserial.
+psx - http://www.arduino.cc/playground/Main/PSXLibrary
+
+Chapter 7
+==========
+Matrix and Sprite libraries can be found in Arduino downloads prior to 1.0
+
+TLC5940 -   http://code.google.com/p/tlc5940arduino/
+
+Chapter 9
+==========
+Tone - http://code.google.com/p/rogue-code/wiki/ToneLibraryDocumentation.
+Wave shield libraries - http://www.ladyada.net/make/waveshield/
+Audacity audio editing and conversion software: http://audacity.sourceforge.net
+Auduino - http://code.google.com/p/tinkerit/wiki/Auduino
+
+Chapter 10
+==========
+IRremote - http://www.arcfn.com/2009/08/multi-protocol-infrared-remote-library.html
+
+Chapter 11
+==========
+GLCD - http://www.arduino.cc/playground/Code/GLCDks0108
+
+Chapter 12
+==========
+Time - http://www.arduino.cc/playground/Code/Time
+TimedAction - http://www.arduino.cc/playground/Code/TimedAction
+
+Chapter 14
+==========
+VirtualWire- http://www.open.com.au/mikem/arduino/VirtualWire-1.5.zip
+Ports and Rf12 libraries - http://jeelabs.net/projects/11/wiki/Libraries
+
+Chapter 15
+==========
+*DHCP - http://blog.jordanterrell.com/post/Arduino-DHCP-Library-Version-04.aspx
+*UDP - http://www.bitbucket.org/bjoern/arduino_osc/src/tip/libraries/Ethernet/
+*TextFinder -http://www.arduino.cc/playground/Code/TextFinder
+
+Chapter 16
+==========
+Time - see Chapter 12
+
+Chapter 18
+==========
+Timer1 (and Timer3) library- http://www.arduino.cc/playground/Code/Timer1
+MsTimer2 library - http://www.arduino.cc/playground/Main/MsTimer2
+narcoleptic - http://code.google.com/p/narcoleptic/
+
+
+* indicates that libraries are only needed for Arduino releases prior to 1.0

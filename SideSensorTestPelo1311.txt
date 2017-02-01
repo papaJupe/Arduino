@@ -1,0 +1,90 @@
+/* Range/Opponent Sensor Test 
+   Assumes GP2Y0D810Z0F / http://www.pololu/product/1134
+   This sensor outputs a digital on/off value. You'll need 
+   to connect each of them to one of the arduino digital 
+   inputs. 2 or 6 are good choices as they aren't being 
+   used in our sumo-bots. Note: you may use the analog inputs
+   as digital imputs. In this example two sensors are used;
+   one connected to 2 and the other to 6.
+   
+   Hookup one of your sensor, black to ground, red to 5 
+   volts, and white to digital 2 (or other unused input) 
+   and the second sensor to ground, 5 volts, and digital 
+   6. Compile and load this sketch into the arduino. Open 
+   the Serial Monitor window. Start with your hand or some 
+   other object about 20cm away from the sensor. Slowly 
+   move toward the sensor observing the readings provided 
+   in the Serial Monitor window. Do this for each side. 
+   These sensors have a small led which will turn on when
+   they are active. The output is HIGH when the sensor 
+   sees nothing and goes LOW when something is between 
+   10 cm and about 2 cm.
+
+   Written by Dave Pelowitz, pelowitz@pelowitz.com
+   You are free to use this example as you see fit.
+   
+   Created: 2013 Nov 9
+   Modified: Not yet.
+*/
+
+//change to use the port your sensors are attached to
+#define LEFTSIDE_SENSOR 2
+#define RIGHTSIDE_SENSOR 6
+
+//we will light the builtin LED (on pin 13) if the object
+//is within the sense range of either sensor
+#define LED 13
+
+void setup() {
+  // put your setup code here, to run once:
+  
+  //set up the sketch to be able to send readings back to
+  //the computer. Viewable through the serial monitor window.
+  Serial.begin(9600); 
+  
+  //make sure the led pin is an output
+  pinMode(LED, OUTPUT);
+  //and the led is off
+  digitalWrite(LED,LOW);
+  
+  //set the two sensor input pins to input
+  //so that we may read them
+  pinMode(RIGHTSIDE_SENSOR, INPUT);
+  pinMode(LEFTSIDE_SENSOR, INPUT);
+ 
+}
+
+void loop() {
+  // put your main code here, to run repeatedly: 
+  
+  //read the sensors
+  //the raw value will seem backwards--the closer something
+  //is to the sensor the higher the value(voltage) it will
+  //show. It ends up that anything closer than roughly half
+  //of the 77cm sumobot arena will provide a value > about 100.
+  int iLeftSense = digitalRead(LEFTSIDE_SENSOR);  
+  int iRightSense = digitalRead(RIGHTSIDE_SENSOR);
+  
+  //turn on or off the led
+  //on if left is low OR(LOGICAL OR is || ) right is LOW then 
+  //turn on LED which means the object is close on that side.
+  if ((iLeftSense==LOW) || (iRightSense==LOW))
+    digitalWrite(LED,HIGH);
+  else
+    digitalWrite(LED,LOW);
+  
+  //print out what the sensors are seeing. In the "competition" 
+  //software you don't really want the arduino wasting time
+  //printing values or wasting program memory.
+  Serial.print("Left: ");
+  Serial.print(iLeftSense);
+  Serial.print(" Right: ");
+  Serial.println(iRightSense);
+  
+  //for the purposes of this test only read the value about
+  //10 times per second. So wait here for 1/10 of a second.
+  //The above actions each take time, so delaying 1/10 of a
+  //second will cause the program to provide slightly fewer
+  //then 10 per second.
+  delay(100);
+}

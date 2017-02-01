@@ -1,0 +1,76 @@
+1505 AM adds:
+fresh W2K on P3 with no Ardu install had no usbser.sys in sys32/drivers, so in SafeMode I copied XP version there (5.1.2600.xxx). When I installed Ardu105 it overwrote it with bad W2K one (sketch failed to upload). In Safe Mode (ps/2 keybd, mouse) I recopied the XP version to sys32/drivers and now it works and stays. No need for elaborate process below. USB keybd/mouse might interfere with this.
+
+
+Option 2: Updating the Windows 2000 Driver by itself
+
+This is the one trick that I've used that seems to work with every combination of board and chip I've tried so far. Unfortunately, it requires some tinkering with your computer's system files. If you're not intimidated by Windows' "Touch me there again and I shall scream!" attitude, read on. 
+
+
+Hypothetically, I'd think there ought to be a way to tell Windows to use a different driver rather than upgrading its default USB driver. I've tried editing the Arduino .inf files to make it use a different driver, but nothing seems to work. Windows either insists on using the same faulty driver that came with it, or it stomps off in a snit and refuses to install a driver at all. Maybe some Windows expert who may read this article can explain to us why this happens and how to force Windows to use an alternate driver. 
+
+
+About the only other way, then, is to update the Windows 2000 USB driver in question itself. This is harder than it sounds, but it CAN be done. The big obstacle is that Windows uses an active protection scheme that continually monitors critical system files like drivers and DLLs for "unauthorized" changes. (Meaning, any change that Windows itself doesn't make.) If it detects a change, it copies the original file from a backup copy or, failing that, from an obscure archive. This is valuable protection against your system getting accidentally corrupted or attacked by malicious software, but it's a damned nuisance if you actually do need to update a file on your own. The trick is to find that resident archive and hide it from Windows so that it has no choice but to use the new file. 
+
+Here's how to do it: 
+
+Step 1.
+Just for good measure, you might want to first uninstall whatever driver you've been using. (I suspect that this isn't necessary, but it can't hurt to cover all your bases.) Plug your Uno into the USB port, open up the Windows Settings command, doubleclick on System, click on the Hardware tab, then click on the Device Manager button. Once you've got the driver tree listed, click on the "+" in front of "Ports (COM & LPT)". In the expanded branch, you should see an entry for your Arduino board if you've tried using it previously. (Your Arduino must be plugged in or this line won't be displayed even if a driver is installed.) Right click on it, pick "Uninstall" from the menu, then confirm that you really do want to remove the Arduino driver. When you're done, unplug your Arduino. 
+
+Step 2.
+Next, you'll need get a new driver. The driver file in question is named "usbser.sys", which resides in my system at "\WINNT\system32\drivers\usbser.sys". (On my multi-boot computer, the Windows system directory is called "\WINNT\...", but it may be called "\WINDOWS\..." on yours. Make the appropriate modifications to the path names I give below.) With my Win2K SP4 installation, I've got version 5.00.2195.6655, which is 22768 bytes long. (You can easily find the version number by using FileAlyzer, a useful utility available from the same fine fellow who brought us the popular SpyBot anti-spyware program.) 
+
+I got onto an XP computer and found the XP version of the usbser.sys driver at "\WINDOWS\ServicePackFiles\i386\usbser.sys". (Note that using Windows Explorer's search function found several other apparent copies, but in several cases they were not the actual file but rather listings for the file in various installation archives.) The file is 26112 bytes long (the file lengths are noteworthy in that I use them to identify at a glance which copy of the file is which version) and is labeled as being version 5.1.2600.5512. 
+
+I can say from experience that this particular driver is capable of interfacing to an Arduino Uno, but with only one example I can't swear that other XP revisions of the driver will work, and I've no idea about the drivers from Vista or later. If you don't have access of an XP machine, I'm afraid I don't know of any trustworthy sources you can download it from. Perhaps you can find a friend, relative, or online contact who's using XP and who may be able to get you a copy. Maybe if it doesn't violate the Arduino Playground's usage policies, I'll try to upload the one I'm using and link it to this article. But whatever you use, whatever the source, be sure to check it yourself for viruses before trying to use it! 
+
+Step 3.
+Once you've got a more recent driver, you need to block Windows from overwriting it when you try to put it where it needs to be. On my system there's a folder called \WINNT\Driver Cache\i386" that appears to hold the compressed archive for drivers. We've got to hide it from Windows. What I did was to create another folder that I called "WINNT\Driver Cache Backup\i386\". Then I moved everything from the first folder into the second. Not copied but moved, so that the first folder is now empty. Yeah, you COULD just delete them, but it's better to back them up somewhere in case you need them again in the future. It's perhaps safer to do this in two steps: copy all the files first and verify that they did get copied, and then delete the contents of the original folder. 
+
+Step 4.
+Windows also keeps a folder of uncompressed backup copies of drivers etc. On my system, they're in "\WINNT\system32\dllcache\". Similar to what I did in Step 2, I created a folder I called "\WINNT\system32\dllcache-backup\" and moved all the files in the first folder into the new folder. 
+
+Step 5.
+Okay, now we're ready to pull off the gauntlet and smack Windows' face with it. Change the name of "\WINNT\system32\drivers\usbser.sys" to, say, "usbser-old.sys", or whatever suits you. Again, you COULD just delete it, but I have a morbid fear of deleting files I may need again some day. Yup, "Digital Packrat", that's me. 
+
+Step 6.
+Within a few seconds, Windows File Protection should pop up with notice that "Files that are required for Windows to run properly have been replaced by unrecognized versions." On my system, it then asks the user to insert the Service Pack 4 disk. It gives you three button choices: Retry, More Information, and Cancel. Click on Cancel. It then warns you that not letting it fix the "problem" could affect Windows stability and asks if you're sure you want to keep the "unrecognized file". Click on Yes. 
+
+Step 7.
+Copy your newer version of "usbser.sys" into "...\system32\drivers\". 
+
+Step 8.
+Again, Windows detects an "unrecognized" file. Repeat Step 6. 
+
+Step 9.
+The new driver should now be ready for action, though you may want to reboot first just for good measure. Plug your Arduino in to the USB port and let the system install the driver. The system may want you to insert an installation disk in another attempt to restore the old driver. Tell it to Cancel this action. Instead, tell it to search for the driver in a specific location, then Browse to the folder where the new version of "usbser.sys" is located, i.e. "\WINNT\system32\drivers\". 
+
+Step 10.
+Start up the Device Manager and expand the "Ports" branch. You should see your Arduino driver in place without the yellow question mark that denotes a driver problem. Make note of which Com port it's configured as. You'll have to give that info to the Arduino IDE. 
+
+Step 11.
+Start the Arduino IDE. In the Tools pull-down menu, click on Serial Port and make sure the appropriate port is selected. Also in the Tools pull-down menu, click on the choice for Board and select the Arduino Uno, same as you would for the USB interface. 
+
+Step 12.
+If everything has gone well, you should now be able to upload your sketch. Don't panic if it doesn't work the first time; it didn't for me, either. Hit your Uno's reset button and try again. On the second try, my unit worked like a champ. It's been my observation that upload failures typically happen the first time I try to upload a sketch after plugging the Uno into the port, so it might be a good idea to get into the habit of always pressing the reset button after powering up your unit. 
+
+
+This procedure has worked for me on two different Windows 2000 machines. Unfortunately, while this lets you hide the old version of "usbser.sys" and replace it with the newer one, it also hides the other archived critical files as well. On the other hand, should one of them become corrupted at some point in the future, Windows will still detect it and let you know, at which time you can copy your backups back into the appropriate folders so that Windows can perform the needed repairs. But I don't know if the system will also "repair" usbser.sys as well at the same time and require you to perform this process all over again. 
+
+
+As an experiment, I tried putting the all the moved files back into the archive folders and rebooting my machine, and Windows allowed the new driver to stay in place. It might be that the active protection scheme is only triggered by the act of modifying a file and the system will leave an updated file alone as long as you don't draw attention to it by deleting or modifying it again. 
+
+
+Note 1 - By Lee Brand. 
+
+
+I had exactly the same issue and based on the above took the Windows 7 (Starter) USBSER.SYS and copied it over (after saving) the one in ..\drivers\.. on my Win2000 machine. Uninstalled the UNo, installed again and presto - problem solved. This has got to be the easiest option! 
+
+
+Note 2 - By Jose S. Augusto 
+
+
+I have 2 Win2K machines. In one of them, I managed to replace usbser.sys using this recipe. But in the other machine the system kept replacing the XP usbser.sys with the older one, even after the recommended "backup" measures were taken. I think the driver usbser.sys was being loaded by the USB keyboard, or some other device. 
+
+
+Finally I've done the following: after uninstalling Arduino UNO R3, I rebooted the PC in "safe mode" (and used an old PS2 keyboard and PS2 mouse, just in case the usbser.sys would eventually be loaded), and then with a DOS command window I deleted the original usbser.sys and replaced it with the usbserxp.sys (by renaming it). After this, the system didn't try to recover the old file. Then I reinstalled the Arduino and now it works fine.
