@@ -6,7 +6,6 @@ FASTLED_USING_NAMESPACE
 #define DATA_PIN 15
 #define LED_TYPE    WS2812B
 
-// Define the array of leds
 // create array of leds object
 CRGB leds[NUM_LEDS];
 
