@@ -2,16 +2,15 @@
 FASTLED_USING_NAMESPACE
 // How many leds in your strip?
 #define NUM_LEDS 2
-#define BRIGHTNESS 22
-#define DATA_PIN 15
-#define LED_TYPE    WS2812B
+#define BRIGHTNESS 24
+#define DATA_PIN 15  // A1
+#define LED_TYPE WS2812B
 
-// Define the array of leds
 // create array of leds object
 CRGB leds[NUM_LEDS];
 
-void setup() 
-{   
+void setup()
+{
   delay(1500);
   // Uncomment/edit one of the following lines for your led arrangement.
 
@@ -24,18 +23,20 @@ void setup()
   FastLED.setBrightness( BRIGHTNESS );
 }
 
-void loop() 
-{ 
+void loop()
+{
   // Turn the LED on, then pause
-  leds[0] = CRGB::White;
-  leds[1] = CRGB::White;
+  leds[0] = CRGB::Red;
+  leds[1] = CRGB::Red;
+  //  leds[0] = CRGB::White;
+  //  leds[1] = CRGB::White;
   //  leds[2] = CRGB::Blue;
   FastLED.show();
-  delay(500);
+  delay(50);
   // Now turn the LED off, then pause
   leds[0] = CRGB::Black;
   leds[1] = CRGB::Black;
   //    leds[2] = CRGB::Black;
   FastLED.show();
-  delay(500);
+  delay(200);
 }
