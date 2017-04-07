@@ -3,7 +3,7 @@
 FASTLED_USING_NAMESPACE
 
 // Mod of DemoReel100 example: various animated patterns using FastLED built-ins
-//
+// Uses: FastLED lib, rotating patterns, black out some
 //
 // Mark Kriegsman, December 2014; 1612 AM mod for X of 2 short strings
 

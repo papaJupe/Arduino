@@ -1,5 +1,5 @@
 /*
-DigitalReadSerial
+DigitalReadSerialOut
  Reads a digital input on pin 2, prints the result to the serial monitor 
 */
 

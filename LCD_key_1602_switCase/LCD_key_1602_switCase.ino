@@ -2,8 +2,7 @@
       no need for DFR library; need to tune for each board anal values
       Uses: LiquidCrystal lib,
 */
-      
- 
+
 #include <LiquidCrystal.h>   // don't need the DFR lib with this code
 
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);           // select the pins used on the LCD panel

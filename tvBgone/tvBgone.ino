@@ -4,6 +4,7 @@ Last Updated: 22 Oct. 2016 By Gabriel Staples, http://www.ElectricRCAircraftGuy.
 -My contact info is available by clicking the "Contact Me" tab at the top of my website.
  Mead mod 1610 cleaned up code, added explanations & questions, ~ interrupts and much
  else. v. B cleans up further by putting long fx in tabs, slimming codes to just NA, etc
+ Uses: progmem data storage, special code lib, sleep lib, special timing fx
 ------------------------------------------------------------  
 Semver (http://semver.org/) VERSION HISTORY (newest on top):  
 (date format: yyyymmdd; ex: 20161022 is 22 Oct. 2016)  

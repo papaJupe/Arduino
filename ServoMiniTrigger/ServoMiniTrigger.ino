@@ -1,6 +1,6 @@
 
 /* ServoMiniTrigger -- mod to use external trigger on interrupt 1 for sending servo pulses,
- so I can display on PC's screen in sync
+ so I can display on PC's screen in sync -- never got to work
  
  built from MotoKnobServo, to use 2 channel servo box, trigger from AD pixelPulse on PC
  

@@ -1,8 +1,6 @@
 // --------------------------------------
 // i2c_scanner2 put scan loop in setup, nothing in loop (commented out)
-//
 
-//
 // This sketch tests the standard 7-bit addresses
 // Devices with higher bit address might not be seen properly.
 //

@@ -1,5 +1,5 @@
 /*
- US display to LCD, adapt from ReadAnalogVaverage - averages analog input on pin, 
+ US display distance to LCD, adapt from ReadAnalogVaverage - averages analog input on pin, 
  voltage or some mapped value, display to LCD
  Attach the center pin of pot to PinIn, and the outside pins to +5V and ground,
  -- here I use adjacent anal pins to supply gnd and 5v.

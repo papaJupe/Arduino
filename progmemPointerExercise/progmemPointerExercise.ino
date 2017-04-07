@@ -7,7 +7,7 @@ Many tries here to use F() to print array strings from progmem directly failed; 
 
 Uses: char pointer, ptr to ptr, PGM_P, C++ class constr, strcpy_P,
 */
-  // #include <avr/pgmspace.h> needed for strcpy_P, maybe already in build path?
+  // don't need? #include <avr/pgmspace.h> needed for strcpy_P, maybe already in build path?
 
 class MenuState {
   public:

@@ -1,3 +1,7 @@
+/* some early state of Leo sketch to send button data to team DB
+ needs some lib, etc
+ */
+
 JoyState_t joySt;
 #include <SoftwareSerial.h>
 #include <math.h>
@@ -45,4 +49,5 @@ void loop()
   Joystick.setState(&joySt);
   delay(10);
 }
+
 

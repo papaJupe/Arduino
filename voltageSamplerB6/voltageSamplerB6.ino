@@ -1,5 +1,6 @@
 
-/* VoltageSamplerB6, modif of VoltageSamplerB4 for serial output to Proc sketch
+/* 
+VoltageSamplerB6, modif of VoltageSamplerB4 for serial output to Proc sketch
   -- just the numbers for min,mV,mA
   -- converts 0-5 v from diff. op-amps to read ~11.5-13 v from batt source
   and Rcurr drop to current draw; calib phase for V in setup; Curr map params
@@ -25,18 +26,15 @@ LiquidCrystal lcd(12, 11, 4, 5, 6, 7); // lib is smart enough to know if you're 
 int mapA = 123;      // default V map params, A for 11.5, B for 13.0
 int mapB = 965; 
 
-
 //int mapC = 640;      // empiric C map params, pinIn2 to dc current mA
 //int mapD = 928;      // these are values from calib using 2 ohm Rc and Rl 8.6
 //int mapE = 650;      // using curr calib sketch; C&D are AR pin values
 //int mapF = 880;      // E&F are corresponding measured currents
 
-
 //int mapC = 717;      // empiric C map params, pinIn2 to disch current mA
 //int mapD = 974;     // these are values from calib using 2 ohm Rc and Rl 12.5
 //int mapE = 700;     // using curr calib sketch; C&D are AR pin values
 //int mapF = 900;     // E&F are corresponding measured currents
-
 
 //int mapC = 344;      // empiric C map params, pinIn2 to disch current mA
 //int mapD = 600;     // these are values from calib using 2 ohm Rc and Rl 14
@@ -375,3 +373,4 @@ void printVals(int battV, int curr)
 //  Serial.println(" mA");
 //  prevTime = millis();
 //}  //end printVals
+

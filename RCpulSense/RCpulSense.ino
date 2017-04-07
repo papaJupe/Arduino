@@ -4,6 +4,7 @@
 // Turn On R/C transmitter
 // If valid signal is received, you should see the LED on pin x turn On.
 // If no valid signal is received, you will see the LED turned Off.
+//Uses: LiqCrystal display, interrupt, 
 
 #include <LiquidCrystal.h>
 
@@ -66,4 +67,5 @@ void loop()
   lcd.print(servo_val);
   delay(100);
 }  //end loop
+
 

@@ -3,7 +3,7 @@
 FASTLED_USING_NAMESPACE
 
 // Mod of DemoReel100 example: various animated patterns using FastLED built-ins
-//
+//  mod to make Y, more random pattern shift
 //
 // Mark Kriegsman, 12/14; 1703 AM mod for  (team) Y of 2 intersecting strings
 
@@ -11,7 +11,7 @@ FASTLED_USING_NAMESPACE
 #warning "Requires FastLED 3.1 or later; check github for latest code."
 #endif
 
-#define DATA_PIN    3
+#define DATA_PIN  3
 
 #define LED_TYPE    WS2812B  // our strings
 #define COLOR_ORDER GRB

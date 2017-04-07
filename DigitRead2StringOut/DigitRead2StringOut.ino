@@ -1,3 +1,6 @@
+/* DigitRead2SerStringOut
+ read a bunch of binary buttons, convert to string of 0/1's, output to Serial
+ */
 int i;
 char out[100], in[100], tempstr[100];
 

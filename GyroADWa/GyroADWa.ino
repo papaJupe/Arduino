@@ -4,6 +4,7 @@
  *
  * orig sketch by eric barch, ericbarch.com, got from Arduino playground/ Main/ interface w/ hardware
  * 2016-04-30 extensive mod by AM for Anal Device gyro ADW22307; make GyroADWb for experiments
+ Uses: LCD display, anal gyro, stabiliz do/while to init,
 */
 
 #define gyroPin A2          // gyro output to analog pin

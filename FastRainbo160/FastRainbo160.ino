@@ -4,7 +4,6 @@ FastRainbo160 makes red to blue rainbow with full string of 160 lites
 Uses: FastLED lib
 */
 
-
 #include "FastLED.h"
 
 // How many leds in your strip?
@@ -19,7 +18,6 @@ Uses: FastLED lib
 
 // Define the array of leds
 CRGB leds[NUM_LEDS];
-
 
 void setup() 
 {  
@@ -59,7 +57,6 @@ void loop()
   for(int i = 0; i <= NUM_LEDS; i++)
   {
     leds[i] = CHSV(starthue++, 255, BRIGHTNESS);
-
   }
   FastLED.show();
   // blink bulbs
@@ -76,5 +73,3 @@ void loop()
 
   delay(50);
 }  // end loop
-
-

@@ -43,7 +43,7 @@ void loop()
   valaR = analogRead(potpinR);       // reads the volts from the potentiometer (0 to 1023)
   static float prevAvgR = valaR;  // just set once, first loop
 
-  int newAvgR = round((valaR + 4 * prevAvgR) * 0.2); // ? faster to * than / by 9
+  int newAvgR = round((valaR + 4 * prevAvgR) * 0.2); // ? faster to * than / by X
   valR = map(newAvgR, 5, 1010, 180, 0); // scale it to degrees for servo (full range = 0 to 180 or partial range)
   // servo position center = 90, pulse = 1500 uS, motor still
   // 70-110 gives range of 1280 - 1680 uS

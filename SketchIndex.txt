@@ -56,17 +56,46 @@ BinaryDisplayFromInput -- experiment to read number from BCD switch or other,
 CharAnalTest -- character analysis operators 
    Send any byte and the sketch will tell you about it:
    Uses: the character analysis operators, isAlpha, isDigit, isControl, isPrintable, isSpace...
-     
-DigitalReadSerial
+
+DemoReel_X and X2
+// Mod of FastLED example DemoReel100: various animated patterns using FastLED built-ins
+// Uses: FastLED lib, rotating patterns, black out some, X2 added more randomness
+
+DigitalReadSerialOut
     Reads a digital input on pin 2, prints the result to the serial monitor 
     Uses INPUT_PULLUP, aka digitalWrite(x, HIGH), digitalRead
-    
+
+DigitRead2StringOut
+ read a bunch of binary buttons, convert to string of 0/1's, output to Serial
+ 
+FastBlink --  FastLED blink example mod for 2 lites
+
+FastLEDemo_shortY
+// Mod of DemoReel100 example: various animated patterns using FastLED built-ins
+//  mod to make Y, more random pattern shift
+
+FastLEDWaveTrainA-B-C
+ Flash 2 neopixel LEDs at various brain wave entraining frequencies
+ and colors; brightness adjusts with pot, A codes one freq/color
+ B adds mode input switch to vary freq/color; C simplified code, adds
+ train-pulse option
+
+ *  Uses: FastLED, analogRead, map, setBrightness, BCD mode switch, switch/case
+ binary LED output, I/O pin arrays, bitWrite/Read
+
+FastRainbo1 - 160 -- rainbow color shift w/ one lite ane many
+
+Gyro_Accel
+  FRC anal. Gyro & _345 Accel devices code combined; first calibrate in their own sketch
+ displays Temp and Angle on LCD and Ser. Mon., accel on Ser. Mon.
+  Uses: (I2Cdev) and ADXL345 accelerometer class libs, LiqCrystal lib, reZeroing fx
+
 GyroADWa
  * Connect FRC ADW22307 Gyro analog output to some Analog Pin, Temp output pin to another 
  *  integrate gyro angle over time to get a current angle, read Temp deg C, display both on LCD
      Uses: LCD, anal read, reZero (manual, needs work to make auto), expon MA, print @ interval
 
-I2Cscanner
+I2Cscanner - v. 2 puts code in setup, easier to use
     tests the standard 7-bit addresses 0-127 for valid device(s)
   Uses: Wire lib and basic commands
   
@@ -79,11 +108,13 @@ LCD 1602 Ultrasonic,
     From Sainsmart for their 1602 LCD display; and to read some US device; seems to 
     need a lot of work; doesn't use DFR library, reads keys itself
     Uses: Liquid Crystal, ultrasonic distance calc, key read without library
-    
-LCD key 1602 -- get values from 5 keys on 1602 LCD / keypad and do things with them;
-    no need for DFR library; need to tune for each board anal values
-    Uses: Liquid Crystal libr, analRead, switch/case
-    
+
+LCDkey1602swit/case
+     tuned for my board, get anal values from 5 keys on 1602 LCD with keypad and do things 
+     with them; no need for DFR library; need to tune for each board anal values, make sensible
+     labels for buttons
+      Uses: LiquidCrystal lib, switch/ case
+      
 Morse Tone Rand 1, from Monk's sketch 5-05 morse reader,  I modified to play tone thru tonePin;
   enter char string into serial monitor, plays tone and led flashes
   Uses: char string array, for loop, random with seed, making char string from ascii input, tone output
@@ -92,25 +123,51 @@ Morse Tone Rand 2, from above, added serial print of word, simplified random gen
 
 Morse Tone Rand3 added pot control of speed, minor improvement
 
-MotoKnobServMod, // Originally controlled servo position using a potentiometer 
+MotoKnobServMod, Mini, Nano // Originally controlled servo position using a potentiometer 
      by Michal Rinott <http://people.interaction-ivrea.it/m.rinott>
     Mead's mod to control a motor speed within narrow range set by values in map function
-    for motor that takes servo type pulse width to set speed and direction
-    Uses servo lib, map anal volt to servo angle (speed)
+    for motor that takes servo type pulse width to set speed and direction; Mini mod has code
+    for 2 channels
+    Uses servo lib, map anal volt to servo angle (speed), expon MA
     
 MotoKnobServNano, mod above for Nano/Mini with pot using A pins for source
-    
-My Blink mods1&2
+
+MotoKnobServoNanoB --  
+  mod for 2 channel Nano control box uses Anal pins for ground/5v of pot;  
+  This modB has L channel normal pot action -- middle is off, 0 is full CCW, 1024 is full CW; 
+  changed R channel to one direction, CCW, so 0 is 1500 ms, full on (1024) is 544 -- 
+  should enable finer control of speed; used with 2 jags for team season '17 testing
+  
+My Blink mods1-3
  Turn on an LED for (blinkDelay), then off for (blinkDelay) repeatedly.
  I modified to accept input from serial monitor and show what's running
  Mod2 adds EEPROM persistent storage of delay value between restarts
   Uses Serial.parseInt to make int from char input, EEPROM to store value 
   between resets, clears EEPROM for initial format, or prn
+   nano mod3 for AR input from pot to adj rate
     
 On Off with Anal Pin, used as digital input to turn LED on / off
     Uses inputPullup, digitalRead, constant
     mod2 uses boolean var, 2 in/outs
     
+ParadeBotLED
+   series of mods build up control of LEDs that change pattern/color with motor direction; orig 
+   code very faulty; AMrevs fix problems and greatly simplify and explain pattern logic
+   
+progmem Exercises  -- various trials of ways to store large # of strings or data in PROGMEM
+  rather than SRAM when processing; F() macro, and PGM_P ptrs -- rather obscure syntax and 
+  concepts. bkgrd in -- /Volumes/HD-3-data/Reference Library/Electronic-commun-device-media/
+  Electronic Circuits&Devices/MakingTTerrata.txt
+  
+RCpulSense, pulSensePulseIn  -- mod  from  cookbook text
+// Code Example 1-3 Using an Interrupt pin to capture an R/C pulse length
+// mead mod for 16x2 lcd display, different LED output pin, etc
+// Connect signal from R/C receiver into Ardu's digital pin 2/3
+// Turn On R/C transmitter
+// If valid signal is received, you should see the LED on pin x turn On.
+// If no valid signal is received, you will see the LED turned Off.
+// Uses: LiqCrystal display, interrupt or (12-3) pulseIn fx to capture w/o interrupt
+
 ReadAnalogVaverage --  (expon moving) averages analog pin input, 0-5 v. (as from batt discharger 
    device with an op-amp); 
    maps that to the actual v. 11.5-13 being sampled; prints raw and calcul. voltage if it's changed; 
@@ -152,6 +209,10 @@ ReadAnalogVavg_Dig1602 -- reads an averaged analog input on pin X, and prints th
   Also takes one hi/lo input to D3 and LED displays on/off from D11. Like ReadAnalVavgDig, 
   modif for 16x2 display
   Uses: Liquid Crystal libr, 16x2 display, DFR keypad libr, reading key value
+
+  Read_Dig_to_Lite -  reads one hi/lo input to D4 and LED displays on/off at D12 
+  -- used to test dig IR sensors et. al. Like On/OffwAnalPin above
+    Uses: device power from pins
     
 ReadPoToPWM_A --  reads an analog input on pin A4, converts it to voltage, 
     and prints the result to the serial monitor if changed; sends scaled PWM 
@@ -172,17 +233,27 @@ ReadSerialIntC -- takes mixed char input from keybd, extracts 1st int, converts 
   orig used Serial.parseInt which is weak at parsing int mixed with other chars, so 
   ReadSerIntB puts incoming digits into a String object then str.toInt() to convert. This v. C
   puts input bytes into char array, extracts first group of digits from it into another array then 
-  uses atoi to make the int; memset clears array each loop
-  
+  uses atoi to make the int; memset clears array each loop  
   Uses: Serial.readBytes, atoi, isDigit, strlen, isDigit, memset
-     
+
+RGB Calibration test -- for Neopixel LED sets
+// Use this sketch to determine RGB ordering for your chipset
+
 SampleSyntax -- code examples of many kinds
 
 SendBinary, major mod from orig Cookbook ch4r6 which was badly flawed
    for printing to ser. monitor, but may have worked for other devices that expect char
    over serial.  Sends a header followed by two random integer values as binary data.
    Uses: random, lowByte, highByte, Serial.write, BIN format
-   
+
+Sensor Reader from Igoe MTT,ch.2,proj.2, added if block for handshaking w/ Proc.
+ Context: Arduino -- later mods prep for sending batt dc readings to Proc
+ Reads two analog inputs and two digital inputs and prints their values to ser. 
+ mon. or ser. port -- to control pong game in Processing. Type any char+ret to
+ trigger printing a string of sensor values, or send any byte from Proc.
+ Connections: analog sensor(s) on 2 analog input pins (or pot simulates them)
+ 2 momentary switches on digital I/O pins
+ 
 serialReadWriteAM1 -- AM revision of PY's for Ardu <-> SmartDesktop comm;
     digi and anal inputs & reading ser bool input to display; my 2nd version added 
     code for strcat of float var; many questions about array use here
@@ -212,7 +283,13 @@ SeriPrintWrite -- to show output of ser.mon. using .write vs .print for a byte a
       .write probably sends binary to serial port, but hard to see with ser.mon. or terminal
      as they both show the binary input as char's
       Uses: serial.write, serial.print
-      
+
+ServoMiniTrigger -- mod to use external trigger on interrupt 1 for sending servo pulses,
+ so I can display on PC's screen in sync -- never got to work
+ built from MotoKnobServo, to use 2 channel servo box, trigger from AD pixelPulse on PC
+ mod for Nano uses Anal pins for ground/5v of pot; my defective nanos can't handle servo and Serial
+ in same sketch!
+ 
 StringToIntParse -- String to Integer conversion
  Reads serial input chars one by one, putting all digits (isDigit()) into a String; if input is Enter, 
  seen as a newline, then prints the String; Ser. Mon. must be set to send 'newline' for this to work.
@@ -235,6 +312,19 @@ turret_and_interruptC, minor changes, slower redraws of display;
   Revision A, put debounce in Interrupts, eliminating flag var, ISR on RISING, B added LCDisplay
   CW switch should go to pin 2, CCW switch to pin 3
 
+TB B Gone  
+shut off nearby TV using IR code library
+ Mead mod 1610 cleaned up code, added explanations & questions, ~ interrupts and much
+ else. v. B cleans up further by putting long fx in tabs, slimming codes to just NA, etc
+ Uses: progmem data storage, special code lib, sleep lib, special timing fx
+
+UltrasonicDisplay2LCD
+ adapt from ReadAnalogVaverage - averages analog input on pin, 
+ voltage or some mapped value, display to LCD
+ Attach the center pin of pot to PinIn, and the outside pins to +5V and ground,
+ -- here I use adjacent anal pins to supply gnd and 5v.
+ Uses: Liquid Crystal 8x2 display, map, analRead, expon moving average, round
+ 
 voltSampleDischarge -- monitor voltage only, without calib, using external resistance
   not tested yet
 
@@ -269,7 +359,14 @@ voltageSamplerB5 -- modif from VoltageSamplerB4: just reads batt V, record deepe
    -- converts 0-5 v from diff. op-amps to actual 11.5-13 v from batt source using map;
   calib phase for V in setup; no Curr monitoring here;
   Uses: LCD, map, expon moving avg, do/while, tone
-      
+
+VoltageSamplerB6, modif of VoltageSamplerB4 for serial output to Proc sketch
+  -- just the numbers for min,mV,mA
+  -- converts 0-5 v from diff. op-amps to read ~11.5-13 v from batt source
+  and Rcurr drop to current draw; calib phase for V in setup; Curr map params
+  come from previous calib sketch -- do that first with current Rc and load Rl
+ being used
+ 
 voltageSimpler12v -- pre-op-amp attempt to monitor batt discharge, using while loop;
    mod to read 0-5 v diff of batt v to regulated 8 v. rather than using volt divider
    now calibrates mult first if voltRegul = 0; much improved in later Sampler versions;
@@ -278,5 +375,7 @@ voltageSimpler12v -- pre-op-amp attempt to monitor batt discharge, using while l
 voltageSimplerNiCd -- monitor batt discharge of 8 cell NiCd, using while loop
    modified to read 0-5 v diff of batt v to regulated 8 v. rather than using volt divider
    now calibrates mult first if voltRegul = 0, also calib offset -- early attempt, pre-op-amp
-   
+
+voltageSimplerNiMh to monitor batt discharge, using while loop;
+ makes beep when target V reached using external discharge circuit
    
