@@ -46,10 +46,10 @@ int mapB = 965;
 //int mapE = 300;      // using curr calib sketch; C&D are AR pin values
 //int mapF = 650;    	 // E&F are corresponding measured currents
 
-int mapC = 255;      // empiric Curr map params, pinIn2 to dc current mA
-int mapD = 573;      // these are values from calib using 2.0 ohm Rc and Rl 18.5
-int mapE = 350;      // using curr calib sketch; C&D are AR pin values
-int mapF = 600;       // E&F are corresponding measured currents
+//int mapC = 255;      // empiric Curr map params, pinIn2 to dc current mA
+//int mapD = 573;      // these are values from calib using 2.0 ohm Rc and Rl 18.5
+//int mapE = 350;      // using curr calib sketch; C&D are AR pin values
+//int mapF = 600;       // E&F are corresponding measured currents
 
 //int mapA = 111;      // default V map params, A for 11.5, B for 13.0
 //int mapB = 965; 
@@ -63,6 +63,11 @@ int mapF = 600;       // E&F are corresponding measured currents
 //int mapD = 330;          // these are values from calib using 2.7 ohm Rc and Rl 35
 //int mapE = 200;         // using curr calib sketch; C&D are AR pin values
 //int mapF = 300;    	 // E&F are corresponding measured currents
+
+int mapC = 121;           // empiric C map params, pinIn2 to dc current mA
+int mapD = 625;          // these are values from calib using 5 ohm Rc and 36 Rl(adj+2+5 in series)
+int mapE = 80;         // using curr calib sketch; C&D are AR pin values
+int mapF = 250;       // E&F are corresponding measured currents
 
 float newVavg;
 float prevVavg;         // voltage globals, used in MA calc in setup calib and loop readout
