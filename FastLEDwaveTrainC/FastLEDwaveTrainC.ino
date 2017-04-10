@@ -4,7 +4,8 @@
     code, adds pulse option: flashes on for 'count' setting (eg 5), then off (dark)
     for 'pulse' x cycle length. Eg if count_max = 5 and pulse = 3 and cycle len =
     25 msec, then flash 5 trains for 125 ms, then dark 75 ms (95 actually)
-    Uses: FastLED, analogRead, map, setBrightness, rotary BCD switch input
+    
+    Uses: FastLED, analogRead, map, setBrightness, rotary BCD switch/case,
     binary LED output, I/O pin arrays, bitWrite/Read, digitalRead/Write
 */
 
@@ -18,7 +19,7 @@ FASTLED_USING_NAMESPACE
 int brite = 0; // sets brightness from pot input during looping
 // mode var sets flash freq and color, init/defaults to 0
 byte mode = 0;   // variable's 8 bits (max) can be read from switches or other input
-// then used to set n LEDs on/off to display int as binary
+// then used to set n LEDs on/off to display val as binary; I only use 0-7, 3 leds
 
 byte pinIns[] = {2, 3, 4};      // input pins for n bit binary switch
 // binary led display of mode is optional;
@@ -55,8 +56,8 @@ void setup()
 }  // end setup
 
 void loop()
-{ static byte count = 1;
-  // enables pulsing: flashes (count max)-1 trains, then dark for pulse*period
+{   // coundt enables pulsing: flashes (count max)-1 trains, then dark for pulse*period
+  static byte count = 1;
   if (count == 6) count = 1;
   // set bits of mode var from inputs, e.g. 3 bit rotary switch
   for (byte i = 0; i < sizeof(pinIns); i++)
@@ -132,6 +133,24 @@ void loop()
         leds[0] = 0x99ffff; // sl bluish
         leds[1] = 0x99ffff;
         pulse = 3;
+        break;
+      }
+          case 6: // 3 hz red w/o pulsing
+      {
+        liteOn = 66;
+        liteOff = 267;
+        leds[0] = 0xff0000; // red
+        leds[1] = 0xff0000;
+        pulse = 0;
+        break;
+      }
+          case 7: // 3 hz red w/ pulsing
+      {
+        liteOn = 66;
+        liteOff = 267;
+        leds[0] = 0xff0000;
+        leds[1] = 0xff0000;
+        pulse = 2;
         break;
       }
     default:
