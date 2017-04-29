@@ -4,7 +4,8 @@
     code, adds pulse option: flashes on for 'count' setting (eg 5), then off (dark)
     for 'pulse' x cycle length. Eg if count_max = 5 and pulse = 3 and cycle len =
     25 msec, then flash 5 trains for 125 ms, then dark 75 ms (95 actually)
-    
+    Wiring: BCD switch to D2,3,4; LED's to D9.10.11; string power from board gnd/5v;
+    string control from A1; pot power from gnd/3.3v, center to A2 
     Uses: FastLED, analogRead, map, setBrightness, rotary BCD switch/case,
     binary LED output, I/O pin arrays, bitWrite/Read, digitalRead/Write
 */
@@ -14,7 +15,7 @@ FASTLED_USING_NAMESPACE
 // How many leds to control?
 #define NUM_LEDS 2
 #define BRIGHTNESS 12
-#define DATA_PIN 15  // A1
+#define DATA_PIN 4  // A1
 #define LED_TYPE WS2812B
 int brite = 0; // sets brightness from pot input during looping
 // mode var sets flash freq and color, init/defaults to 0
@@ -36,13 +37,22 @@ CRGB leds[NUM_LEDS];
 
 void setup()
 {
-  pinMode(2, INPUT_PULLUP);   // 1s -- digital pins read input from mode switch
-  pinMode(3, INPUT_PULLUP);   // 2s
-  pinMode(4, INPUT_PULLUP);   // 4s
-  // optional binary display of mode
-  pinMode(9, OUTPUT);    // pins light LEDs, 9 = low bit, 10 = 2s, 11=4s
-  pinMode(10, OUTPUT);   // could use loop to config I/O pins from arrays
-  pinMode(11, OUTPUT);
+
+  pinMode(2, OUTPUT);   // could use loop to config I/O pins from arrays
+  pinMode(3, OUTPUT);
+    pinMode(A0, OUTPUT);   // could use loop to config I/O pins from arrays
+  pinMode(58, OUTPUT);  //mega A4 same as Uno's 18?
+  digitalWrite(2,LOW);
+  digitalWrite(3,HIGH);
+  digitalWrite(A0,LOW);
+  digitalWrite(58,HIGH);  
+//  pinMode(2, INPUT_PULLUP);   // 1s -- digital pins read input from mode switch
+//  pinMode(3, INPUT_PULLUP);   // 2s
+//  pinMode(4, INPUT_PULLUP);   // 4s
+//  // optional binary display of mode
+//  pinMode(9, OUTPUT);    // pins light LEDs, 9 = low bit, 10 = 2s, 11=4s
+//  pinMode(10, OUTPUT);   // could use loop to config I/O pins from arrays
+//  pinMode(11, OUTPUT);
 
   delay(1500);
   // Uncomment/edit one of the following lines for your led type
@@ -56,7 +66,7 @@ void setup()
 }  // end setup
 
 void loop()
-{   // coundt enables pulsing: flashes (count max)-1 trains, then dark for pulse*period
+{   // count enables pulsing: flashes (count max)-1 trains, then dark for pulse*period
   static byte count = 1;
   if (count == 6) count = 1;
   // set bits of mode var from inputs, e.g. 3 bit rotary switch

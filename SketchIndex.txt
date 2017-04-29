@@ -19,16 +19,18 @@ ADXL345_test2
     address of active device, then get its ID from reg 0x00
     Uses: I2C, Wire
     
-AnalInputMap2ToneA-B-c
+AnalInputMap2ToneA-B-C
  input analog voltage, from pot or sonar, map to useful values, activate toner using beep
  rate and frequency to indicate distance (inversely); when target distance reached, stop tone and
  turn on a light; set adjacent analog pins (gnd, 5v, signal) to 0 and 5 v to power pot or US device
- mod A worked fine but not optimal -- long delays make loop execute very slowly when AR big;
+ mod A worked fine but long delays make loop execute very slowly when AR big;
  mod B uses timed event method to eliminate loop delays; much more complex logic, and tone quality
- suffers from beat frequency I assume
+ suffers from beat frequency I guess
  mod C uses timedAction lib to make beeps run in their own thread so loop rate not affected; tone 
  quality is fine, and I can modulate beep rate in loop, and freq by setting it in beep().
- Uses: anal read, tone, timing events w/ millis, TimedAction lib, count: sane printing, map, constrain
+ 
+ Uses (A,B,C): analogRead, tone, timing events w/ millis, print w/ String concat, sane print @ 
+ count interval, TimedAction lib, map, constrain variable
 
 AnalogReadSerial
       Reads an analog input on pin A4, prints the result to the serial monitor
