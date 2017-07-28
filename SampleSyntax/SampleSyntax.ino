@@ -27,7 +27,8 @@ const [type] [NAME] = [value];  // safer than #define to set a constant, gcc che
     using Macros like this; instead use inline function ? whatever that is]
 ----------------------------------------------
 binary # represented in code as Bxxxxxx, e.g. B0001100 for 12
-byte(x) converts number x to byte format (what if larger than 1? truncates to 1)
+
+byte(x) converts number x to byte format
 -------------------------
 void setup()  // put your setup code here, to run once:
 {
@@ -42,7 +43,7 @@ void loop()
 {
   // put main code here, runs repeatedly
    exit(1); // exit(int) undocumented C fx, stops loop, sends int to OS
- 
+   not sure how OS interprets the param
 }
 -------------------------
 
@@ -85,12 +86,12 @@ void loop()
 
 use enum constants to 'label' array elements
 --------------------------------------------------
-// another undocumented C feature
+// another undocumented C feature, sort of like find(something) by index
 enum {zilch, alpo, burka, carly, darpa}; 
 // when used in fx, useEm(burka), the index of burka in the array is sent as param
 // example Cookbook p. 431
 
-//loops and conditionals IF and WHILE
+//loops and conditionals IF WHILE DO
 ---------------------------
   if (brightness > 253)  // must be true or false
     {                    // brackets optional for one line block
@@ -104,7 +105,8 @@ enum {zilch, alpo, burka, carly, darpa};
   for (byte i=0; i < 4; i++)  //why use int when it fits in byte?
     {              // brackets needed for more than one line
                 // write the brightness value to the LEDs
-  analogWrite(pinOut[i], brightness);
+         analogWrite(pinOut[i], brightness);
+         if(some condx you want to end for loop) break; // exits
      } // end for
      
      // can send PWM also to A0 et al? if you pinMode(A0-?others, OUTPUT) and aW(A0,0-255) 
@@ -198,7 +200,7 @@ switch/case structure, from LCD1602
 
    switch (lcd_key)
    {           // depending on which button was pushed, we perform an action;
-               // looks like strings, but they are ints because of defines
+               // indexes look like strings, but they are ints because of defines
        case btnRIGHT:
        {          //  if  "RIGHT"  pressed show this on the screen
             lcd.print("RIGHT ");
@@ -209,7 +211,9 @@ switch/case structure, from LCD1602
              lcd.print("LEFT "); //  if  "LEFT" show on the screen
              break;
        }    etc
-       
+       default:
+       {break;}
+   } end switch    
 ------------------------------------------------------------------------ 
 
  // char variables vs. their ascii number, from MorseTone player
@@ -493,3 +497,25 @@ void loop()
    }
 }
 
+FastLED color assignments
+-------------------------
+usually just: 
+ leds[1]= CRGB::Red, or = 0x99ffff
+but if you have to assign using a var (e.g. w/ options in setup)
+1st init CRGB C; // color to send lites, seem to be byte triplets
+in setup: C = CRGB::Red, C = CRGB(255, 0, 0), C = CRGB(0x99ffff);
+then in loop: leds[0], leds[1] = C;
+
+FastLED v>3.1 special timer fx
+-----------------------
+   EVERY_N_SECONDS(5) || EVERY_N_MILLISECONDS(5) 
+   { // doo stuff
+    T = millis();
+    Serial.println ("pulse " + String (pulse) + " millis " + String(T)); 
+   }
+more:https://plus.google.com/112916219338292742137/posts/ZCucuzvCJFd
+
+#include <TimedAction.h>  -- threadlike non-delaying events
+-----------------------
+how to use in lib and my sketch AnalInputMap2ToneC
+TimedAction beepONoff = TimedAction(1000,beep); interval resetable

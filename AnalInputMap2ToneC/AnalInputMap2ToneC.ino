@@ -8,15 +8,17 @@
  suffers from beat frequency I assume
  mod C uses timedAction lib to make beeps run in their own thread so loop rate not affected; tone 
  quality is fine, and I can modulate beep rate in loop, and freq by setting it in beep().
- Uses: anal read, tone, TimedAction lib, count for sane printing, map, constrain
+ Uses: anal read, tone, TimedAction (old) lib, count for sane printing, map, constrain
  */
 
 // preprocessor directives
-#define potPin  A3  // analog pin to read the pot / device voltage, A1-2 can power device
+#define potPin  A2  // analog pin to read the pot / device voltage, A0-1 can power device
 #define litePin 13  // digital pin to light LED when target distance reached
 
 #include <TimedAction.h>
 
+void beep();
+ 
 TimedAction beepONoff = TimedAction(1000,beep);  // object runs its own 'thread'
 
 // ARval local var, shown here for clarity, others are global
@@ -27,11 +29,11 @@ boolean toneOn = false;  // true if we're toning, false if quiet
 
 void setup()  
 { 
-  pinMode(potPin, INPUT);   // put pot ends/device supply to 5v and grnd, signal voltage to A_
-  pinMode(A2,OUTPUT);
-  pinMode(A1,OUTPUT);
-  digitalWrite(A2,HIGH);
-  digitalWrite(A1,LOW);
+  pinMode(potPin, INPUT);  // put pot ends/device supply to 5v and grnd, signal voltage to A_
+//  pinMode(A2,OUTPUT);
+//  pinMode(A1,OUTPUT);
+//  digitalWrite(A2,HIGH);
+//  digitalWrite(A1,LOW);
 
   pinMode(litePin,OUTPUT);  // signal lite comes on when target distance reached
   digitalWrite(litePin,LOW);  // init LED to off
@@ -80,12 +82,11 @@ void loop()
   {  
     beepONoff.disable();
     noTone(8);
-   
     digitalWrite(litePin,HIGH);
   }
 
   //
-  //  // map fx I/O uses integers; we could convert input value in ticks to distance in ft.
+  // map fx I/O uses ints; we could convert input value in ticks to distance in ft.
   //  val = map(ARval, 31, 615, 1, 20);  // and print to Ser. Mon.
   //  Serial.println(val); // in ft.
 

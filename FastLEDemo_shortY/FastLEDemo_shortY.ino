@@ -46,7 +46,7 @@ void loop()
   gPatterns[gCurrentPatternNumber]();  // array of ptrs to names of functions ?
 
   // paint some black
-  for (byte i = 49; i < 69; i++)  // 1st 20 so dark; lighted ones make a Y
+  for (byte i = 49; i < 69; i++)  // 1st 20 dark; lighted ones make a Y
     leds[i] = 0x000000;
 
   // send the 'leds' array to the LED strip

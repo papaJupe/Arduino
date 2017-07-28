@@ -76,16 +76,20 @@ FastLEDemo_shortY
 // Mod of DemoReel100 example: various animated patterns using FastLED built-ins
 //  mod to make Y, more random pattern shift
 
-FastLEDWaveTrainA-B-C
- Flash 2 neopixel LEDs at various brain wave entraining frequencies
- and colors; brightness adjusts with pot, A codes one freq/color
- B adds mode input switch to vary freq/color; C simplified code, adds
- train-pulse option
+FastLEDWaveTrainA-B-C-D
+	 Flash 2 neopixel LEDs at various brain wave entraining frequencies
+	 and colors; brightness adjusts with pot, A codes one freq/color
+	 B adds mode input switch to vary freq/color; C simplified code, adds
+	 train+pulse option; D adds slowdown option
 
- *  Uses: FastLED, analogRead, map, setBrightness, BCD mode switch, switch/case
- binary LED output, I/O pin arrays, bitWrite/Read
+	Wiring: BCD switch to D2,3,4; LED's to D9,10,11; 2 LEDs power from board gnd/5v;
+	string controlled from A1; pot power from gnd/3.3v, center to A2
+	
+	Uses: FastLED, analogRead, map, setBrightness, rotary BCD to switch/case,
+	binary LED output, I/O pin arrays, bitWrite/Read, digitalRead/Write,
+	EVERY_N_MILLISECONDS(tInt) for timed event
 
-FastRainbo1 - 160 -- rainbow color shift w/ one lite ane many
+FastRainbo1 - 160 -- rainbow color shift w/ one lite and many
 
 Gyro_Accel
   FRC anal. Gyro & _345 Accel devices code combined; first calibrate in their own sketch

@@ -19,7 +19,7 @@ int anal_read  = 0;  // raw AR value on pin A0
 #define btnNONE   5
 
 int read_LCD_buttons()
-{       // function to read the buttons, returns a name that define makes an int
+{   // function to read the buttons, returns a name that define makes an int
 		// this could be done using an enum as well
     anal_read = analogRead(0);       // read the voltage (0-1024) the buttons send A0 
 
