@@ -1,11 +1,8 @@
 /* originally LCD 1602 Ultrasonic,
-  From Sainsmart for their 1602 LCD display to read some US device;
-  edited by AM, with some uncertainty about role of keypad switches;
-  needed significant editing to work, edit 1707 for SR-04 US module;
+  ... edit 1707 for SR-04 US module;
   _avg vers. reads using exp moving average; _key version adds LCD
   module button actions; could be used for calibration etc
-  Seems like when displaying inches, response very sluggish???
-  might want to make float, print using Streaming.h (v. Sampl Synta)
+  Got faster response w/ float, print using Streaming.h
 
    LCD RS pin to digital pin 8
    LCD Enable pin to digital pin 9
@@ -22,12 +19,12 @@
   function :  when the serial port sends "a" to the Board, prints
   "holy sainsmart " on lcd --   no it won't unless you edit loop
 */
-#include <Streaming.h>
+#include <Streaming.h>  // lets lcd print float
 #include <LiquidCrystal.h>
 #define TP 11     //Trigger pin
 #define EP 13     //Echo pin
 
-LiquidCrystal lcd(8, 9, 4, 5, 6, 7);  // had 13 here, wrong, used for echo
+LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 const char numb[] = "0123456789";
 char number_s[] = "000"; // these are used in LCD_conv_data fx, not sure how
 char  rword;  // not clear why, how to use
@@ -57,7 +54,7 @@ void setup()
 }
 
 void loop()
-{ 
+{
   static float distAvg = 69;
   int keyV = analogRead(A0);
   if (keyV < 999)  // some button is pressed
@@ -65,47 +62,47 @@ void loop()
     for (int j = 0; j < NUM_KEYS; j++)
     { if (keyV < adc_key_val[j])
       {
-        key = j;  
+        key = j;
         break;  // exit the for loop
       }  // end if
     } // end for, getting key ID
     // what action to take with key, or key press could toggle some var
-       switch (key)
-   {
-       case 0:
-       {    //  if "RIGHT"  pressed show this on the screen
-            // lcd.print("RIGHT ");
-            break;
-       }
-       case 1:
-       {
-             // lcd.print("LEFT "); // if "LEFT" show on the screen
-             break;
-       }    
-       case 2:
-       {
-             // lcd.print("UP ");  // button "UP" 
-             break;
-       }
-       case 3:
-       {
-             // lcd.print("DOWN  ");  // button "DOWN"
-             break;
-       }
-       case 4:
-       {     CM = 0; // sel button tells loop to display INches
-             //lcd.print("SELECT");  //  if button "SELECT"
-             break;
-       }
-       default:
-       {     CM = 1;
-         // lcd.print("NONE  ");  //  No action will show "None" on the screen
-             break;
-       }
-   }  // end switch
+    switch (key)
+    {
+      case 0:
+        { //  if "RIGHT"  pressed show this on the screen
+          // lcd.print("RIGHT ");
+          break;
+        }
+      case 1:
+        {
+          // lcd.print("LEFT "); // if "LEFT" show on the screen
+          break;
+        }
+      case 2:
+        {
+          // lcd.print("UP ");  // button "UP"
+          break;
+        }
+      case 3:
+        {
+          // lcd.print("DOWN  ");  // button "DOWN"
+          break;
+        }
+      case 4:
+        { CM = 0; // sel button tells loop to display INches
+          //lcd.print("SELECT");  //  if button "SELECT"
+          break;
+        }
+      default:
+        { CM = 1;
+          // lcd.print("NONE  ");  //  No action will show "None" on the screen
+          break;
+        }
+    }  // end switch
 
   }  // end if some key pressed
-  else CM =1;  // no key pressed, default to CM
+  else CM = 1; // no key pressed, default to CM
   delay(100);
   long microseconds = TP_init(); // activates the pulser, gets uS back
   float dist = Distance(microseconds, CM);
@@ -113,12 +110,13 @@ void loop()
   // calc expon MA
   distAvg = (((distAvg * 4) + dist) / 5);
   lcd.clear();
-//  lcd.print("dist : ");
-//  lcd.print(distAvg);
-//  if (CM) lcd.print(" CM");
-//  else lcd.print(" IN");
-   if (CM) lcd << _FLOAT(distAvg,1) << " CM";
-   else lcd << _FLOAT(distAvg,1) << " IN";
+  //  lcd.print("dist : ");
+  //  lcd.print(distAvg);
+  //  if (CM) lcd.print(" CM");
+  //  else lcd.print(" IN");
+  // float format prints with 1 decimal digit
+  if (CM) lcd << "dist: " << _FLOAT(distAvg, 1) << " CM";
+  else lcd << "dist: " << _FLOAT(distAvg, 1) << " IN";
   Serial.println(distAvg);
   // Serial.println(" Holy SainSmart");
 }  // end loop, NB was no delay before
@@ -137,9 +135,9 @@ long TP_init()
   return microseconds;
 }
 
-uint16_t Distance(long time, int flag)  // returns unsigned int
+float Distance(long time, int flag)  // returns unsigned int
 {
-  uint16_t distance;
+  float distance;
   if (flag) // display in cm.
     distance = (time * 17) / 1000;
   //distance = time /29 / 2;  // was this for some other sensor type
@@ -147,7 +145,7 @@ uint16_t Distance(long time, int flag)  // returns unsigned int
   // = ((Duration of high level)*(Sonic :0.034 cm/us))/2
   // = ((Duration of high level)/(Sonic :29.4 cm/us))/2
   else  // 1122 ft/sec   13464 in/sec   0.0135 in/uS / 2 for bounce
-    distance = round((time * 67) / 10000);  // INches, float might be better
+    distance = (time * 67) / 10000;  // INches, float might be better
   delay(20);
   return distance;
 }

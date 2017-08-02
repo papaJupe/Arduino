@@ -10,7 +10,7 @@
  
     Uses: FastLED, analogRead, map, setBrightness, rotary BCD switch/case,
     binary LED output, I/O pin arrays, bitWrite/Read, digitalRead/Write,
-    EVERY_N_MILLISECONDS(tInt)
+    EVERY_N_MILLISECONDS(tInt) function from FastLED lib
 */
 
 #include "FastLED.h"
@@ -167,13 +167,13 @@ void loop()
   leds[1] = C;
 
   FastLED.show();
-  delay(liteOn);
+  delay(liteOn);  // timing set by mode
 
   leds[0] = CRGB::Black;
   leds[1] = CRGB::Black;
 
   FastLED.show();
-  delay(liteOff);
+  delay(liteOff);   // timing set by mode
 
   if (count == 5 && pulse != 0)  // if not 0, delay 'pulse#' * loop duration
   {

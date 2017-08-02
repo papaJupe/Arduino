@@ -3,7 +3,8 @@
   serial monitor; mod to show use of String object for better printing and take a float, 
   which normally it won't accept in constr.  String can use printf like Java / C (not used here)
   Attach the center pin of a potentiometer to pin A_, and the outside pins to +5V and ground.
-  Uses: String object, cast from int to float, dtostrf to convert float to string then to String
+  Uses: String object, cast from int to float, dtostrf to convert float to string then to String.
+  alternate method using Streaming.h in  SampSynt and USsr04-avg-Flt
  */
 
 //  setup runs once when you load, press reset or open Ser. Mon.:

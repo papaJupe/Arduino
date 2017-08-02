@@ -182,6 +182,7 @@ void Initialize_8(const int16_t timerOffset)
 	uint8_t wgm = 5;
 	
 	TCCRA_8(timerOffset) = (TCCRA_8(timerOffset) & B11111100) | (wgm & 3);
+
 	TCCRB_8(timerOffset) = (TCCRB_8(timerOffset) & B11110111) | ((wgm & 12) << 1);
 	
 	//disable timer0's interrupt when initialization is called, otherwise handler will eat

@@ -6,7 +6,7 @@
     25 msec, then flash 5 trains for 125 ms, then dark 75 ms (95 actually)
     Wiring: BCD switch to D2,3,4; LED's to D9,10,11; string power from board gnd/5v;
     string controlled from A1; pot power from gnd/3.3v, center to A2
-    ? some code here for mega
+    ? some code here for mega pins
     Uses: FastLED, analogRead, map, setBrightness, rotary BCD switch/case,
     binary LED output, I/O pin arrays, bitWrite/Read, digitalRead/Write
 */

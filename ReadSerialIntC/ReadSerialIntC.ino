@@ -1,7 +1,7 @@
 /* 
  ReadSerialIntC -- takes mixed char input from keybd, extracts 1st int, converts from C to F temp;
  orig used Serial.parseInt which is weak at parsing int mixed with other chars, so 
- ReadSerIntB puts incoming digits into a String object then str.toInt() to convert. This v. C
+ ReadSerIntB puts incoming digits into a String object then Str.toInt() to convert. This v. C
  puts input bytes into char array, extracts first group of digits from it into another array then 
  uses atoi (or conv to String then .toInt) to make the int; reinit or memset clears array each loop
  
@@ -60,7 +60,7 @@ void loop()
         Serial.println(inDig[j]);
         Serial.println(inDig);
         j++;
-      }
+      }  // end if isDigit
       // if you get a non-digit after some digit(s), ignore and break; ser buff flushed above
       else if (gotOne)  
       { 
@@ -69,7 +69,7 @@ void loop()
         break;   // out of the for loop
       } // end else
     } // end for 
-  }  //end if no input
+  }  //end if some input inByt
 
 
   // convert the array to int if not empty; strlen works, ? because chars in array end with null \0

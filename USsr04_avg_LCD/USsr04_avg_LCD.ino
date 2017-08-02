@@ -1,4 +1,4 @@
-/* LCD 1602 Ultrasonic,
+/* orig LCD 1602 Ultrasonic, now USsr04 avg 2 LCD
   From Sainsmart for their 1602 LCD display to read some US device;
   edited by AM, with some uncertainty about role of keypad switches;
   needed significant editing to work, edit 1707 for SR-04 US module;

@@ -13,7 +13,7 @@ FASTLED_USING_NAMESPACE
 #define LED_TYPE WS2812B
 int brite = 0; // will set brightness from pot input during looping
 
-// create leds object
+// create leds color array
 CRGB leds[NUM_LEDS];
 
 void setup()

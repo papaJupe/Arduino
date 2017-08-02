@@ -18,7 +18,6 @@ const [type] [NAME] = [value];  // safer than #define to set a constant, gcc che
     while( ABSOLUTE_VALUE( x ) )  // runs while body until x becomes 0? 
     ...
     
-    
     It is generally a good idea to use extra parentheses when using complex macros. 
     Notice that in the above example, the variable "x" is always within its own set of 
     parentheses. This way it will be evaluated as itself, before being compared to 
@@ -70,8 +69,8 @@ void loop()
              //this should reset all to 0, but inelegant  
     int out[8] = {0,0,0,0,0,0,0,0}; 
     //or  void * memset ( void * ptr, int value, size_t num );< proto in C already?
-   memset(in, 0, 10);
-   memset(out, 0, 10);  // clears properly; e.g. ReadSerialIntC
+   memset(in, 0, 8);
+   memset(out, 0, 8);  // clears properly; e.g. ReadSerialIntC
    
    int out[5] = {2};   // new declar puts 2 in [0] or [5]?, 0 in others(or not?), each int slot=2 byte
                           // so sizeof(out) is 10, whether the slots are filled or null
@@ -190,7 +189,6 @@ enum {zilch, alpo, burka, carly, darpa};
 // do - while loop, when you want it done at least once
 
 do { some stuff
-
    }              // note final semicolon
 while(condition);  // keep going if condx = true, else exit loop
 
@@ -292,7 +290,7 @@ void loop() // expon MA automatically averages last N values, with older values 
   int voltOut;  // the averaged value you will output
           // read the input on analog pin 
   int sensorV = analogRead(PinIn);
-  int newAvg = round((sensorV + 4*prevAvg)/5);  // updates expon moving average of sensor reading
+  int newAvg = round((sensorV + 4*prevAvg)/5);  // updates expon moving average of sensor reading; may be faster to multiply than divide
   
   // use map fx to convert 0-1023 to voltage it corresponds to 0-5000 mV
   voltOut = map(newAvg,0,1023,0,5000);  // in mV, resolves ~5 mV
@@ -323,7 +321,6 @@ void loop() // expon MA automatically averages last N values, with older values 
 'concat' text and variable in one print statement
 -----------------------------------------
 // loop normally repeats, but not this one
-
 void loop() 
 {
   // read the input on some analog pin:
@@ -334,6 +331,7 @@ void loop()
   String myValue = String(sensorValue,DEC);  // optional DEC formatter for int/flt
   // Serial.println("raw pin AR is " + myValue + " ticks"); // prints OK since 
 myVal is String var
+ can parse Str obj with charAt, setCharAt - v. String refs
 //  this works too but is unnecessary
   Serial.println (String ("raw pin AR is " + myValue + " ticks"));  // concat of 
   Str's OK
@@ -370,13 +368,14 @@ Serial << "outstr= " << out << '\n';  // OK to insert single char too
 Serial << "and flot2 = " << vFlt << " volts" << endl; 
 // float print defaults to 2 digits; for 3 digit precision use _FLOAT(vFlt,3)  
 // other formatting prefixes for numbers: _BIN, _HEX, _DEC defined in the streaming.h
-
+float vFlt = analogRead(A0)/5.0;  this prints to lcd with 1 # after decimal
+lcd << "raw AR " << _FLOAT(vFlt,1);
 ------------------------------------------------------------------------ 
 reading a char string one by one using pointer to it
- for(const char *p = "some string\n"; c= *p; p++)  // not sure if const type needed or why
- doSomething(c);  // doesSometng to each c in string until c=*p goes false when out of chars
+ for(const char *p = "some string\n"; c = *p; p++)  // not sure if const type needed or why
+ doSomething(c);  // doesSometg to each c in string until c=*p goes false when out of chars
  
- // does c need a type?
+ // does c need a type? no
 ------------------------------------------------------------------------ 
  
 using flash memory to store some program data like strings that doesn't change much
@@ -502,7 +501,7 @@ FastLED color assignments
 usually just: 
  leds[1]= CRGB::Red, or = 0x99ffff
 but if you have to assign using a var (e.g. w/ options in setup)
-1st init CRGB C; // color to send lites, seem to be byte triplets
+1st init CRGB C; // color to send lites, which seem to be byte triplets
 in setup: C = CRGB::Red, C = CRGB(255, 0, 0), C = CRGB(0x99ffff);
 then in loop: leds[0], leds[1] = C;
 

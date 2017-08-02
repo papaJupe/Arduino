@@ -5,7 +5,6 @@
     binary LED output, I/O pin arrays, switch/case, bitWrite/Read, digitalRead/Write
 */
 
-
 #include "FastLED.h"
 FASTLED_USING_NAMESPACE
 // How many leds to control?
@@ -24,7 +23,7 @@ byte pinOuts[] = {9, 10, 11}; //  these are [0,1,2,n] output pins to LEDs
 //  for 1s,2s,4s,8s; my 3 bit switch only goes 0-7
 
 // 2 params control loop freq
-byte liteOn;   // will never be > 254 ms
+byte liteOn;   // will never be > 254 ms, so changed in later v.'s
 byte liteOff;
 byte pulse;  // some cycling var, not used yet
 
@@ -53,7 +52,8 @@ void setup()
 }  // end setup
 
 void loop()
-{ static byte count = 0; // enables pulsing off every n flashes
+{ 
+  static byte count = 0; // enables pulsing lites off every n flashes
   if (count == 6) count = 0; // never go above n
   // set bits of mode var from inputs, e.g. 3 bit rotary switch
   for (byte i = 0; i < sizeof(pinIns); i++)
