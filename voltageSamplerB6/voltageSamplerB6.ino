@@ -36,10 +36,10 @@ int mapB = 965;
 //int mapE = 700;     // using curr calib sketch; C&D are AR pin values
 //int mapF = 900;     // E&F are corresponding measured currents
 
-//int mapC = 344;      // empiric C map params, pinIn2 to disch current mA
-//int mapD = 600;     // these are values from calib using 2 ohm Rc and Rl 14
-//int mapE = 400;     // using curr calib sketch; C&D are AR pin values
-//int mapF = 600;     // E&F are corresponding measured currents
+int mapC = 344;      // empiric C map params, pinIn2 to disch current mA
+int mapD = 600;     // these are values from calib using 2 ohm Rc and Rl 14
+int mapE = 400;     // using curr calib sketch; C&D are AR pin values
+int mapF = 600;     // E&F are corresponding measured currents
 
 //int mapC = 210;      // empiric Curr map params, pinIn2 to dc current mA
 //int mapD = 656;      // these are values from calib using 2.0 ohm Rc and Rl 16
@@ -64,10 +64,10 @@ int mapB = 965;
 //int mapE = 200;         // using curr calib sketch; C&D are AR pin values
 //int mapF = 300;    	 // E&F are corresponding measured currents
 
-int mapC = 121;           // empiric C map params, pinIn2 to dc current mA
-int mapD = 625;          // these are values from calib using 5 ohm Rc and 36 Rl(adj+2+5 in series)
-int mapE = 80;         // using curr calib sketch; C&D are AR pin values
-int mapF = 250;       // E&F are corresponding measured currents
+//int mapC = 121;           // empiric C map params, pinIn2 to dc current mA
+//int mapD = 625;          // these are values from calib using 5 ohm Rc and 36 Rl(adj+2+5 in series)
+//int mapE = 80;         // using curr calib sketch; C&D are AR pin values
+//int mapF = 250;       // E&F are corresponding measured currents
 
 float newVavg;
 float prevVavg;         // voltage globals, used in MA calc in setup calib and loop readout
@@ -91,7 +91,7 @@ void setup()   // check & calibrate voltage readout, if OK sets starTime for dc 
   int current;
   pinMode(pinIn1, INPUT);  // anal pin to read batt V
   pinMode(pinIn2, INPUT);  // anal pin to read curr sense V
-
+  pinMode(8, OUTPUT);  // toner prn active
   delay(2000);         // wait to get first samples
 
   prevVavg = analogRead(pinIn1);  // just a starting place for the MA of voltage
@@ -290,14 +290,20 @@ void loop()   // read the batt volt, print elapsed time & values, more often as 
     if (watch == 0)  // don't beep if watching
     {
       for (byte i = 0; i <= 6; i++) // beep tone every 20 sec
-      {
-        tone(8, 2700);   // don't need pin config for toner
+//      {
+//        tone(8, 2700);   // don't need pin config for toner
+//        delay(500);
+//        noTone(8);
+//        delay(200);
+//      } // end tone 
+      {  // active piezo beeper just needs voltage
+        digitalWrite(8, HIGH);   //  need pin config for digiWrite to work
         delay(500);
-        noTone(8);
+        digitalWrite(8, LOW);
         delay(200);
       } // end tone loop
       delay (18000);   // 2 + 18 = 20 sec between plays
-    }
+    } // end if watch
   }  //end if done
 
   if (done == 1 && watch == 1)  // main loop does this if watch = 1
