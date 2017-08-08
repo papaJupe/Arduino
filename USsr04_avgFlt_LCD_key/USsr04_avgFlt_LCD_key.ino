@@ -48,9 +48,9 @@ void setup()
   Serial.begin(9600);       // 9600 bps, for Ser. Mon. if on
   pinMode(TP, OUTPUT);      // TP output pin for trigger
   pinMode(EP, INPUT);       // EP input pin for echo
-  pinMode(2, OUTPUT);
+  pinMode(3, OUTPUT);
+  digitalWrite(3, HIGH); // 5 v for US module et al
   pinMode(A0, INPUT_PULLUP);
-  digitalWrite(2, HIGH); // 5 v for US module
 }
 
 void loop()

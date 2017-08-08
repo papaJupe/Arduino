@@ -39,7 +39,7 @@ byte buttonState = 0;        // current state of the button
 byte lastButtonState = 0;    // previous state of the button
 
 float freq_offset = 0.1;
-float duty_eMagnet = 18;   // don't overheat magnet with duty cycle too high 
+float duty_eMagnet = 24;   // don't overheat magnet with duty cycle too high 
 // Better to adjust force through magnet position
 float freq_eMagnet = BASE_FREQ;  
 float duty_led = 7;  
