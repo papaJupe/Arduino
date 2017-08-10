@@ -23,23 +23,23 @@
 #define USERWAITTIME  6000  // milliseconds
 #define LEDWAITTIME     35  // milliseconds
 
-// Many non-trivial Arduino programs benefit from being expressed as a state machine.
-// This one encodes the various nuances of accepting user input while still doing
-// background work (flashing the LED...)
-//
-// State machine:  a device that can be in one of a set number of stable conditions 
-//                 depending on its previous condition and on the present values of 
-//                 its inputs.
-//
-// Alan Skorkin wrote a nice blog about using state machines:
-//    http://www.skorks.com/2011/09/why-developers-never-use-state-machines/
-// in response to this (non-Arduino) post:
-//    http://www.shopify.com/technology/3383012-why-developers-should-be-force-fed-state-machines#axzz2jvAUuwUj
-//
+/* 
+Many non-trivial Arduino programs benefit from being expressed as a state machine.
+ This one encodes the various nuances of accepting user input while still doing
+ background work (flashing the LED...)
+ State machine:  a device that can be in one of a set number of stable conditions 
+     depending on its previous condition and on the present values of its inputs.
+
+ Alan Skorkin wrote a nice blog about using state machines:
+    http://www.skorks.com/2011/09/why-developers-never-use-state-machines/
+ in response to this (non-Arduino) post:
+ http://www.shopify.com/technology/3383012-why-developers-should-be-force-fed-state-machines#axzz2jvAUuwUj
+*/
+
 enum State { INIT, NEEDINPUT, WAITING, TIMEOUT, PROCESSING, FINISHED, ERROR } state;	
 
-// The LED would be really boring if it just sat there being either always on or always off
-// The array encodes a flash pattern to let you know that nothing is hung...
+// The LED would be really boring if it just sat there always on or always off
+// The array encodes a flash pattern to let you know that it's not hung...
 boolean flashPattern[] = { 1,1,1,1,1,1,1,0,1,1,0 };	
 unsigned int ledIndex = 0;
 
