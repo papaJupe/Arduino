@@ -1,3 +1,5 @@
+// maker orig, much modified by AM in V2
+
 #include <PWM.h>  
 // PWM lib at https://code.google.com/archive/p/arduino-pwm-frequency-library/downloads
 #include <elapsedMillis.h>

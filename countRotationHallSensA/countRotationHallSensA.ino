@@ -1,6 +1,6 @@
 /*
-    count rotations with hall sensor
-
+  count rotations with hall sensor
+   display count on LCD display with buttons (read on A0, not used in program)
 */
 
 #include <Streaming.h>  // lets lcd print float
@@ -117,5 +117,5 @@ void upCnt()     // ISR increments count
     ++rotaCount;       // incr count
     last_interrupt_time = interrupt_time;  // global var, should be reset only on good signal, > 100 ms from a valid one
   }
-}  //end up
+}  //end upCnt
 

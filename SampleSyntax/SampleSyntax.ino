@@ -8,7 +8,7 @@ const [type] [NAME] = [value];  // safer than #define to set a constant, gcc che
 
 #define [something] [its value]     // needs no = or ;
 
-    from wikibooks C prog -- not sure if this works in Ardu C --
+    from wikibooks C prog -- should also work in Ardu C --
     Another feature of the #define command is that it can take arguments, 
     making it rather useful as a pseudo-function creator. Consider the following:
     
@@ -17,7 +17,12 @@ const [type] [NAME] = [value];  // safer than #define to set a constant, gcc che
     int x = -1;
     while( ABSOLUTE_VALUE( x ) )  // runs while body until x becomes 0? 
     ...
-    
+from cookbook p 88, after showing use of word(hi,low) to make 2 byte word from
+a high and low byte, also extract them from a word w/ highByte(), lowByte()
+
+#define makelong(hi,lo) ((hi) << 16 | (lo))  -- makes 32 bit big word from
+2 16 bit words
+
     It is generally a good idea to use extra parentheses when using complex macros. 
     Notice that in the above example, the variable "x" is always within its own set of 
     parentheses. This way it will be evaluated as itself, before being compared to 
@@ -142,6 +147,12 @@ enum {zilch, alpo, burka, carly, darpa};
    {
     return (c * 9/5 + 32)
    }
+   
+C ternary operator
+------------------
+IsLEDOn = !IsLEDOn; // toggle value of IsLEDOn
+digitalWrite(LEDPin, IsLEDOn ? HIGH : LOW)
+
  ----------------------------------------------------
  //use of WHILE to hold action, and/or make looping function
   
