@@ -2,7 +2,7 @@
 Arduino Hall Effect Sensor Project
 by Arvind Sanjeev
 Please check out  http://diyhacking.com for the tutorial of this project.
-DIY Hacking -- if pullup used, mag detect may occur on low; probable other
+DIY Hacking -- for interrupt pin sensing pulls down; probable other
 problems but use of interrupt is good
 */
 
@@ -11,13 +11,13 @@ problems but use of interrupt is good
  unsigned int rpm;
  unsigned long timeold;
  void setup()
- {
-   Serial.begin(115200);
-   attachInterrupt(0, magnet_detect, RISING);//Initialize the intterrupt pin (Arduino digital pin 2)
-   half_revolutions = 0;
-   rpm = 0;
-   timeold = 0;
- }
+     {
+       Serial.begin(115200);
+       attachInterrupt(0, magnet_detect, RISING);//Initialize the int pin (Ardu D2)
+       half_revolutions = 0;
+       rpm = 0;
+       timeold = 0;
+     }
  void loop()//Measure RPM
  {
    if (half_revolutions >= 20) { 
@@ -27,7 +27,7 @@ problems but use of interrupt is good
      //Serial.println(rpm,DEC);
    }
  }
- void magnet_detect()//This function is called whenever a magnet/interrupt is detected by the arduino
+ void magnet_detect()// called whenever a magnet is detected by sensor
  {
    half_revolutions++;
    Serial.println("detect");
