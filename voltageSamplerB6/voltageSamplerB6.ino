@@ -5,7 +5,7 @@ VoltageSamplerB6, modif of VoltageSamplerB4 for serial output to Proc sketch
   -- converts 0-5 v from diff. op-amps to read ~11.5-13 v from batt source
   and Rcurr drop to current draw; calib phase for V in setup; Curr map params
   come from previous calib sketch -- do that first with current Rc and load Rl
- being used
+  being used
  */
 
 
@@ -24,22 +24,22 @@ LiquidCrystal lcd(12, 11, 4, 5, 6, 7); // lib is smart enough to know if you're 
 #define pinIn2 A2          // pin to read curr sense voltage across Rc via op-amplification
 
 int mapA = 123;      // default V map params, A for 11.5, B for 13.0
-int mapB = 965; 
+int mapB = 975; 
 
 //int mapC = 640;      // empiric C map params, pinIn2 to dc current mA
 //int mapD = 928;      // these are values from calib using 2 ohm Rc and Rl 8.6
 //int mapE = 650;      // using curr calib sketch; C&D are AR pin values
 //int mapF = 880;      // E&F are corresponding measured currents
 
-//int mapC = 717;      // empiric C map params, pinIn2 to disch current mA
-//int mapD = 974;     // these are values from calib using 2 ohm Rc and Rl 12.5
+//int mapC =740;      // empiric C map params, pinIn2 to disch current mA
+//int mapD = 1000;     // these are values from calib using 2 ohm Rc and Rl 12.5
 //int mapE = 700;     // using curr calib sketch; C&D are AR pin values
 //int mapF = 900;     // E&F are corresponding measured currents
 
-int mapC = 344;      // empiric C map params, pinIn2 to disch current mA
-int mapD = 600;     // these are values from calib using 2 ohm Rc and Rl 14
+int mapC = 342;      // empiric C map params, pinIn2 to disch current mA
+int mapD = 858;     // these are values from calib using 2 ohm Rc and total Rl 14
 int mapE = 400;     // using curr calib sketch; C&D are AR pin values
-int mapF = 600;     // E&F are corresponding measured currents
+int mapF = 800;     // E&F are corresponding measured currents
 
 //int mapC = 210;      // empiric Curr map params, pinIn2 to dc current mA
 //int mapD = 656;      // these are values from calib using 2.0 ohm Rc and Rl 16
@@ -51,23 +51,20 @@ int mapF = 600;     // E&F are corresponding measured currents
 //int mapE = 350;      // using curr calib sketch; C&D are AR pin values
 //int mapF = 600;       // E&F are corresponding measured currents
 
-//int mapA = 111;      // default V map params, A for 11.5, B for 13.0
-//int mapB = 965; 
-//
 //int mapC = 109;       // empiric C map params, pinIn2 to dc current mA
 //int mapD = 320;       // these are values from calib using 2.0 ohm Rc and Rl 27
 //int mapE = 200;       // using curr calib sketch; C&D are AR pin values
 //int mapF = 400;       // E&F are corresponding measured currents
 
-//int mapC = 160;           // empiric C map params, pinIn2 to dc current mA
-//int mapD = 330;          // these are values from calib using 2.7 ohm Rc and Rl 35
-//int mapE = 200;         // using curr calib sketch; C&D are AR pin values
+//int mapC = 160;      // empiric C map params, pinIn2 to dc current mA
+//int mapD = 330;      // these are values from calib using 2.7 ohm Rc and Rl 35
+//int mapE = 200;      // using curr calib sketch; C&D are AR pin values
 //int mapF = 300;    	 // E&F are corresponding measured currents
 
-//int mapC = 121;           // empiric C map params, pinIn2 to dc current mA
-//int mapD = 625;          // these are values from calib using 5 ohm Rc and 36 Rl(adj+2+5 in series)
-//int mapE = 80;         // using curr calib sketch; C&D are AR pin values
-//int mapF = 250;       // E&F are corresponding measured currents
+//int mapC = 121;      // empiric C map params, pinIn2 to dc current mA
+//int mapD = 625;     // these are values from calib using 5 ohm Rc and 36 Rl(adj+2+5 in series)
+//int mapE = 80;      // using curr calib sketch; C&D are AR pin values
+//int mapF = 250;     // E&F are corresponding measured currents
 
 float newVavg;
 float prevVavg;         // voltage globals, used in MA calc in setup calib and loop readout
