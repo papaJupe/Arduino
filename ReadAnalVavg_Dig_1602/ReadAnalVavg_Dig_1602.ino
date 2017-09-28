@@ -1,30 +1,25 @@
 /*
 ReadAnalogVavg_Dig1602 -- reads an averaged analog input on pin X, and prints the result 
-  0-5000mV (+/- ser. mon. +/- lcd if present) if it has changed. Attach the center pin of a 
+  0-5000mV (+/- ser. mon. +/- lcd if present) if it has changed. Attach the center pin of  
   potentiometer to PinIn, and the outside pins to +5V and ground, or any other analog input.
-  Uncomment key stuff to use keys.
+
   Also takes one hi/lo input to D3 and LED displays on/off from D11. Like ReadAnalVavgDig, 
   modif for 16x2 display
   Uses: Liquid Crystal libr, 16x2 display, DFR keypad libr, reading key value
 */
 
-#define PinIn 0        // analog 0 is wired to switch array on 1602 board
+#define PinIn 1        // analog 0 is wired to switch array on 1602 board
 #define DigIn 3       // digital pin 3
 #define LiteOut 11  // LED output
 
     // include the library code for LCD
 #include <LiquidCrystal.h>
-  // #include <LCD_DFR_Keypad.h>  // for DFR 16 x 2 keypad reading, uncomment if used;
-  // may need to edit .cpp values
-  // switches feed a range of voltages to A0, so you could read and do something with them,
-  //or use the library to send you back an int to use in a switch/case function
+
+  // switches feed a range of voltages to A0, so you could use them somehow,
+  // or use the library to send you back an int to use in a switch/case function
 
 // initialize new 16x2 lcd with the Arduino pins
-LiquidCrystal lcd(8,9,4,5,6,7);  //lib is smart enough to know if you're using 4 pins or 8
-
-    // DFR_Key keypad;  // keypad object will get back ints 0-5 from the library; uncomment if used
-    // int localKey = 0;  // same as no switch being pressed
-    // String keyString = "";  //not sure what this does
+LiquidCrystal lcd(8,9,4,5,6,7);  // lib adapts to using 4 data pins or 8
                  
 void setup() 
 {
@@ -39,12 +34,7 @@ void setup()
   lcd.setCursor(0, 0);
    // lcd.print("Key Grab v0.2");
   delay(2500);
-  
-  /*
-  Sets the sample rate at once every x milliseconds, default 10
-  */
-//  keypad.setRate(20);
-}
+}  // end setup
 
 void loop() 
 {
@@ -59,20 +49,20 @@ void loop()
 //    lcd.print(localKey)  // the number of key pressed
 //  } // end if
 //  
- 
-  digitalWrite(LiteOut, !digitalRead(DigIn));  // if switch pulls down the input, it turns ON the LED
+  // if switch pulls down the input, it turns ON the LED
+  digitalWrite(LiteOut, !digitalRead(DigIn)); 
 
   static int prevAvg = analogRead(PinIn);  // just set once
   int voltage;
   // read the input on analog pin 
   int sensorV = analogRead(PinIn);
-  int newAvg = round((sensorV + 4*prevAvg)/5);  //updates expon moving average of AR
+  int newAvg = round((sensorV + 4*prevAvg)/5);  // updates expon moving average of AR
   // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 5000 mV):
   voltage = (int)(newAvg * 4.77);  // in mV, resolves about 5 mV; cast to int (mV)
   // empiric multiplier at midrange; varies some from pin to pin, board to board
   // print out the new MA if different
   if (newAvg != prevAvg)
-  {        //print to Ser Mon if it's on
+  {    //print to Ser Mon if it's on
     Serial.print("pin out= "); 
     Serial.print(newAvg); 
     Serial.print(" calc mV= "); 
@@ -90,4 +80,4 @@ void loop()
 
   } // end if changed value
   delay (100);   // ten loops / second 
-}
+}  // end loop
