@@ -15,14 +15,13 @@
    Vcc pin to  +5         // above all hardwired w/ shield
 
    Trig pin to digital pin 11
-   Echo pin to digital pin 13
-  function :  when the serial port sends "a" to the Board, prints
-  "holy sainsmart " on lcd --   no it won't unless you edit loop
+   Echo pin to digital pin 12
+
 */
 #include <Streaming.h>  // lets lcd print float
 #include <LiquidCrystal.h>
 #define TP 11     //Trigger pin
-#define EP 13     //Echo pin
+#define EP 12     //Echo pin
 
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 const char numb[] = "0123456789";
@@ -48,8 +47,8 @@ void setup()
   Serial.begin(9600);       // 9600 bps, for Ser. Mon. if on
   pinMode(TP, OUTPUT);      // TP output pin for trigger
   pinMode(EP, INPUT);       // EP input pin for echo
-  pinMode(3, OUTPUT);
-  digitalWrite(3, HIGH); // 5 v for US module et al
+  pinMode(2, OUTPUT);
+  digitalWrite(2, HIGH); // 5 v for US module et al
   pinMode(A0, INPUT_PULLUP);
 }
 
@@ -115,11 +114,11 @@ void loop()
   //  if (CM) lcd.print(" CM");
   //  else lcd.print(" IN");
   // float format prints with 1 decimal digit
-  if (CM) lcd << "dist: " << _FLOAT(distAvg, 1) << " CM";
-  else lcd << "dist: " << _FLOAT(distAvg, 1) << " IN";
+  if (CM) lcd << "dist: " << _FLOAT(distAvg, 1) << " cm";
+  else lcd << "dist: " << _FLOAT(distAvg, 1) << " in";
   Serial.println(distAvg);
-  // Serial.println(" Holy SainSmart");
-}  // end loop, NB was no delay before
+
+}  // end loop
 
 long TP_init()
 {
@@ -135,12 +134,11 @@ long TP_init()
   return microseconds;
 }
 
-float Distance(long time, int flag)  // returns unsigned int
+float Distance(long time, int flag)  // returns float
 {
   float distance;
   if (flag) // display in cm.
     distance = (time * 17) / 1000;
-  //distance = time /29 / 2;  // was this for some other sensor type
   // distance  = ((Duration of high level)*(Sonic :340m/s))/2
   // = ((Duration of high level)*(Sonic :0.034 cm/us))/2
   // = ((Duration of high level)/(Sonic :29.4 cm/us))/2

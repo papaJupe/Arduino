@@ -338,9 +338,9 @@ UltrasonicDisplay2LCD
  -- here I use adjacent anal pins to supply gnd and 5v.
  Uses: Liquid Crystal 8x2 display, map, analRead, expon moving average, round
  
-US-SR04A -- orig code from Elegoo using their lib, not tried yet
+US-SR04eleg -- orig code from Elegoo using their lib, not tried yet
 
-USsr04 -- various, adapted to display on LCD, with MA's, key action, float display, etc
+USsr04 -- various US module: display on LCD, with MA's, key action, float display, etc
 
 voltSampleDischarge -- monitor voltage only, without calib, using external resistance
   not tested yet

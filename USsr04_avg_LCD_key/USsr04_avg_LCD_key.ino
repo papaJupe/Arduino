@@ -5,10 +5,10 @@
   _avg vers. reads using exp moving average; _key version adds LCD
   module button actions; could be used for calibration etc
   Seems like when displaying inches, response very sluggish???
-  might want to make float, print using Streaming.h (v. Sampl Synta)
+  _Flt version prints float using Streaming.h (v. Sampl Synta)
 
    LCD RS pin to digital pin 8
-   LCD Enable pin to digital pin 9
+   LCD Enable pin to digital 9
    LCD D4 pin to digital pin 4
    LCD D5 pin to digital pin 5
    LCD D6 pin to digital pin 6
@@ -18,16 +18,14 @@
    Vcc pin to  +5         // above all hardwired w/ shield
 
    Trig pin to digital pin 11
-   Echo pin to digital pin 13
-  function :  when the serial port sends "a" to the Board, prints
-  "holy sainsmart " on lcd --   no it won't unless you edit loop
+   Echo pin to digital pin 12
 */
 #include <Streaming.h>
 #include <LiquidCrystal.h>
-#define TP 11     //Trigger pin
-#define EP 13     //Echo pin
+#define TP 11     // Trigger pin
+#define EP 12     // Echo pin
 
-LiquidCrystal lcd(8, 9, 4, 5, 6, 7);  // had 13 here, wrong, used for echo
+LiquidCrystal lcd(8, 9, 4, 5, 6, 7);  // had 13 here, wrong
 const char numb[] = "0123456789";
 char number_s[] = "000"; // these are used in LCD_conv_data fx, not sure how
 char  rword;  // not clear why, how to use
@@ -53,7 +51,7 @@ void setup()
   pinMode(EP, INPUT);       // EP input pin for echo
   pinMode(2, OUTPUT);
   pinMode(A0, INPUT_PULLUP);
-  digitalWrite(2, HIGH); // 5 v for US module
+  digitalWrite(2, HIGH); // 5 v for US module power
 }
 
 void loop()
@@ -105,29 +103,28 @@ void loop()
    }  // end switch
 
   }  // end if some key pressed
-  else CM =1;  // no key pressed, default to CM
-  delay(100);
+  else CM = 1;  // no key pressed, default to print CM
+  delay(50);
   long microseconds = TP_init(); // activates the pulser, gets uS back
   float dist = Distance(microseconds, CM);
   //  LCD_conv_data(distance_cm,number_s); unclear when/if needed
   // calc expon MA
   distAvg = (((distAvg * 4) + dist) / 5);
   lcd.clear();
-//  lcd.print("dist : ");
+//  lcd.print("dist: ");
 //  lcd.print(distAvg);
 //  if (CM) lcd.print(" CM");
 //  else lcd.print(" IN");
-   if (CM) lcd << _FLOAT(distAvg,1) << " CM";
-   else lcd << _FLOAT(distAvg,1) << " IN";
+   if (CM) lcd << "dist: " << _DEC(distAvg) << " cm";
+   else lcd << "dist: " << _FLOAT(distAvg,1) << " in";
   Serial.println(distAvg);
-  // Serial.println(" Holy SainSmart");
 }  // end loop, NB was no delay before
 
 long TP_init()
 {
   digitalWrite(TP, LOW);
   delayMicroseconds(2);
-  digitalWrite(TP, HIGH); // make Trig pin HIGH for more than 10us
+  digitalWrite(TP, HIGH); // make Trig pin HIGH for >= 10us
   delayMicroseconds(10);
   digitalWrite(TP, LOW);
   delayMicroseconds(2);
