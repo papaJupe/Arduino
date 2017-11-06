@@ -5,7 +5,7 @@
     for 'pulse' x cycle length. Eg if count_max = 5 and pulse = 3 and cycle len =
     25 msec, then flash 5 trains for 125 ms, then dark 75 ms (95 actually)
     v. D adds slowdown taper option
-    Wiring: BCD switch to D2,3,4; LED's to D9,10,11; lites get power from board 
+    Wiring: BCD switch to D2,3,4; prog # LED's to D9,10,11; lites get power from board 
     gnd/5v; string controlled from A1; pot power from gnd/3.3v, center to A2
  
     Uses: FastLED, analogRead, map, setBrightness, rotary BCD switch/case,
@@ -28,10 +28,10 @@ byte mode = 0;   // variable's 8 bits (max) can be read from switches or other i
 byte pinIns[] = {2, 3, 4};      // input pins for n bit binary switch
 // binary led display of mode is optional;
 byte pinOuts[] = {9, 10, 11}; //  these are [1's,2's,4's] bin output pins to LEDs
-//  could use for more modes; but my 3 bit switch only goes 0-7
+//  could use more for more modes; but my 3 bit switch only goes 0-7
 
-// params control loop freq, pulsing
-int liteOn;   // byte never > 255 ms
+// params control loop freq, pulsing, in mS
+int liteOn;   // byte never > 255
 int liteOff;  // so int better here
 int pulse = 0;  // how long to pause between trains
 boolean slowdown = 0; // whether flash rate slows with time

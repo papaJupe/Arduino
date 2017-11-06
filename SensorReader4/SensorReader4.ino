@@ -45,6 +45,6 @@ void loop()
   // wnen done, send some text
   Serial.println("that's all folks");
   delay(2000);
-  Serial.println("will start over shortly...");
+  Serial.println("will repeat soon ...");
   delay(2000);
 } // end loop

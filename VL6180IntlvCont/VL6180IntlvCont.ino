@@ -1,7 +1,8 @@
 /*
- VL6180 laser rangefinder 1-20+ cm, also AmbientLightSense
+  VL6180 laser rangefinder 1-20+ cm, also AmbientLightSense
+  -- more on pololu.com/product/2489
   
- * This example demonstrates how to use interleaved mode to
+  This example demonstrates how to use interleaved mode to
   take continuous range and ambient light measurements. The
   datasheet recommends using interleaved mode instead of
   running "range and ALS continuous modes simultaneously (i.e.
@@ -25,22 +26,25 @@
   resolution of 0.32 lux/count, the light level is therefore
   (0.32 * 613 * 100) / (1 * 50) or 392 lux.
 
-  The range readings are in units of mm. 
-
-  mod 1709 AM for display to 16x2 LCD, MA smoothing
+  The range readings are in units of mm.
+  Wiring: 3-5v - VIN, gnd, SDA - A4/AREF+1, SCL - A5/AREF+2
+  mod 1709 AM - display to 16x2 LCD, MA smoothing, interval print
 */
 
-#include <Wire.h>
+#include <Wire.h>   // ardu lib for I2C devices
 #include <VL6180X.h>
 #include <LiquidCrystal.h>
+#include <elapsedMillis.h>  // print @ some interval
 
 VL6180X sensor;
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
+elapsedMillis timeElapsed;
+uint16_t interval = 3000;  // print interval
 
 void setup()
 {
   lcd.begin(16, 2);    // 16 col, 2 row LCD
-  Serial.begin(9600);
+  Serial.begin(9600);  // for Ser.Mon. display only
   Wire.begin();
 
   sensor.init();
@@ -67,25 +71,33 @@ void setup()
 
 void loop()
 {
-  static int alsAvg = 0;  // for expon MA calc of these values
+  static int alsAvg = 0;  // for expon MA calc of als, rng
   static int rngAvg = 100;
 
   int als = sensor.readAmbientContinuous();
-  Serial.print("Ambient: ");
-  Serial.print(als);
-  if (sensor.timeoutOccurred()) {
-    Serial.print(" als TIMEOUT");
-  }
+
   // raw output seems 12 mm too high
   int rng = sensor.readRangeContinuousMillimeters() - 10;
-  Serial.print("\tRange: ");
-  Serial.println(rng);
-  if (sensor.timeoutOccurred()) {
-    Serial.print(" rng TIMEOUT");
-  }
-   // expon MA smoothes output numbers
+
+  if (sensor.timeoutOccurred())
+    Serial.println(" als TIMEOUT");
+  if (sensor.timeoutOccurred())
+    Serial.println(" rng TIMEOUT");
+
+  // expon MA smoothes output numbers
   alsAvg = (((alsAvg * 4) + als) / 5);
   rngAvg = (((rngAvg * 4) + rng) / 5);
+
+  if (timeElapsed > interval)
+  {
+    Serial.print("Ambient: ");
+    Serial.print(alsAvg);
+    Serial.print("\tRange: ");
+    Serial.println(rngAvg);
+    Serial.println();
+    timeElapsed = 0;
+  }
+
   lcd.clear();
   lcd.print("ambient: ");
   lcd.print(alsAvg);

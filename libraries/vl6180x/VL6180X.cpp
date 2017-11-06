@@ -5,7 +5,7 @@
 
 // The Arduino two-wire interface uses a 7-bit number for the address,
 // and sets the last bit correctly based on reads and writes
-#define ADDRESS_DEFAULT 0b0101001
+#define ADDRESS_DEFAULT 0b0101001   // 41
 
 // RANGE_SCALER values for 1x, 2x, 3x scaling - see STSW-IMG003 core/src/vl6180x_api.c (ScalerLookUP[])
 static uint16_t const ScalerValues[] = {0, 253, 127, 84};

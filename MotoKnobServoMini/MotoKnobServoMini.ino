@@ -22,18 +22,18 @@ int valR;     // mapped int to write a variable width pulse to output pin
 void setup()
 {
   pinMode(potpinR, INPUT);   // A4 input for R
-  pinMode(17, OUTPUT); // A3 is ground for pot
-  digitalWrite(17, LOW);
-  pinMode(19, OUTPUT); // A5 gives 5v for pot
-  digitalWrite(19, HIGH);
+  pinMode(15, OUTPUT); // A3 is ground for pot
+  digitalWrite(15, LOW);
+  pinMode(16, OUTPUT); // A5 gives 5v for pot
+  digitalWrite(16, HIGH);
 
 //  pinMode(potpinL, INPUT);   // A6 input for L
 //  pinMode(A4, OUTPUT); // A4 works as ground for pot
 //  digitalWrite(A4, LOW);
 //  pinMode(A5, OUTPUT); // A5 gives 5v for pot
 //  digitalWrite(A5, HIGH);
-  // Serial.begin(9600);   // for printout of values, my nano/mini ch340 can't handle Serial & servo
-  mymotoR.attach(3);     // attach some dig (needs PWM? - no) pin to servo, or e.g. (pin,default min 544,max 2400)
+   Serial.begin(9600);   // for printout of values, my nano/mini ch340 can't handle Serial & servo
+  mymotoR.attach(2);     // attach some dig (needs PWM? - no) pin to servo, or e.g. (pin,default min 544,max 2400)
  // mymotoL.attach(3);
 
 }
@@ -44,7 +44,7 @@ void loop()
   static float prevAvgR = valaR;  // just set once, first loop
 
   int newAvgR = round((valaR + 4 * prevAvgR) * 0.2); // ? faster to * than / by X
-  valR = map(newAvgR, 5, 1010, 180, 0); // scale it to degrees for servo (full range = 0 to 180 or partial range)
+  valR = map(newAvgR, 50, 980, 180, 0); // scale it to degrees for servo (full range = 0 to 180 or partial range)
   // servo position center = 90, pulse = 1500 uS, motor still
   // 70-110 gives range of 1280 - 1680 uS
 

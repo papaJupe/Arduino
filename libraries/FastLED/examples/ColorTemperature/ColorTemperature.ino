@@ -1,14 +1,15 @@
 #include <FastLED.h>
 
-#define LED_PIN 6
+#define LED_PIN     3
 
 // Information about the LED strip itself
-#define NUM_LEDS    160
-#define CHIPSET     WS2812B
+#define NUM_LEDS    60
+#define CHIPSET     WS2811
 #define COLOR_ORDER GRB
 CRGB leds[NUM_LEDS];
 
-#define BRIGHTNESS  40
+#define BRIGHTNESS  128
+
 
 // FastLED v2.1 provides two color-management controls:
 //   (1) color correction settings for each LED strip, and
@@ -48,15 +49,6 @@ CRGB leds[NUM_LEDS];
 // How many seconds to show black between switches
 #define BLACKTIME   3
 
-void setup() 
-{
-  delay(2000); // power-up safety delay
-  // It's important to set the color correction for your LED strip here,
-  // so that colors can be more accurately rendered through the 'temperature' profiles
-  FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection( TypicalSMD5050 );
-  FastLED.setBrightness( BRIGHTNESS );
-}
-
 void loop()
 {
   // draw a generic, no-name rainbow
@@ -73,7 +65,7 @@ void loop()
     leds[0] = TEMPERATURE_2; // show indicator pixel
   }
 
-  // Black out the LEDs for a few seconds between color changes
+  // Black out the LEDs for a few secnds between color changes
   // to let the eyes and brains adjust
   if( (secs % DISPLAYTIME) < BLACKTIME) {
     memset8( leds, 0, NUM_LEDS * sizeof(CRGB));
@@ -81,5 +73,13 @@ void loop()
   
   FastLED.show();
   FastLED.delay(8);
+}
+
+void setup() {
+  delay( 3000 ); // power-up safety delay
+  // It's important to set the color correction for your LED strip here,
+  // so that colors can be more accurately rendered through the 'temperature' profiles
+  FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection( TypicalSMD5050 );
+  FastLED.setBrightness( BRIGHTNESS );
 }
 

@@ -134,8 +134,14 @@ enum {zilch, alpo, burka, carly, darpa};
       tempHolder = 0; // reset holder for next sequence to come in
      } //end else
    } //end while - repeats actions until Serial buffer empty,i.e. = 0
-   
+
+ convert serial input or char[] to String
+ ------------------------------------------
+ v. Read Serial Int C can use int i=atoi(char[]) or
+ cast to String s = String(ch[]) then s.toInt()
+ 
  Simpler way to read int from serial input:
+ ---------------------------------------
    if (Serial.available())
    { 
      delay(50);  // flaky reading of chars unless some delay, maybe <50 would work?
@@ -529,3 +535,14 @@ more:https://plus.google.com/112916219338292742137/posts/ZCucuzvCJFd
 -----------------------
 how to use in lib and my sketch AnalInputMap2ToneC
 TimedAction beepONoff = TimedAction(1000,beep); interval resetable
+
+
+#include <elapsedMillis.h>  // to do things like .print at interval
+-----------------------  used in vl6180 et al
+elapsedMillis timeElapsed; // declare global so not reset every loop
+could you declare static in loop?
+unsigned int interval = 1000;  // ms
+in loop()
+if (timeElapsed > interval) 
+  do stuff @ interval ... reset var
+  timeElapsed = 0;

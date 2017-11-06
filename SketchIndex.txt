@@ -73,7 +73,47 @@ DigitalReadSerialOut
 
 DigitRead2StringOut
  read a bunch of binary buttons, convert to string of 0/1's, output to Serial
- 
+
+ESPwf -- WiFiEsp example: UdpNTPClient -- various tests of wifiESP w/ shields
+  mod by AM to use 2 serial channels of MEGA and display to LCD. all
+  wifiESP code is for Ardu with ESP shield attached
+  setup: ESP shield gets pwr from Ardu, its TX,RX wired to Mega Ser2 pins
+  w/ shield RX input level shifted w/ voltage divider
+  Gets the time from a Network Time Protocol (NTP) server.
+  Demonstrates use of UDP to send and receive data packets
+  
+ESPrimUDP GPS time (stub) aka
+   Tardis Time Server by: M. Ray Burnette 20150910 -- code for programming primary
+    ESP board in Ardu IDE; orig got time from GPS, sends over wifi, this seems like test
+    stub, no GPS input, etc; may work to test various I/O. More code in TardisTimeServ.ino
+    
+   Create a private 10. network and capture all DNS requests to the Tardis Time server
+   Respond to both UDP and HTML requests
+   
+ESP primary UDP, send/recv UDP data
+  from https://thearduinoandme.wordpress.com/tutorials/esp8266-send-receive-binary-data/
+  load to primary ESP board -- uses Serial() to comm with PC hosting the ESP board, view
+   tx/rx messages that it sends and gets from Processing app over wifi, on same or other
+   PC; works as modif with Feather-Huzz, turns LED on/off in response to incoming message
+
+ESP82 shield Uno Mega serial and UDP various comm tests to receive / send
+  data & control to/from Proc on PC over serial and wifi-UDP. Proc sketches called
+  Serial data read graph and UDP Mega ... things, v.i. Ardu sketches sending US
+  data called USsr04 avg LCD Ser / UDP ... or mega w/ ESP shield
+  
+ESP82 shield mega UDP tx rx --  Mega w/ ESP shield, send / recv bytes
+   over wifi UDP to prog like Proc on PC, also view Ardu's I/O w/ ser. mon.
+   mod from UDPsendreceive in wifiESP examples
+
+  [US data on Ardu--> wifi shield sends UDP--> wifi AP (can be on PC)-->]
+  Proc running UDP lib --> sends control bytes to Ardu for servo; first got
+  a byte for up/down and increment tilt var; this adds getting an int
+  from a slider from UDP on Proc, or joystick button up/down control
+
+  Uses: udp read /.write bytes, Ser2 to shield, servo.write, convert
+  incoming data to int angle for servo, elapsedMillis for timed print
+  
+  
 FastBlink --  FastLED blink example mod for 2 lites
 
 FastLEDemo_shortY
@@ -342,6 +382,12 @@ US-SR04eleg -- orig code from Elegoo using their lib, not tried yet
 
 USsr04 -- various US module: display on LCD, with MA's, key action, float display, etc
 
+USsr04 avg Ser TX -- Ultrasonic distance --> LCD & send bytes over Serial
+  display averaged distance to onboard LCD shield, send data via Serial to
+  remote program like Proc SerialDataReadGraph
+Uses: gets dist_avg using exp moving average, pulseIn,LCD display,.write
+  bytes
+  
 voltSampleDischarge -- monitor voltage only, without calib, using external resistance
   not tested yet
 

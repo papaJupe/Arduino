@@ -70,55 +70,69 @@ boolean Adafruit_ESP8266::find(Fstr *str, boolean ipd) {
   if(ipd) { // IPD stream stalls really long occasionally, what gives?
     save = receiveTimeout;
     setTimeouts(ipdTimeout);
-  }
+           }
 
   if(str == NULL) str = F("OK\r\n");
-  stringLength = strlen_P((Pchr *)str);
+   stringLength = strlen_P((Pchr *)str);
 
   if(debug && writing) {
     debug->print(F("<--- '"));
     writing = false;
-  }
+         }
 
-  for(t = millis();;) {
-    if(ipd && !bytesToGo) {  // Expecting next IPD marker?
-      if(find(F("+IPD,"))) { // Find marker in stream
-        for(;;) {
-          if((c = stream->read()) > 0) { // Read subsequent chars...
-            if(debug) debug->write(c);
-            if(c == ':') break;          // ...until delimiter.
-            bytesToGo = (bytesToGo * 10) + (c - '0'); // Keep count
-            t = millis();    // Timeout resets w/each byte received
-          } else if(c < 0) { // No data on stream, check for timeout
-            if((millis() - t) > receiveTimeout) goto bail;
-          } else goto bail; // EOD on stream
-        }
-      } else break; // OK (EOD) or ERROR
-    }
+  for(t = millis();;) 
+  {
+    if(ipd && !bytesToGo) 
+      {  // Expecting next IPD marker?
+      if(find(F("+IPD,"))) 
+       { // Find marker in stream
+        for(;;) 
+          {
+          if((c = stream->read()) > 0) 
+                { // Read subsequent chars...
+                if(debug) debug->write(c);
+                if(c == ':') break;          // ...until delimiter.
+                bytesToGo = (bytesToGo * 10) + (c - '0'); // Keep count
+                t = millis();    // Timeout resets w/each byte received
+                } 
+             else if(c < 0) 
+                 { // No data on stream, check for timeout
+                 if((millis() - t) > receiveTimeout) goto bail;
+                 } else goto bail; // EOD on stream
+          }  // end for ;;
+      }   // end if find F
+      else break; // OK (EOD) or ERROR
+    }  // end if ipd
 
-    if((c = stream->read()) > 0) { // Character received?
+    if((c = stream->read()) > 0) 
+       { // Character received?
       if(debug) debug->write(c);   // Copy to debug stream
-      bytesToGo--;
-      if(c == pgm_read_byte((Pchr *)str +
-              matchedLength)) {               // Match next byte?
-        if(++matchedLength == stringLength) { // Matched whole string?
-          found = true;                       // Winner!
-          break;
-        }
-      } else {          // Character mismatch; reset match pointer+counter
+              bytesToGo--;
+      if(c == pgm_read_byte((Pchr *)str + matchedLength)) 
+        {               // Match next byte?
+        if(++matchedLength == stringLength) 
+            { // Matched whole string?
+              found = true;                       // Winner!
+              break;
+            }
+         }  // end if  c==
+          // Character mismatch; reset match pointer+counter
+      else         
         matchedLength = 0;
-      }
+      
       t = millis();     // Timeout resets w/each byte received
-    } else if(c < 0) {  // No data on stream, check for timeout
-      if((millis() - t) > receiveTimeout) break; // You lose, good day sir
-    } else break;       // End-of-data on stream
-  }
+    }   // end if c=stream
+    else if(c < 0) 
+        {  // No data on stream, check for timeout
+          if((millis() - t) > receiveTimeout) break; // You lose, good day sir
+        } else break;       // End-of-data on stream
+  }  // end for t=milli
 
   bail: // Sorry, dreaded goto.  Because nested loops.
   if(debug) debug->println('\'');
   if(ipd) setTimeouts(save);
   return found;
-}
+}   // end Ada find()
 
 // Read from ESP8266 stream into RAM, up to a given size.  Max number of
 // chars read is 1 less than this, so NUL can be appended on string.
@@ -135,7 +149,7 @@ int Adafruit_ESP8266::readLine(char *buf, int bufSiz) {
   }
   while(stream->read() != '\n'); // Discard thru newline
   return bytesRead;
-}
+}   // end readLine()
 
 // ESP8266 is reset by momentarily connecting RST to GND.  Level shifting is
 // not necessary provided you don't accidentally set the pin to HIGH output.

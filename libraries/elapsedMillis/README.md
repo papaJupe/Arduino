@@ -2,7 +2,7 @@ elapsedMillis [![Build Status]
 (https://travis-ci.org/pfeerick/elapsedMillis.svg?branch=master)](https://travis-ci.org/pfeerick/elapsedMillis)
 =====================
 
-These special variable types (*objects*) automatically increase as time elapses. This makes it easy to check if a certain time has elapsed, while allowing your program to perform other work or checks for user input. It is also very to handle multiple tasks requiring different delays.
+These special variable types (*objects*) automatically increase as time elapses. This makes it easy to check if a certain time has elapsed, while allowing your program to perform other work or checks for user input. It is also very [something] to handle multiple tasks requiring different delays.
 
 Documentation on how to use this library is located in the [wiki](https://github.com/pfeerick/elapsedMillis/wiki) and also on the [Arduino Playground](http://playground.arduino.cc//Code/ElapsedMillis).
 

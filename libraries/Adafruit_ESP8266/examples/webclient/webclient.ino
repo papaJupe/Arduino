@@ -1,5 +1,8 @@
 /*------------------------------------------------------------------------
-  Simple ESP8266 test.  Requires SoftwareSerial and an ESP8266 that's been
+  Simple ESP8266 module test. this Code is for Ardu attached to ESP huzzah 
+  module, (like shield), NOT to send to primary ESP board like Feather Huzzah
+
+  Requires SoftwareSerial and an ESP8266 module that's been
   flashed with recent 'AT' firmware operating at 9600 baud.  Only tested
   w/Adafruit-programmed modules: https://www.adafruit.com/product/2282
 
@@ -10,7 +13,7 @@
 #include <Adafruit_ESP8266.h>
 #include <SoftwareSerial.h>
 
-#define ESP_RX   2
+#define ESP_RX   2  // pin #s on host Ardu board, not the ESP
 #define ESP_TX   3
 #define ESP_RST  4
 SoftwareSerial softser(ESP_RX, ESP_TX);
