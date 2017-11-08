@@ -36,10 +36,10 @@ int mapB = 975;
 //int mapE = 700;     // using curr calib sketch; C&D are AR pin values
 //int mapF = 900;     // E&F are corresponding measured currents
 
-int mapC = 342;      // empiric C map params, pinIn2 to disch current mA
-int mapD = 858;     // these are values from calib using 2 ohm Rc and total Rl 14
-int mapE = 400;     // using curr calib sketch; C&D are AR pin values
-int mapF = 800;     // E&F are corresponding measured currents
+//int mapC = 342;      // empiric C map params, pinIn2 to disch current mA
+//int mapD = 858;     // these are values from calib using 2 ohm Rc and total Rl 14
+//int mapE = 400;     // using curr calib sketch; C&D are AR pin values
+//int mapF = 800;     // E&F are corresponding measured currents
 
 //int mapC = 210;      // empiric Curr map params, pinIn2 to dc current mA
 //int mapD = 656;      // these are values from calib using 2.0 ohm Rc and Rl 16
@@ -56,10 +56,10 @@ int mapF = 800;     // E&F are corresponding measured currents
 //int mapE = 200;       // using curr calib sketch; C&D are AR pin values
 //int mapF = 400;       // E&F are corresponding measured currents
 
-//int mapC = 160;      // empiric C map params, pinIn2 to dc current mA
-//int mapD = 330;      // these are values from calib using 2.7 ohm Rc and Rl 35
-//int mapE = 200;      // using curr calib sketch; C&D are AR pin values
-//int mapF = 300;    	 // E&F are corresponding measured currents
+int mapC = 125;      // empiric C map params, pinIn2 to dc current mA
+int mapD = 466;      // these are values from calib using 2.7 ohm Rc and Rl 35
+int mapE = 150;      // using curr calib sketch; C&D are AR pin values
+int mapF = 300;    	 // E&F are corresponding measured currents
 
 //int mapC = 121;      // empiric C map params, pinIn2 to dc current mA
 //int mapD = 625;     // these are values from calib using 5 ohm Rc and 36 Rl(adj+2+5 in series)
