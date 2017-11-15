@@ -4,3 +4,5 @@ libraries/DS3231/LICENSE
 libraries/elapsedMillis/LICENSE
 
 *.yml
+
+.sync.ffs_db
