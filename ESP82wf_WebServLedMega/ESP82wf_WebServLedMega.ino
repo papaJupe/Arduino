@@ -7,7 +7,7 @@
  to the Serial monitor. From there, you can open that address in a web browser
  to turn on and off the LED on pin 13.
 
- For more details see: http://yaab-arduino.blogspot.com/p/wifiesp.html
+ For (no)more details see: http://yaab-arduino.blogspot.com/p/wifiesp.html
 */
 
 #include "WiFiEsp.h"

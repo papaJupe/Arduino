@@ -1,11 +1,12 @@
-/****************************************************************************************
+/************************************************************
 **  This is'custom' LINX firmware for use with the Arduino Uno
 **  with the serial interface enabled. Upload from Ardu IDE instead
 **  of LV Wizard/prebuilt, adding LCD plus I2C distance device
 **
 ** mod by AM to use onboard 16x2 LCD display as well as LINX display
-   works OK for analog-read, this code uses I2C device, display to LCD
-****************************************************************************************/
+   works OK for analog-read, this code uses I2C device, display to LCD,
+   but I'm not able to send data to LINX, looks erratic and garbled
+***************************************************************/
 
 //Include Peripheral Libraries for LINX, as needed for ___ device
 #include <SPI.h>
@@ -18,15 +19,15 @@
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 
 // #include <dummy.h>  // from libr/LINX, so Ardu IDE shows firmware libs
-// for various boards
+// for various boards; any reason to ever have here?
 
 //Include Device Specific Header w/ Sketch>>Import Library (e.g. uno.h)
 //Include some LINX Listener w/ Sketch>>Import Library (e.g. LinxSerialListener.h)
 #include <LinxArduinoUno.h>
 #include <LinxSerialListener.h>
 
-//Create A Pointer To The LINX Device Object We Instantiate In Setup()
-LinxArduinoUno* LinxDevice;
+//Create A Pointer To The LINX Device Object; later Instantiate In Setup()
+LinxArduinoUno* LinxDevice;   // supposedly safer to instantiate later
 VL6180X sensor;  // sensor instance
 
 //Initialize LINX Device And Listener
@@ -75,5 +76,6 @@ void loop()
   delay(10);
   
 }  // end loop
+
 
 

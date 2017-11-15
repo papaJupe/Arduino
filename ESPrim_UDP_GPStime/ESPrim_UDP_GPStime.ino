@@ -1,7 +1,7 @@
 /* ESPrimUDP GPS time (stub) aka
    Tardis Time Server by: M. Ray Burnette 20150910 -- code for programming primary
     ESP board in Ardu IDE; orig got time from GPS, sends over wifi, this seems like test
-    stub, no GPS input, etc; may work to test various I/O. More code in TardisTimeServ.ino
+    stub, no GPS input, etc; may work to test various I/O. More code in TardisTimeRecv.ino
     
    Create a private 10. network and capture all DNS requests to the Tardis Time server
    Respond to both UDP and HTML requests:
@@ -25,7 +25,8 @@ char         packetBuffer[UDP_TX_PACKET_MAX_SIZE];  // buffer to hold incoming p
 char         ReplyBuffer[] = "acknowledged";    // a 12 character string to send back
 
 String       responseHTML = ""
-                      "<!DOCTYPE html><html><head><title>CaptivePortal</title></head><body>"
+                      "<!DOCTYPE html>
+                      <html><head><title>CaptivePortal</title></head><body>"
                       "<h1>Tardis Time</h1><p>Coordinated Universal Time (UTC) "
                       "HH:MM:SS  YYYYMMDD </p></body></html>";
 
@@ -51,7 +52,7 @@ void setup()
 
   webServer.begin();
   
-  while (! connectUDP() ) {                                     // protocol connected ?
+  while (! connectUDP() ) {                              // protocol connected ?
     Serial.print(".");
     delay( 100 );
   }

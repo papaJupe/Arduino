@@ -31,7 +31,7 @@ void loop()
   //   }
   // static time = millis();  // sets once
   // read the analog pins  (simulate change with time)
-  for (int i = 0; i < 202; i += 13) // repeats every 10 sec
+  for (int i = 0; i < 202; i += 14) // repeats every 7 sec
   { 
 	  leftValue = i;
 	  rightValue = 12800 - i;
@@ -40,9 +40,9 @@ void loop()
 	  Serial.println(String(leftValue) + "," + String(rightValue) + "," + String(thirdValue));
 	   // Ser.write sends # as byte (0-255) so wraps around if higher than that
 	   //Serial.write(pinValue);
-	  delay (5000);
+	  delay (3000);
   } // end for
-  // wnen done, send some text
+  // when done, send some text
   Serial.println("that's all folks");
   delay(2000);
   Serial.println("will repeat soon ...");

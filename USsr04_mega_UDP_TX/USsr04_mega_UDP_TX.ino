@@ -4,14 +4,14 @@
   US data on Ardu--> wifi shield sends UDP--> wifi AP (can be on PC)--> 
   Proc running UDP lib --> SerialDataReadGraph
 
-  Uses: gets dist_avg using exp MA, pulseIn, udp .write bytes, Ser2 to shield
+  Uses: gets dist_avg using exp MA of pulseIn, udp .write bytes, Ser2 to shield
   for comm w/ remote PC, mega's TX=15 (voltage divider-->3.3v), RX=16, to RX/TX
   on shield, AP on iMac, v.s. Proc2 app
 
   Setup for MEGA: serial2 pins connect to ESP shield I/O
    Vcc pin to  +5 from pin 11    // via shield pass thru
    Trig pin to digital pin 12
-   Echo pin to digital pin 13 -- non- interrupt pin works OK
+   Echo pin to digital pin 13 -- non-interrupt pin works OK
    gnd to pin 13+1
    Serial Mon. sees data I/O prn
 */
@@ -34,7 +34,6 @@ unsigned int localPort = 8888;  // local port to listen on, any unused
 
 char packetBuffer[255];          // buffer to hold incoming packet
 byte replyBuffer[] = "ACK";      // acknowl string to send back
-// int replyBuffer = 30;
 
 #define CM 1      //Centimeter, if 1 loop displays Cm, if 0 displays Inch
 #define TP 12     //Trigger pin
@@ -128,7 +127,7 @@ void loop()
     Udp.endPacket();
     Serial.println(distAvg);  // ser. mon. can show what's sent
 
-  }  // end if pktsiz,  respond to incoming data
+  }  // end if pktsiz,  response to incoming data
 
   // getting US data, runs each loop anyway ~ 10 hz
   uint32_t microseconds = TP_init(); // activates the pulser, gets uS back
@@ -153,7 +152,7 @@ void loop()
   delay(80);
 }  // end loop
 
-uint32_t TP_init()
+uint32_t TP_init()  // trigger sensor, get pulse width back
 {
   digitalWrite(TP, LOW);
   delayMicroseconds(2);
@@ -171,7 +170,7 @@ uint16_t Distance(uint32_t time, int flag)  // returns distance as unsigned int
 {
   uint16_t distance;  // SR04 only works to ~3m, so max time < 18K uS
   if (flag) // display in cm./1000 or mm /100
-    distance = (time * 17) / 100; // want mm to demo sending large #
+    distance = (time * 17) / 100; // use mm to demo sending large #
   // distance  = ((Duration of high level)*(Sonic:340m/s))/2
   // = ((Duration of high level)*(Sonic :0.034 cm/uS))/2
   else  // 1122 ft/sec   13464 in/sec   0.0135 in/uS / 2 for bounce

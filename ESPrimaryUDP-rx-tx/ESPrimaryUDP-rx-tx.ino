@@ -5,10 +5,10 @@
    PC; works as modif with Feather-Huzz, turns LED on/off in response to incoming message
 */
 
-// libs from~/Library/Arduino15/packages/esp8266/hardware/
+// libs from ~/Library/Arduino15/packages/esp8266/hardware/
 // esp8266/2.3.0/libraries/ESP8266WiFi/src/ESP8266WiFi.h <-- examp here too
 #include <ESP8266WiFi.h>  // all such libs are for coding primary
-#include <WiFiUDP.h>   //  ESP boards w/ Ardu IDE
+#include <WiFiUDP.h>   //         ESP boards w/ Ardu IDE
 
 // wifi connection variables
 const char* ssid = "hny_Trp";  // wifi AP on iMac
@@ -19,7 +19,7 @@ boolean wifiConnected = false;
 unsigned int localPort = 8888;
 WiFiUDP UDP;
 boolean udpConnected = false;
-char packetBuffer[UDP_TX_PACKET_MAX_SIZE]; //buffer to hold incoming packet,
+char packetBuffer[UDP_TX_PACKET_MAX_SIZE]; //buffer to hold incoming packet
 char ReplyBuffer[] = "ack"; // a string to send back
 
 void setup()
@@ -81,9 +81,9 @@ void loop() {
       }
       delay(100);
 
-    }
+    }  // end if UDP connected
 
-  }
+  }  // end if wifi Conn
 
 }  // end loop
 

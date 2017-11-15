@@ -11,15 +11,18 @@ Supports ESP SDK version 1.1.1 and above (AT version 0.25 and above).
 ## Features
 
 - APIs compatible with standard Arduino WiFi library.
-- Use AT commands of standard ESP firmware (no need to flash a custom firmware).
+- Uses AT commands of standard ESP firmware (no need to flash custom firmware).
 - Support hardware and software serial ports.
 - Configurable tracing level.
 
-## Wiring
+## Shield hardware
 
 The WiFiEsp library has been designed to work with the [ESP WiFi shield]
 (http://www.instructables.com/id/Cheap-Arduino-WiFi-Shield-With-ESP8266/).
-It is a cheap version of the Arduino WiFi shield that uses an ESP-82xx module to provide networking capabilities to Arduino boards. Mine use ESP8266MOD which is probably E-13.
+It is a cheap version of the Arduino WiFi shield that uses an ESP-82xx module to provide wifi function to Arduino boards. Mine use ESP8266MOD which is probably E-13.
+
+## Wiring
+  Place shield to get 5v. power from Ardu (shield VR drops to 3.3), connect RX/TX of shield to some secondary Serial pins, Soft Ser on Uno, S1,2,3 on Mega, using volt div. to send 3.3 to shield's RX. Keep regular Serial for I/O to PC. On my shields 2 pins need to be bent/cut, so not to touch D0,1
 
 ## Examples
 

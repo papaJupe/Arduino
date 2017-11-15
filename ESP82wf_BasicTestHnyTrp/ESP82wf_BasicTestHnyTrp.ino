@@ -6,8 +6,8 @@
  
  Performs basic connectivity test and checks.  must enter firmware 
  vers. you expect, IP for this device, wifi net's AP's SSID, password, baud
- rates for your setup. all works as it should but I don't understand how 
- this static IP connects to my totally differently numbered wifi AP
+ rates for your setup. all works as it should; not clear if I need to set
+ static IP or if it would get DHCP from my iMac AP
  
 */
 
@@ -20,8 +20,8 @@
 //#endif
 
 
-char ssid[] = "hny_Trp";     // your network SSID (name), 2.4 ghz only
-char pwd[] = "hunniBunch69";  // your network password, should PASS
+char ssid[] = "tabuRaza";     // your network SSID (name), 2.4 ghz only
+char pwd[] = "crap0-la4711";  // your network password, should PASS
 char pwdErr[] = "xxxx";   // wrong password, is supposed to FAIL
 
 
@@ -37,13 +37,13 @@ void setup()
 
 void loop()
 {
-  assertEquals("Firmware version", WiFi.firmwareVersion(), "2.0.0");
+  assertEquals("Firmware version", WiFi.firmwareVersion(), "2.1.0");
   assertEquals("Status is (WL_DISCONNECTED)", WiFi.status(), WL_DISCONNECTED);
   assertEquals("Connect", WiFi.begin(ssid, pwd), WL_CONNECTED);
   assertEquals("Check status (WL_CONNECTED)", WiFi.status(), WL_CONNECTED);
   assertEquals("Check SSID", WiFi.SSID(), ssid);
 
-  IPAddress ip = WiFi.localIP();  // not set by DHCP, where from, 1st loop?
+  IPAddress ip = WiFi.localIP();// set by DHCP on AP, 1st loop
   assertNotEquals("Check IP Address", ip[0], 0);
   Serial.print("IP Addr .locIP 1stchk: ");
   Serial.println(ip);
@@ -72,15 +72,16 @@ void loop()
   assertEquals("Wrong pwd", WiFi.begin(ssid, pwdErr), WL_CONNECT_FAILED);
 
   IPAddress localIp(192, 168, 2, 80);  // static IP to assign this device
-  // but is it device # on wifi LAN or its AP IP to clients
-  // LAN it connects to has totally different #s; may be allowed to
-  // change only last # ? others work here, not other sketches?
-  WiFi.config(localIp);       // consistent w/ AP's IP / subnet ?
+  // -- its device # on wifi LAN or its AP if that mode?
+  // imac as AP is 192.168.2.1, serves DHCP; I may be able to
+  // set only last #; ? if others work here, not other sketches?
+  // once set statically, seems to hold on to it
+  WiFi.config(localIp);    // consistent w/ iMac AP's IP / subnet, yes
   
   assertEquals("Connect", WiFi.begin(ssid, pwd), WL_CONNECTED);
   assertEquals("Check status (WL_CONNECTED)", WiFi.status(), WL_CONNECTED);
 
-  ip = WiFi.localIP(); // is this .localIP as set above 192.168.x.x ?
+  ip = WiFi.localIP(); // is this .localIP as set above 192.168.x.x ? Y
   assertNotEquals("Check IP Address", ip[0], 0);  // should pass
 
   Serial.println("END OF TESTS");
