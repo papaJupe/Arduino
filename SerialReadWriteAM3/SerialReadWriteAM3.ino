@@ -4,6 +4,7 @@ serialReadWriteAM3 -- AM revision of PY's for Ardu <-> SmartDesktop comm;
     to put full input string into char[], then for loop to read it, turn lites on/off
     my v. 2 added code for strcat of float var;  
     v. 3 tests various ways to re-init/clear the 'out' array each loop
+    
     Uses: char/string array, boolean input/output, Serial.readBytes
     dtostrf (vFlt,4,3,vStr) convert float to string,
     sprintf(tempstr,"%s;",vStr);   // put numbers / string into ch array buffer
@@ -21,9 +22,9 @@ char out[16],in[16],tempstr[16];  // containers for in/out strings, no values as
 void setup() 
 {
   Serial.begin(9600);
-  Serial.setTimeout(500);   // 500 mS timeout for Serial functions, how does it work?
+  Serial.setTimeout(500);   // 500 mS timeout for Serial readBytes to complete read
         // configure digital pins 2-13 (0,1 are unusable); analog pins (14-19) default to INPUT
-        // so could go up to i<20 in next for loop; but still would need INPUT_PULLUP for dig pins;
+        // so could go up to i<20 in next for loop; but still need INPUT_PULLUP for dig pins;
   for (byte i=2;i<14;i++)   //  = range of digital I/O pins for Uno
     {               // so if 2 input switches, they will connect to 2,3 (and ground)
       if (i<=numBoolInput+1)   // if you have 2 switches, numBoolInput=2, so you want to 
@@ -35,7 +36,7 @@ void setup()
         
     // digitalWrite(16, HIGH);  // if using A2 as digital input or could use INPUT_PULLUP
     
-}   //end setup
+}   // end setup
 
 void loop()
 {   while (!Serial.available());  //  stops here, then typing any char should run loop once
@@ -45,10 +46,11 @@ void loop()
     // char out[14];  // just re-declar leaves what's there in memory 
     // char out[16] = {'0'};   // re-declar puts ch 0 in [0], null others, sizeof() = 16 bytes 
     char out[16] = {0};   // re-declar puts #0 (null) in all slots, sizeof() = 16 bytes
-                          // whether the slots are filled or null, strlen = how many char in it
+                          // whether the slots are filled or null, strlen = how many char slots
     // int out[5] = {2};   // new declar puts 2 in [0], null 0 in others; each int slot = 2 byte
                           // so sizeof() is 10, whether the slots are filled, 0, or null
-                          
+   // ----------------------------------------------                   
+    // first section reads dig/anal pins and makes a string for output somewhere
    strcat(out,"B");   // appends B to out (should be empty, all 0s (null)); works if array is char type
         // so a string is added as indiv chars: "Bx" adds B to 0, x to 1 slot; strcat can't use (out,'B')
   Serial.println("--just added B to out: ");
@@ -60,7 +62,7 @@ void loop()
        // in this line, print (+/- the ,DEC formatter) prints an int as #, char as itself; 
        //.write always prints char equiv in ser mon, B if 66, blank if 0
        // with ,DEC format below, char[] elements print as their ASCII #, 0 for null, etc
-    Serial.print(out[i],DEC),Serial.print('\n');   //newline 
+    Serial.print(out[i],DEC),Serial.print('\n');   // newline 
     }
     
   for(byte i=4; i>=2; i--)  // to read dig->bin switch correct order, D4->D2, hi -> low bit
@@ -84,7 +86,6 @@ void loop()
                                           // byte / char it gets
     }
     
-  
   strcat(out,";A");  // append ;A to out
   for (int i=2;i<numAnalInput+2;i++)   // start with A2
   {         // put int values of Anal pins into tempstr (a global char array)
@@ -95,7 +96,7 @@ void loop()
 //  float vFlt = 4.77 *((float)analogRead(0)/1023);  // need the cast from an int var
 //  char vStr[] = "0";    // make the buffer array; but put a string in it ???, how does it enlarge?
 //            // dtostrf(sourceFLOAT,WIDTH,PRECISION,targetBUFFER);
-//  dtostrf (vFlt,4,3,vStr);  // float now held as string ?
+//  dtostrf (vFlt,4,3,vStr);  // float now held as string array right size ?
 //  sprintf(tempstr,"%s;",vStr);   // put string into tempstr
 //  strcat(out,tempstr);           // -- and appends it to out
 
@@ -109,7 +110,9 @@ void loop()
 //    }
 //  counter++;
 
-                     // .readBytes(buffer,length) puts (length) bytes into (buffer) ch array
+// ---------------------------
+// second section reads input and lites some LEDs accordingly
+             // .readBytes(buffer,length) puts (length) bytes into (buffer) ch array
   Serial.readBytes(in,Serial.available());  // reads all bytes in Serial buffer, 
   if (strlen(in)>0)                // puts them into 'in' global char array
     {    // incoming string assumed to look like: D01100 or more, 

@@ -1,6 +1,19 @@
 /*--------------------------------------------------------------------
 This file is part of the Arduino WiFiEsp library.
 
+The Arduino WiFiEsp library is free software: you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+The Arduino WiFiEsp library is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with The Arduino WiFiEsp library.  If not, see
+<http://www.gnu.org/licenses/>.
 --------------------------------------------------------------------*/
 
 #include <Arduino.h>
@@ -8,6 +21,7 @@ This file is part of the Arduino WiFiEsp library.
 
 #include "utility/EspDrv.h"
 #include "utility/debug.h"
+
 
 #define NUMESPTAGS 5
 
@@ -92,7 +106,7 @@ void EspDrv::wifiDriverInit(Stream *espSerial)
 	}
 	else
 	{
-		LOGINFO1(F("Initialization successful -"), fwVersion);
+		LOGINFO1(F("Initilization successful -"), fwVersion);
 	}
 }
 
@@ -129,7 +143,7 @@ void EspDrv::reset()
 
 
 
-bool EspDrv::wifiConnect(char* ssid, const char *passphrase)
+bool EspDrv::wifiConnect(const char* ssid, const char* passphrase)
 {
 	LOGDEBUG(F("> wifiConnect"));
 
@@ -156,7 +170,7 @@ bool EspDrv::wifiConnect(char* ssid, const char *passphrase)
 }
 
 
-bool EspDrv::wifiStartAP(char* ssid, const char* pwd, uint8_t channel, uint8_t enc, uint8_t espMode)
+bool EspDrv::wifiStartAP(const char* ssid, const char* pwd, uint8_t channel, uint8_t enc, uint8_t espMode)
 {
 	LOGDEBUG(F("> wifiStartAP"));
 
@@ -531,7 +545,7 @@ char* EspDrv::getSSIDNetoworks(uint8_t networkItem)
 uint8_t EspDrv::getEncTypeNetowrks(uint8_t networkItem)
 {
 	if (networkItem >= WL_NETWORKS_LIST_MAXNUM)
-		return NULL;
+		return 0;
 
     return _networkEncr[networkItem];
 }
@@ -539,7 +553,7 @@ uint8_t EspDrv::getEncTypeNetowrks(uint8_t networkItem)
 int32_t EspDrv::getRSSINetoworks(uint8_t networkItem)
 {
 	if (networkItem >= WL_NETWORKS_LIST_MAXNUM)
-		return NULL;
+		return 0;
 
     return _networkRssi[networkItem];
 }
@@ -898,7 +912,7 @@ uint16_t EspDrv::getRemotePort()
 /*
 * Sends the AT command and stops if any of the TAGS is found.
 * Extract the string enclosed in the passed tags and returns it in the outStr buffer.
-* Returns true if the string is extracted, false if tags are not found or timed out.
+* Returns true if the string is extracted, false if tags are not found of timed out.
 */
 bool EspDrv::sendCmdGet(const __FlashStringHelper* cmd, const char* startTag, const char* endTag, char* outStr, int outStrLen)
 {

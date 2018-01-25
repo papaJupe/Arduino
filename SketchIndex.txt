@@ -345,6 +345,23 @@ SeriPrintWrite -- to show output of ser.mon. using .write vs .print for a byte a
      as they both show the binary input as char's
       Uses: serial.write, serial.print
 
+Servo Mega tx rx BT -- Mega w/ BT/BTE? module, send / recv bytes
+   over BT to prog like Proc on PC, can view Ardu's input w/ ser. mon.
+
+  Proc app  --> sends control bytes via BT to Ardu for servo; first got
+  a byte for up/down to increment tilt var; Proc. can use joystick button
+  2 simul. key stroke, like sketch mega Servo Tx Rx BT; could try get
+  an int from a slider on Proc
+
+  Uses: BT mod on ser2 read/write bytes, servo.write, elapsedMillis for
+  timed print, later: convert incoming data to int angle for servo
+  
+SR04+VL53L LCD uno uses polo's code vl53l0x_ContinuousRanging TOF
+  (on adafrut board) + SR04 US module for demo of 2 rangefinders 
+  on 1 LCD display
+  Uses: polo vl53lox lib, elapsedMillis, liquidCrystal, wire lib,
+  expon MA
+  
 SumoShield_Code  -- Solarbotics code from Allan? never used by me
 
 SzilardLED -- various mods to color strings according to camera object detection?
@@ -387,6 +404,10 @@ USsr04 avg Ser TX -- Ultrasonic distance --> LCD & send bytes over Serial
   remote program like Proc SerialDataReadGraph
 Uses: gets dist_avg using exp moving average, pulseIn,LCD display,.write
   bytes
+
+ VL6180interleaveContinuous -- laser rangefinder 1-20+ cm, also AmbientLightSense
+  setup for Uno using I2C pins, display to 16x2 LCD
+  Uses: LCD, wiring lib, <elapsedMillis.h> to print @ some interval
   
 voltSampleDischarge -- monitor voltage only, without calib, using external resistance
   not tested yet

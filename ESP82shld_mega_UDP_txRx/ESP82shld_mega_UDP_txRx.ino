@@ -3,9 +3,9 @@
    mod from UDPsendreceive in wifiESP examples
 
   [US data on Ardu--> wifi shield sends UDP--> wifi AP (can be on PC)-->]
-  Proc running UDP lib --> sends control bytes to Ardu for servo; first got
-  a byte for up/down and increment tilt var; this adds getting an int
-  from a slider from UDP on Proc, or joystick button up/down control
+  Proc running UDP lib sends control bytes  --> Ardu for servo; first got
+  a byte for up/down to increment tilt var; this adds getting an int
+  from a slider on Proc via UDP, or joystick button could simulate keybd
 
   Uses: udp read /.write bytes, Ser2 to shield, servo.write, convert
   incoming data to int angle for servo, elapsedMillis for timed print,
@@ -28,7 +28,7 @@ SoftwareSerial Serial1(6, 7); // RX, TX
 
 //char ssid[] = "hny_Trp";        // your network SSID (name) 2.4ghz only
 //char pass[] = "hunniBunch69";   // your network password
-char ssid[] = "dap15";        // free standing router works too
+char ssid[] = "dap15";        // freestanding router works too
 char pass[] = "hunniBranch69";
 
 int status = WL_IDLE_STATUS;    // the Wifi radio's status
@@ -108,7 +108,7 @@ void loop()
 
     // read the packet into packetBufffer, does this clear as well? Y
     int len = Udp.read(packetBuffer, packetSize);
-    if (len > 0)  // puts a null at end of data; ? char[] same as string
+    if (len > 0)  // puts a null at end of data; ? now char[] same as string
       packetBuffer[len] = 0;
     Serial.print("Contents:");
     Serial.println(packetBuffer);  // chars from remote, stops @ null

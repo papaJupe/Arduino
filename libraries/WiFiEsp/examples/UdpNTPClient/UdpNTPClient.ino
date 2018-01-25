@@ -8,9 +8,8 @@
 
  NOTE: The serial buffer size must be larger than 36 + packet size
  In this example we use an UDP packet of 48 bytes so the buffer must be
- at least 36+48=84 bytes & that exceeds Ardu default buffer size (64).
- You must modify the serial buffer size to 128 (not for MEGA anyway)
- These don't exist in current IDE:
+ at least 36+48=84 bytes that exceeds the default buffer size (64).
+ You must modify the serial buffer size to 128
  For HardwareSerial modify _SS_MAX_RX_BUFF in
    Arduino\hardware\arduino\avr\cores\arduino\SoftwareSerial.h
  For SoftwareSerial modify _SS_MAX_RX_BUFF in
@@ -20,14 +19,14 @@
 #include "WiFiEsp.h"
 #include "WiFiEspUdp.h"
 
-// Emulate Serial1 on pins 6/7 if not present (as on MEGA)
+// Emulate Serial1 on pins 6/7 if not present
 #ifndef HAVE_HWSERIAL1
 #include "SoftwareSerial.h"
 SoftwareSerial Serial1(6, 7); // RX, TX
 #endif
 
-char ssid[] = "hny_Trp";            // your network SSID (name)
-char pass[] = "hunniBunch69";        // your network password
+char ssid[] = "Twim";            // your network SSID (name)
+char pass[] = "12345678";        // your network password
 int status = WL_IDLE_STATUS;     // the Wifi radio's status
 
 char timeServer[] = "time.nist.gov";  // NTP server
@@ -46,9 +45,9 @@ void setup()
   // initialize serial for debugging
   Serial.begin(115200);
   // initialize serial for ESP module
-  Serial2.begin(115200);
+  Serial1.begin(9600);
   // initialize ESP module
-  WiFi.init(&Serial2);
+  WiFi.init(&Serial1);
 
   // check for the presence of the shield
   if (WiFi.status() == WL_NO_SHIELD) {
@@ -86,7 +85,7 @@ void loop()
     Udp.read(packetBuffer, NTP_PACKET_SIZE);
 
     // the timestamp starts at byte 40 of the received packet and is four bytes,
-    // or two words, long. First, extract the two words:
+    // or two words, long. First, esxtract the two words:
 
     unsigned long highWord = word(packetBuffer[40], packetBuffer[41]);
     unsigned long lowWord = word(packetBuffer[42], packetBuffer[43]);

@@ -2,7 +2,7 @@
   display averaged distance to onboard LCD shield, send data via Serial to
   remote program like Proc SerialDataReadGraph
 
-  Uses: gets dist_avg using exp moving average, pulseIn, LCD display,.write
+  Uses: gets dist_avg using exp moving average, pulseIn, LCD display, .write
   bytes
 
    LCD RS pin to digital pin 8
@@ -15,15 +15,15 @@
    KEY pin to analog pin 0
    Vcc pin to  +5         // above hardwired w/ shield
 
-   Trig pin to digital pin 11
-   Echo pin to digital pin 12 -- pulseIn doc says it needs interrupt pin, but not true
+   Trig pin to digital pin 3
+   Echo pin to digital pin 11 -- pulseIn doc says it needs interrupt pin, but not true
 
 */
 
 #include <LiquidCrystal.h>
 #define CM 1    //Centimeter, 1 tells loop to display CM, Inch otherwise
-#define TP 11   //Trigger pin
-#define EP 12   //Echo pin
+#define TP 3   //Trigger pin
+#define EP 11   //Echo pin
 
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);  // had 13 here, wrong
 
@@ -49,7 +49,7 @@ void loop()
     Serial.write(distAvg%256);  // lo byte
     }
   uint32_t microseconds = TP_init(); // activates the pulser, gets uS back
-  delay(20); // how long to wait for value? v.i.--this works up to 300cm, 3m
+  delay(20); // how long to wait for value? v.i.-- OK up to 300cm, 3m
   uint16_t dist = Distance(microseconds, CM);
   // calc expon MA
   distAvg = round((distAvg * 4) + dist) / 5;
@@ -66,7 +66,7 @@ void loop()
    delay(100);
 }  // end loop
 
-uint32_t TP_init()  //tried uint16 but doesn't work
+uint32_t TP_init()  // tried uint16 but doesn't work
 {
   digitalWrite(TP, LOW);
   delayMicroseconds(2);

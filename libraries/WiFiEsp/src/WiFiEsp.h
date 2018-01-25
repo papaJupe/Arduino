@@ -5,6 +5,15 @@ The Arduino WiFiEsp library is free software: you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation, either version 3 of the
 License, or (at your option) any later version.
+
+The Arduino WiFiEsp library is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with The Arduino WiFiEsp library.  If not, see
+<http://www.gnu.org/licenses/>.
 --------------------------------------------------------------------*/
 
 #ifndef WiFiEsp_h
@@ -15,11 +24,13 @@ License, or (at your option) any later version.
 #include <IPAddress.h>
 #include <inttypes.h>
 
+
 #include "WiFiEspClient.h"
 #include "WiFiEspServer.h"
 #include "utility/EspDrv.h"
 #include "utility/RingBuffer.h"
 #include "utility/debug.h"
+
 
 class WiFiEspClass
 {
@@ -31,12 +42,13 @@ public:
 
 	WiFiEspClass();
 
+
 	/**
 	* Initialize the ESP module.
 	*
 	* param espSerial: the serial interface (HW or SW) used to communicate with the ESP module
 	*/
-	static void init(Stream *espSerial);
+	static void init(Stream* espSerial);
 
 
 	/**
@@ -60,7 +72,7 @@ public:
 	* param passphrase: Passphrase. Valid characters in a passphrase
 	*		  must be between ASCII 32-126 (decimal).
 	*/
-	int begin(char* ssid, const char* passphrase);
+	int begin(const char* ssid, const char* passphrase);
 
 
 	/**
@@ -217,13 +229,13 @@ public:
 	* param enc: encryption type (enum wl_enc_type)
 	* param apOnly: Set to false if you want to run AP and Station modes simultaneously
 	*/
-	int beginAP(char* ssid, uint8_t channel, const char* pwd, uint8_t enc, bool apOnly=true);
+	int beginAP(const char* ssid, uint8_t channel, const char* pwd, uint8_t enc, bool apOnly=true);
 
 	/*
 	* Start the ESP access point with open security.
 	*/
-	int beginAP(char* ssid);
-	int beginAP(char* ssid, uint8_t channel);
+	int beginAP(const char* ssid);
+	int beginAP(const char* ssid, uint8_t channel);
 
 	/**
 	* Change IP address of the AP
@@ -231,6 +243,8 @@ public:
 	* param ip:	Static ip configuration
 	*/
 	void configAP(IPAddress ip);
+
+
 
 	/**
 	* Restart the ESP module.

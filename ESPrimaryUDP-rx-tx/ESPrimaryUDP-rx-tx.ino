@@ -6,7 +6,7 @@
 */
 
 // libs from ~/Library/Arduino15/packages/esp8266/hardware/
-// esp8266/2.3.0/libraries/ESP8266WiFi/src/ESP8266WiFi.h <-- examp here too
+// esp8266/2.3.0/libraries/ESP8266WiFi/src/ESP8266WiFi.h <-- exampl here too
 #include <ESP8266WiFi.h>  // all such libs are for coding primary
 #include <WiFiUDP.h>   //         ESP boards w/ Ardu IDE
 
@@ -16,9 +16,9 @@ const char* password = "hunniBunch69";
 boolean wifiConnected = false;
 
 // UDP variables
-unsigned int localPort = 8888;
+unsigned int localPort = 8888;  // incoming port of this device
 WiFiUDP UDP;
-boolean udpConnected = false;
+boolean udpConnected = false;  // does this pkt size come from lib ?
 char packetBuffer[UDP_TX_PACKET_MAX_SIZE]; //buffer to hold incoming packet
 char ReplyBuffer[] = "ack"; // a string to send back
 
@@ -55,17 +55,17 @@ void loop() {
         Serial.print("From ");
         IPAddress remote = UDP.remoteIP();
         for (int i = 0; i < 4; i++)
-        {
-          Serial.print(remote[i], DEC);
-          if (i < 3)
           {
-            Serial.print(".");
+            Serial.print(remote[i], DEC);
+            if (i < 3)
+            {
+              Serial.print(".");
+            }
           }
-        }
         Serial.print(", port ");
         Serial.println(UDP.remotePort());
 
-        // read the packet into packetBufffer
+        // read the packet into packetBufffer, assuming incoming 2 byte #
         UDP.read(packetBuffer, UDP_TX_PACKET_MAX_SIZE);
         Serial.println("Contents: ");
         int value = packetBuffer[0] * 256 + packetBuffer[1];
@@ -87,25 +87,6 @@ void loop() {
 
 }  // end loop
 
-// connect to UDP – returns true if successful or false if not
-boolean connectUDP()
-{
-  boolean state = false;
-
-  Serial.println("");
-  Serial.println("Connecting to UDP");
-
-  if (UDP.begin(localPort) == 1) {
-    Serial.println("Connection successful");
-    state = true;
-  }
-  else {
-    Serial.println("Connection failed");
-  }
-
-  return state;
-}  // end connectUDP
-
 // connect to wifi – returns true if successful, false if not
 boolean connectWifi()
 {
@@ -118,27 +99,46 @@ boolean connectWifi()
   // Wait for connection, 10 tries
   Serial.print("...trying...");
   while (WiFi.status() != WL_CONNECTED)
-  {
-    delay(500);
-    Serial.print(".");
-      if (i > 10) 
-      {
-        state = false;
-        break;
-      }  // end if
-    i++;
-  }  // end while
-  if (state) {
-    Serial.println("");
-    Serial.print("Connected to ");
-    Serial.println(ssid);
-    Serial.print("IP address: ");
-    Serial.println(WiFi.localIP());
-  }  // end if
-  else 
-  {
-    Serial.println("");
-    Serial.println("Connection failed.");
-  }
+    {
+      delay(500);
+      Serial.print(".");
+        if (i > 10) 
+        {
+          state = false;
+          break;
+        }  // end if
+      i++;
+    }  // end while
+  if (state) 
+    {
+      Serial.println("");
+      Serial.print("Connected to ");
+      Serial.println(ssid);
+      Serial.print("IP address: ");  // of this device from DHCP
+      Serial.println(WiFi.localIP());
+    }  // end if
+  
+  else Serial.println("Connection failed.");
+ 
   return state;
-}  // end connectwifi fx()
+}  // end connectwifi fx
+
+// connect to UDP (service?) – return true if successful, else false
+boolean connectUDP()
+{
+  boolean state = false;
+
+  Serial.println();  // ? just connect to local svc, not remote dev
+  Serial.println("Connecting to UDP");
+
+  if (UDP.begin(localPort) == 1) 
+    {
+      Serial.println("Connection successful");
+      state = true;
+    }
+  else  Serial.println("Connection failed");
+ 
+  return state;
+}  // end connectUDP
+
+

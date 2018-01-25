@@ -1,28 +1,24 @@
-# WiFiEsp  -- lib and examples for Ardu sketches that enable comm with ESP8266
-shield -- this file and examples are in ~/Documents/Arduino/libraries/WiFiEsp/ 
+# WiFiEsp
 
 With an ESP8266 board, WiFiEsp library allows an Arduino board to connect to the internet.
-It can serve as either a server accepting incoming connections or a client making outgoing ones.  The WiFiEsp library is very similar to the Arduino
-[WiFi](http://www.arduino.cc/en/Reference/WiFi) and [Ethernet](http://www.arduino.cc/en/Reference/Ethernet) 
-libraries, and many of the function calls are the same. 
+It can serve as either a server accepting incoming connections or a client making outgoing ones.
+The WiFiEsp library is very similar to the Arduino [WiFi](http://www.arduino.cc/en/Reference/WiFi) and [Ethernet](http://www.arduino.cc/en/Reference/Ethernet) libraries, and many of the function calls are the same. 
 
 Supports ESP SDK version 1.1.1 and above (AT version 0.25 and above).
+
 
 ## Features
 
 - APIs compatible with standard Arduino WiFi library.
-- Uses AT commands of standard ESP firmware (no need to flash custom firmware).
+- Use AT commands of standard ESP firmware (no need to flash a custom firmware).
 - Support hardware and software serial ports.
 - Configurable tracing level.
 
-## Shield hardware
-
-The WiFiEsp library has been designed to work with the [ESP WiFi shield]
-(http://www.instructables.com/id/Cheap-Arduino-WiFi-Shield-With-ESP8266/).
-It is a cheap version of the Arduino WiFi shield that uses an ESP-82xx module to provide wifi function to Arduino boards. Mine use ESP8266MOD which is probably E-13.
-
 ## Wiring
-  Place shield to get 5v. power from Ardu (shield VR drops to 3.3), connect RX/TX of shield to some secondary Serial pins, Soft Ser on Uno, S1,2,3 on Mega, using volt div. to send 3.3 to shield's RX. Keep regular Serial for I/O to PC. On my shields 2 pins need to be bent/cut, so not to touch D0,1
+
+The WiFiEsp library has been designed to work with the [ESP WiFi shield](http://www.instructables.com/id/Cheap-Arduino-WiFi-Shield-With-ESP8266/).
+It is a cheap version of the Arduino WiFi shield that uses an ESP-01 module to provide networking capabilities to Arduino boards.
+
 
 ## Examples
 

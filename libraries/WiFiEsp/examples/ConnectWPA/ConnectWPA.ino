@@ -2,9 +2,9 @@
  WiFiEsp example: ConnectWPA
  
  This example connects to an encrypted WiFi network using an ESP8266 module.
- Then it prints the MAC address of the WiFi shield, the IP address obtained
+ Then it prints the  MAC address of the WiFi shield, the IP address obtained
  and other network details.
- AM mod for MEGA, iMac wifi
+
  For more details see: http://yaab-arduino.blogspot.com/p/wifiesp-example-connect.html
 */
 
@@ -16,8 +16,8 @@
 SoftwareSerial Serial1(6, 7); // RX, TX
 #endif
 
-char ssid[] = "hny__Trp";            // your network SSID (name)
-char pass[] = "hunniBunch69";        // your network password
+char ssid[] = "Twim";            // your network SSID (name)
+char pass[] = "12345678";        // your network password
 int status = WL_IDLE_STATUS;     // the Wifi radio's status
 
 void setup()
@@ -25,9 +25,9 @@ void setup()
   // initialize serial for debugging
   Serial.begin(115200);
   // initialize serial for ESP module
-  Serial2.begin(115200);
+  Serial1.begin(9600);
   // initialize ESP module
-  WiFi.init(&Serial2);
+  WiFi.init(&Serial1);
 
   // check for the presence of the shield
   if (WiFi.status() == WL_NO_SHIELD) {
@@ -67,7 +67,7 @@ void printWifiData()
   // print your MAC address
   byte mac[6];
   WiFi.macAddress(mac);
-  char buf[20];   // converting 6 byte array to formatted string w/ : between each
+  char buf[20];
   sprintf(buf, "%02X:%02X:%02X:%02X:%02X:%02X", mac[5], mac[4], mac[3], mac[2], mac[1], mac[0]);
   Serial.print("MAC address: ");
   Serial.println(buf);

@@ -6,6 +6,14 @@ and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation, either version 3 of the
 License, or (at your option) any later version.
 
+The Arduino WiFiEsp library is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with The Arduino WiFiEsp library.  If not, see
+<http://www.gnu.org/licenses/>.
 --------------------------------------------------------------------*/
 
 #ifndef EspDrv_h
@@ -105,6 +113,8 @@ enum wl_tcp_state {
 	TIME_WAIT   = 10
 };
 
+
+
 class EspDrv
 {
 
@@ -118,13 +128,13 @@ public:
      * param ssid: Pointer to the SSID string.
      * param passphrase: Passphrase. Valid characters in a passphrase must be between ASCII 32-126 (decimal).
      */
-    static bool wifiConnect(char* ssid, const char *passphrase);
+    static bool wifiConnect(const char* ssid, const char* passphrase);
 
 
     /*
 	* Start the Access Point
 	*/
-	static bool wifiStartAP(char* ssid, const char* pwd, uint8_t channel, uint8_t enc, uint8_t espMode);
+	static bool wifiStartAP(const char* ssid, const char* pwd, uint8_t channel, uint8_t enc, uint8_t espMode);
 
 
     /*
@@ -146,6 +156,8 @@ public:
     static int8_t disconnect();
 
     /*
+     *
+     *
      * return: one value of wl_status_t enum
      */
     static uint8_t getConnectionStatus();

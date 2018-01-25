@@ -1,15 +1,14 @@
 /*
- ardu/lib/WiFiEsp example/ WebServer for ardu + ESP shield, connecting w/
- existing wifi network, serving web page
+ WiFiEsp example: WebServer
 
  A simple web server that shows the value of the analog input 
  pins via a web page using an ESP8266 module.
  This sketch will print the IP address of your ESP8266 module (once connected)
  to the Serial monitor. From there, you can open that address in a web browser
  to display the web page.
- The web page will automatically refresh every 20 seconds.
+ The web page will be automatically refreshed each 20 seconds.
 
- For more [NOT] see: http://yaab-arduino.blogspot.com/p/wifiesp.html
+ For more details see: http://yaab-arduino.blogspot.com/p/wifiesp.html
 */
 
 #include "WiFiEsp.h"
@@ -26,7 +25,7 @@ int status = WL_IDLE_STATUS;     // the Wifi radio's status
 int reqCount = 0;                // number of requests received
 
 WiFiEspServer server(80);
- // WiFi object auto-instanced, but need to make server instance?
+
 
 void setup()
 {
