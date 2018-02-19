@@ -5,7 +5,8 @@ sVL53L0X: PerformSingleRangingMeasurement
 Range Status: 2 : Signal Fail
 RANGE IGNORE THRESHOLD: 0.12
 Measured distance: 858 <-- printout from debug code somewhere
-Distance (mm): 1086  <-- these are moving-averaged printouts from sketch code, so adjust slower than the debug printout
+Distance (mm): 1086  <-- these are moving-averaged printouts from sketch code,
+so adjust slower than the debug printout
 
 sVL53L0X: PerformSingleRangingMeasurement
 Range Status: 2 : Signal Fail
@@ -28,7 +29,7 @@ Adafruit_VL53L0X lox = Adafruit_VL53L0X();
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   lcd.begin(16, 2);    // 16 col, 2 row LCD
   // wait until serial port opens for native USB devices
   while (! Serial) {

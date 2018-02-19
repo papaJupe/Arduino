@@ -10,7 +10,7 @@ void setup()
   // put your setup code here, to run once:
   Serial.begin(9600), Serial.write("\r\n");  // \r needed for terminal 'screen', ser. mon. doesn't care
   Serial.write(123), Serial.write("  given a number, write sends as 1 byte to ser.mon.\r\n  which prints it as char equivalent of that byte, L curly brace\r\n");   
-           // 123 = ascii for { which is printed;  sends string as bytes, also shown as char's by ser.mon.
+           // 123 = ascii for { which is printed; sends string as bytes, also shown as char's by ser.mon.
   for (byte n = 99; n<110; n++)        // 99 is c, 110 is x
   {
     Serial.print(n), Serial.println("  Ser.prints the number of the byte as str of chars"); // this prints the numbers (int value of the byte)

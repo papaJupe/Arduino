@@ -1,5 +1,11 @@
-SketchIndex.txt as of 170801
+SketchIndex.txt as of 180210
 
+2waySerial for mega -- to program BT module w/ AT cmd from Ardu IDE
+  or Ser2 can be wired to USB-TTL dongle for I/O w/ Proc to test
+  serial protocol: key or var in Proc sent variously, see how
+  displayed in Ardu ser. mon. or used in sketch; ideas here used in
+  ServoMega TxRx Serial and BT
+  
 ADXL345-FRCada 
       adapted from Adafruit's _345 code for FRC accel breakout board to display 3 axis accel-
       erometer values (tilt).
@@ -157,7 +163,6 @@ Key Grab v0.2
   I  made custom .cpp for my panel' s analog button vals
   Uses Liq Crystal, LCD_DFR libraries, using variable from .cpp processing
 
-
 LCDkey1602swit/case
      tuned for my board, get anal values from 5 keys on 1602 LCD with keypad and do things 
      with them; no need for DFR library; need to tune for each board anal values, make sensible
@@ -278,19 +283,32 @@ ReadPoToPWM_A --  reads an analog input on pin A4, converts it to voltage,
     outside pins to +3.3V and ground.
     Uses: constant var, static, PWM output using analogWrite
     
-ReadPoToPWM_B -- reads analog input on pin 0, converts it to voltage, proportional PWM output,
-    and prints the result to the serial monitor when it changes. Very basic, could be improved with
-    MA of voltage, rounding, faster loop.  Attach the center pin of a potentiometer to pin A0, and 
-    the outside pins to +5V and ground.
+ReadPoToPWM_B -- reads analog input on pin 0, converts it to voltage,
+  proportional PWM output, and prints the result to the serial monitor 
+  when it changes. Very basic, could be improved with MA of voltage, 
+  rounding, faster loop.  Attach the center pin of a potentiometer to
+  pin A0, and the outside pins to +5V and ground.
+  
     Uses: float, cast to byte, PWM output with analogWrite
 
-ReadSerialIntB/C -- takes mixed char input from keybd, extracts 1st int, converts from C to F temp;
-  orig used Serial.parseInt which is weak at parsing int mixed with other chars, so 
-  ReadSerIntB puts incoming digits into a String object then str.toInt() to convert. v. C
-  puts input bytes into char array, extracts first group of digits from it into another array then 
-  uses atoi to make the int; memset clears array each loop -- needs work
+ReadSerialIntB -- takes mixed char input from keybd, extracts 1st int, 
+ converts from C to F temp; orig used Serial.parseInt which is weak at
+ parsing int mixed with other chars, so ReadSerIntB puts incoming digits
+ into a String object then str.toInt() to convert.
+  
   Uses: Serial.readBytes, atoi, isDigit, strlen, isDigit, memset
 
+ReadSerialIntC -- takes mixed char input from keybd, extracts 1st int,
+  converts from C to F temp; orig used Serial.parseInt which is weak at
+  parsing int mixed with other chars, so ReadSerIntB puts incoming
+  digits into a String object then Str.toInt() to convert. This v. C
+  puts input bytes into char array, extracts first group of digits
+  from it into another array then uses atoi (or conv to String then
+  .toInt) to make the int; reinit or memset clears array each loop;
+  handles neg # input OK, may need to limit input to 9 char
+
+  Uses: Ser.readBytes, atoi, isDigit, strlen, memset, string.toInt, strcpy
+  
 RGB Calibration test -- for Neopixel LED sets
 // Use this sketch to determine RGB ordering for your chipset
 
@@ -351,10 +369,24 @@ Servo Mega tx rx BT -- Mega w/ BT/BTE? module, send / recv bytes
   Proc app  --> sends control bytes via BT to Ardu for servo; first got
   a byte for up/down to increment tilt var; Proc. can use joystick button
   2 simul. key stroke, like sketch mega Servo Tx Rx BT; could try get
-  an int from a slider on Proc
+  an int from a GUI slider or joystick on Proc
 
   Uses: BT mod on ser2 read/write bytes, servo.write, elapsedMillis for
   timed print, later: convert incoming data to int angle for servo
+  
+Servo Mega tx rx Serial -- send / recv bytes over USB-TTL serial
+    to prog like Proc on PC, can view Ardu's I/O w/ ser. mon.
+
+  Proc app  --> sends control bytes via dongle on Ser2 of Mega for
+  servo; first got a byte for up/down to increment tilt var;
+  Proc. w/ GCP lib can use joystick button & axes to send ch or #
+  to Ardu sketch mega Servo Tx Rx Ser or BT; GC gui lib can also
+  sent  an int from a slider on Proc; Ardu converts chars and #'s to
+  angle change for servos. code started for tilt & pan, vals read OK
+
+  Uses: USB-TTL dongle on ser2, read/write bytes, servo.write,
+  elapsedMillis for timed print, convert incoming data to change angle
+  for servo
   
 SR04+VL53L LCD uno uses polo's code vl53l0x_ContinuousRanging TOF
   (on adafrut board) + SR04 US module for demo of 2 rangefinders 
@@ -405,7 +437,12 @@ USsr04 avg Ser TX -- Ultrasonic distance --> LCD & send bytes over Serial
 Uses: gets dist_avg using exp moving average, pulseIn,LCD display,.write
   bytes
 
- VL6180interleaveContinuous -- laser rangefinder 1-20+ cm, also AmbientLightSense
+USsr04_MaxBot Avg_LCD -- Ultrasonic module to 1602 LCD display
+  display averaged distance to onboard LCD shield to compare SR04
+  to MaxBot analog sensor, on one display
+  Uses: gets dist_avg using exp moving average, pulseIn
+  
+VL6180interleaveContinuous -- laser rangefinder 1-20+ cm, also AmbientLightSense
   setup for Uno using I2C pins, display to 16x2 LCD
   Uses: LCD, wiring lib, <elapsedMillis.h> to print @ some interval
   

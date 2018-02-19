@@ -28,8 +28,9 @@
 #define BALL_IN_PIN A0   
 
 
-CRGB leds[NUM_LEDS], color;  // leds is an object of type CRGB, color is param sent to it
-// unsigned long time = 0;
+CRGB leds[NUM_LEDS], color;  // leds is an object of type CRGB, 
+// color is param sent to it, not used or needed in this sketch
+// unsigned long time = 0; 
 
 void setup()
 {

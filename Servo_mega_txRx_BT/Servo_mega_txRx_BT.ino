@@ -1,4 +1,4 @@
-/* Servo Mega tx rx BT -- Mega w/ BT/BTE? module, send / recv bytes
+/* Servo Mega tx rx BT -- Mega w/ BT/BLE? module, send / recv bytes
    over BT to prog like Proc on PC, can view Ardu's input w/ ser. mon.
 
   Proc app  --> sends control bytes via BT to Ardu for servo; first got
@@ -45,14 +45,14 @@ void setup()
 //  digitalWrite(40, LOW);  // ground for level shift resistor
 
   Serial.begin(9600);    // speed for Ser. Mon. if on
-  Serial2.begin(9600); // speed = BT module UART rate
+  Serial2.begin(9600); // speed = BT module / UART rate
   tiltServ.write(posit);  // init to neutral angle
 
 }  // end setup
 
 void loop()
 {
-  // loop runs 10 hz, gets control bytes from BT mod
+  // loop runs 10 hz, gets control bytes from BT module
 // ? need faster than incoming data or need to clear buffer
   // if there's BT data available, read & ack
   if (Serial2.available())

@@ -1,30 +1,23 @@
-/* USsr04 avg LCD -- Ultrasonic module to 1602 LCD display
-  display averaged distance to onboard LCD shield
-  orig Elegoo needed significant editing to work, mod 1707 for SR-04 US module;
+/* USsr04_MaxBot Avg_LCD -- Ultrasonic module to 1602 LCD display
+  display averaged distance to onboard LCD shield to compare SR04
+  to MaxBot analog sensor, on one display
+
   Uses: gets dist_avg using exp moving average, pulseIn
 
-   LCD RS pin to digital pin 8
-   LCD Enable pin to digital pin 9
-   LCD D4 pin to digital pin 4
-   LCD D5 pin to digital pin 5
-   LCD D6 pin to digital pin 6
-   LCD D7 pin to digital pin 7
-   LCD BL pin to digital pin 10
-   KEY pin to analog pin 0
-   Vcc pin to  +5         // above all hardwired w/ shield
-
-   Trig pin to digital pin 11
-   Echo pin to digital pin 12 -- pulseIn doc says it needs interrupt pin, but not true
+   anal pin in to A5
+   Trig pin to digital pin 3
+   Echo pin to digital pin 11 -- pulseIn doc says it needs interrupt pin, but not true
 
 */
 
 #include <LiquidCrystal.h>
-#define CM 0      //CM vs. IN,  0  for IN, 1 for CM
-   // Inch,  get displayed otherwise
+#define CM 0      //CM vs. IN:  0  for IN, 1 for CM
+// Inch,  get displayed otherwise
 #define TP 3     //Trigger pin
 #define EP 11     //Echo pin
+#define PinIn A5    // analog pin In
 
-LiquidCrystal lcd(8, 9, 4, 5, 6, 7);  // had 13 here, wrong
+LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 
 void setup()
 {
@@ -33,32 +26,48 @@ void setup()
   Serial.begin(9600);       // 9600 bps, for Ser. Mon. if on, else Proc ser. in ?
   pinMode(TP, OUTPUT);      // TP output pin for trigger
   pinMode(EP, INPUT);       // EP input pin for echo
-  pinMode(2, OUTPUT);
-  digitalWrite(2, HIGH); // 5 v for US module power
+  // pinMode(2, OUTPUT);
+  // digitalWrite(2, HIGH); // 5 v for US module power
 }
 
 void loop()
-{ 
-  static uint16_t distAvg = 69; // need to start somewhere, anywhere
-  delay(100);
+{
+  static uint16_t distAvg = 69; // for SR04 device
+  static int prevAvg = analogRead(PinIn) + 5;  // for anal device
+
   long microseconds = TP_init(); // activates the pulser, gets uS back
   unsigned int dist = Distance(microseconds, CM);
   // calc expon MA
   distAvg = round((distAvg * 4) + dist) / 5;
+
+  // read anal distance
+  int analDist;
+  int sensorV = analogRead(PinIn);
+  // update expon moving average of anal reads
+  prevAvg = round((sensorV * 0.2) + (prevAvg * 0.8));
+  //  use map from ~10mV (2 ticks) / inch, range ~ 6" to 360"
+  analDist = map(prevAvg, 21, 204, 7, 80); // mapping ticks to inches for MaxBot
+
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("SR04 : ");
   lcd.print(distAvg);
   if (CM) lcd.print(" cm");
-     else lcd.print(" in");
+  else lcd.print(" in");
   // Serial.println(distAvg);  // for ser. mon.
   // send distance (cm default) as bytes to Proc
-  Serial.write(distAvg/256);  // hi byte
-  Serial.write(distAvg%256);  // lo byte
-  Serial.write('\n');  // Proc buffer expects \n to end message
-  
+  //  Serial.write(distAvg / 256); // hi byte
+  //  Serial.write(distAvg % 256); // lo byte
+  //  Serial.write('\n');  // Proc buffer expects \n to end message
+  lcd.setCursor(0, 1);  // second line
+  lcd.print("MxBot: ");
+  lcd.print(analDist);
+  lcd.print(" in.");
+
+  delay(100);
 }  // end loop
 
+// 2 fx's for SR04 ranging
 long TP_init()
 {
   digitalWrite(TP, LOW);
@@ -74,7 +83,7 @@ long TP_init()
 }
 
 uint16_t Distance(long time, boolean flag)  // returns unsigned int
-{  // as CM or IN depending on flag  1/0
+{ // as CM or IN depending on flag  1/0
   uint16_t distance;
   if (flag) // display in cm.
     distance = (time * 17) / 1000;
@@ -82,8 +91,8 @@ uint16_t Distance(long time, boolean flag)  // returns unsigned int
   // = ((Duration of high level)*(Sonic :0.034 cm/us))/2
   // = ((Duration of high level)/(Sonic :29.4 cm/us))/2
   else  // 1122 ft/sec   13464 in/sec   0.0135 in/uS / 2 for bounce
-    distance = (time * 67) / 10000;       // INches
-    // delay(10); 
+    distance = (time * 72) / 10000;   // INches (manual calib)
+  // delay(10);
   return distance;
 }  // end Distance
 

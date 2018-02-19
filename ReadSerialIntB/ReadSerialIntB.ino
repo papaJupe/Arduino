@@ -30,7 +30,7 @@ void loop()
   while (Serial.available() > 0)
   {
     // int c = Serial.parseInt();  // keybd entry of 2-3 digits of temp in C.
-    // parseInt OK for numbers and letter+number; gets fooled by letter alone or number+letter
+    // parseInt OK for numbers and letter+number; but fooled by letter alone or number+letter
 
     int inChar = Serial.read();  // int,byte,char work here
     // test if it's a (-)
@@ -41,12 +41,12 @@ void loop()
       inString += (char)inChar;
       gotOne = true;  // you've got at least one digit from input
     }
-    // if you get a non-digit after some digit(s), ignore and break; need to flush Ser buffer too?
-    else if (gotOne)                   // yes, and flush() does not do it, this does
+    // if you get a non-digit after some digit(s), ignore and break from while loop;
+    else if (gotOne)  // need to flush Ser buffer and flush() does not flush, this does
     {
       while (Serial.read() != -1); // read incoming buffer until empty
       break;
-    }    // without this else block, digits coming after a letter also get added to String
+    }    // w/o this else block, digits coming after a letter also get added to String
   }  //end while serial.avail
 
   // convert the String to int if not empty

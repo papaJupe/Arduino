@@ -8,7 +8,7 @@ ReadAnalogVavg_Dig1602 -- reads an averaged analog input on pin X, and prints th
   Uses: Liquid Crystal libr, 16x2 display, DFR keypad libr, reading key value
 */
 
-#define PinIn 1        // analog 0 is wired to switch array on 1602 board
+#define PinIn A2        // analog 0 is wired to switch array on 1602 board
 #define DigIn 3       // digital pin 3
 #define LiteOut 11  // LED output
 
@@ -33,7 +33,7 @@ void setup()
   lcd.clear();
   lcd.setCursor(0, 0);
    // lcd.print("Key Grab v0.2");
-  delay(2500);
+  delay(2000);
 }  // end setup
 
 void loop() 
@@ -63,7 +63,7 @@ void loop()
   // print out the new MA if different
   if (newAvg != prevAvg)
   {    //print to Ser Mon if it's on
-    Serial.print("pin out= "); 
+    Serial.print("anal pin = "); 
     Serial.print(newAvg); 
     Serial.print(" calc mV= "); 
     Serial.println(voltage);

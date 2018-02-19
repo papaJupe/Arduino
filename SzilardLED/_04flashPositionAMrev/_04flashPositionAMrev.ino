@@ -32,7 +32,7 @@ here pullup is used on input pins, etc
 #define BALL_IN_PIN A0
 #define POSITION_PIN A3  // analog tracking target loc
 
-CRGB leds[NUM_LEDS], color;
+CRGB leds[NUM_LEDS], color; // color obj not used here
 unsigned long time = 0;
 int cycleDuration = 0;
 int normalizedPosition = 0;
@@ -159,5 +159,6 @@ void disable()
     leds[i] = projectY;
   }
 }  // end disable
+
 
 

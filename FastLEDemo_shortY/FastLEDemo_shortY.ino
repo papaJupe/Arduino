@@ -11,11 +11,11 @@ FASTLED_USING_NAMESPACE
 #warning "Requires FastLED 3.1 or later; check github for latest code."
 #endif
 
-#define DATA_PIN  3
+#define DATA_PIN  2
 
 #define LED_TYPE    WS2812B  // our strings
 #define COLOR_ORDER GRB
-#define NUM_LEDS    143
+#define NUM_LEDS    48
 CRGB leds[NUM_LEDS];
 
 #define BRIGHTNESS    60
@@ -46,8 +46,8 @@ void loop()
   gPatterns[gCurrentPatternNumber]();  // array of ptrs to names of functions ?
 
   // paint some black
-  for (byte i = 49; i < 69; i++)  // 1st 20 dark; lighted ones make a Y
-    leds[i] = 0x000000;
+//  for (byte i = 49; i < 69; i++)  // 1st 20 dark; lighted ones make a Y
+//    leds[i] = 0x000000;
 
   // send the 'leds' array to the LED strip
   FastLED.show();

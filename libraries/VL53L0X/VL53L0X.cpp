@@ -869,7 +869,7 @@ bool VL53L0X::timeoutOccurred()
   return tmp;
 }
 
-// Private Methods /////////////////////////////////////////////////////////////
+// Private Methods ////////////////////////////////////////////
 
 // Get reference SPAD (single photon avalanche diode) count and type
 // based on VL53L0X_get_info_from_device(),

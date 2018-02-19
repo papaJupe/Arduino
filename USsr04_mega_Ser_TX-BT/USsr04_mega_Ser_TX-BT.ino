@@ -1,12 +1,12 @@
-/* USsr04 avg Ser TX-BT -- US sr04 module on Mega w/ BLE ser dongle, 
+/* USsr04 avg Ser TX-BT -- US sr04 module on Mega w/ BT2 ser dongle, 
    send bytes over Ser_ to prog like Proc on PC, also ser. mon. sees
    Ardu I/O; BT mod adds sending pot data, uses BT serial dongle 
    on Ardu mega for wireless ser. to ser. mon. or Proc app
 
-  Uses: gets dist_avg using exp moving average, pulseIn, Ser2 + BLE
+  Uses: gets dist_avg using exp moving average, pulseIn, Ser2 + BT2
   for comm w/ remote PC, TX=16, RX=17 on Mega
 
-  Setup for MEGA: SR-94 US --
+  Setup for MEGA: SR-04 US --
    Vcc pin to  +5 from pin 11    // w/ Proc
    Trig pin to digital pin 12
    Echo pin to digital pin 13 -- pulseIn doc wrong, !needs interrupt pin
