@@ -1,5 +1,5 @@
 /*
-  VL6180 laser rangefinder 1-20+ cm, also AmbientLightSense
+  VL6180 laser TOF range 2-18cm, 20-180mm & AmbientLightSense
   -- more on pololu.com/product/2489
   
   This example demonstrates how to use interleaved mode to
@@ -76,8 +76,8 @@ void loop()
 
   int als = sensor.readAmbientContinuous();
 
-  // raw output seems 12 mm too high
-  int rng = sensor.readRangeContinuousMillimeters() - 10;
+  // raw output needs tuning for conditions
+  int rng = sensor.readRangeContinuousMillimeters();
 
   if (sensor.timeoutOccurred())
     Serial.println(" als TIMEOUT");
