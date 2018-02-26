@@ -1,12 +1,12 @@
 
-/* 
-VoltageSamplerB6, modif of VoltageSamplerB4 for serial output to Proc sketch
+/*
+  VoltageSamplerB6, modif of VoltageSamplerB4 for serial output to Proc sketch
   -- just the numbers for min,mV,mA
   -- converts 0-5 v from diff. op-amps to read ~11.5-13 v from batt source
   and Rcurr drop to current draw; calib phase for V in setup; Curr map params
   come from previous calib sketch -- do that first with current Rc and load Rl
   being used
- */
+*/
 
 
 unsigned long starTime;  // starting time for discharge, msec, (global) used in setup and printVals fx
@@ -24,42 +24,47 @@ LiquidCrystal lcd(12, 11, 4, 5, 6, 7); // lib is smart enough to know if you're 
 #define pinIn2 A2          // pin to read curr sense voltage across Rc via op-amplification
 
 int mapA = 123;      // default V map params, A for 11.5, B for 13.0
-int mapB = 975; 
+int mapB = 975;
 
 //int mapC = 640;      // empiric C map params, pinIn2 to dc current mA
 //int mapD = 928;      // these are values from calib using 2 ohm Rc and Rl 8.6
 //int mapE = 650;      // using curr calib sketch; C&D are AR pin values
 //int mapF = 880;      // E&F are corresponding measured currents
 
+//int mapC =720;      // empiric C map params, pinIn2 to disch current mA
+//int mapD = 978;     // these are values from calib using 2 ohm Rc and Rl 10.5
+//int mapE = 700;     // using curr calib sketch; C&D are AR pin values
+//int mapF = 900;     // E&F are corresponding measured current
+
 //int mapC =740;      // empiric C map params, pinIn2 to disch current mA
 //int mapD = 1000;     // these are values from calib using 2 ohm Rc and Rl 12.5
 //int mapE = 700;     // using curr calib sketch; C&D are AR pin values
 //int mapF = 900;     // E&F are corresponding measured currents
 
-//int mapC = 342;      // empiric C map params, pinIn2 to disch current mA
-//int mapD = 858;     // these are values from calib using 2 ohm Rc and total Rl 14
-//int mapE = 400;     // using curr calib sketch; C&D are AR pin values
-//int mapF = 800;     // E&F are corresponding measured currents
+int mapC = 347;      // empiric C map params, pinIn2 to disch current mA
+int mapD = 868;     // these are values from calib using 2 ohm Rc and total Rl 14
+int mapE = 400;     // using curr calib sketch; C&D are AR pin values
+int mapF = 800;     // E&F are corresponding measured currents
 
 //int mapC = 210;      // empiric Curr map params, pinIn2 to dc current mA
 //int mapD = 656;      // these are values from calib using 2.0 ohm Rc and Rl 16
 //int mapE = 300;      // using curr calib sketch; C&D are AR pin values
 //int mapF = 650;    	 // E&F are corresponding measured currents
 
-//int mapC = 255;      // empiric Curr map params, pinIn2 to dc current mA
-//int mapD = 573;      // these are values from calib using 2.0 ohm Rc and Rl 18.5
-//int mapE = 350;      // using curr calib sketch; C&D are AR pin values
-//int mapF = 600;       // E&F are corresponding measured currents
+//int mapC = 230;      // empiric Curr map params, pinIn2 to dc current mA
+//int mapD = 596;      // these are values from calib using 2.0 ohm Rc and Rl 18.5
+//int mapE = 300;      // using curr calib sketch; C&D are AR pin values
+//int mapF = 560;       // E&F are corresponding measured currents
 
 //int mapC = 109;       // empiric C map params, pinIn2 to dc current mA
 //int mapD = 320;       // these are values from calib using 2.0 ohm Rc and Rl 27
 //int mapE = 200;       // using curr calib sketch; C&D are AR pin values
 //int mapF = 400;       // E&F are corresponding measured currents
 
-int mapC = 125;      // empiric C map params, pinIn2 to dc current mA
-int mapD = 466;      // these are values from calib using 2.7 ohm Rc and Rl 35
-int mapE = 150;      // using curr calib sketch; C&D are AR pin values
-int mapF = 300;    	 // E&F are corresponding measured currents
+//int mapC = 125;      // empiric C map params, pinIn2 to dc current mA
+//int mapD = 466;      // these are values from calib using 2.7 ohm Rc and Rl 35
+//int mapE = 150;      // using curr calib sketch; C&D are AR pin values
+//int mapF = 300;    	 // E&F are corresponding measured currents
 
 //int mapC = 121;      // empiric C map params, pinIn2 to dc current mA
 //int mapD = 625;     // these are values from calib using 5 ohm Rc and 36 Rl(adj+2+5 in series)
@@ -145,18 +150,18 @@ void setup()   // check & calibrate voltage readout, if OK sets starTime for dc 
   //  delay(50);  //flaky reading of chars unless some delay
   //  while (!Serial.available()); // while, you wait, for batt connection
   // when something typed, wait 5 seconds, get the first batt reading, init starTime
-  delay(5000);
+  delay(3000);
   prevVavg = analogRead(pinIn1);
   prevCavg = analogRead(pinIn2);
   for (int i = 0; i < 10; i++) // average for few seconds to stabilize
   {
     int pin1Sees = (analogRead(pinIn1));    // AR the pin sees
-    newVavg = (float)pin1Sees*0.2 + 0.8*prevVavg; //update expon moving average of AR
+    newVavg = (float)pin1Sees * 0.2 + 0.8 * prevVavg; //update expon moving average of AR
     prevVavg = newVavg;
 
     // read the curr pin, use moving average to stabilize
     int pin2Sees = analogRead(pinIn2);
-    newCavg = (float)pin2Sees*0.2 + 0.8 * prevCavg; // update expon moving average of AR
+    newCavg = (float)pin2Sees * 0.2 + 0.8 * prevCavg; // update expon moving average of AR
     prevCavg = newCavg;   //  after loop x 10 goes on from here
     delay(300);
   }  //end for
@@ -220,7 +225,7 @@ void loop()   // read the batt volt, print elapsed time & values, more often as 
       lcd.print("cPin " + String(round(newCavg)));
     }
     pinPrint = !pinPrint;  // invert value, so LCD alternates showing V/C and pinVals
-    
+
     deltaV  = (battVolt - targVolt);  //  how far batt is from target now
     //   Serial.print("delta  "); Serial.println(deltaV);         // should drop as batt dc's
 
@@ -252,23 +257,23 @@ void loop()   // read the batt volt, print elapsed time & values, more often as 
     delay(1000);      // while, you wait
   }  // end while loop, must be done   // Serial.println("exit while loop");
 
-    if (pinPrint == 0)
-    { // print V/C to 2 lines of LCD, if it's present, every 2.5 sec, while+readPin delay
-      lcd.clear();  // first clear screen and set the cursor to (0,0)
-      lcd.print(battVolt);
-      lcd.print(" mV");  // the averaged voltage
-      lcd.setCursor(0, 1);  // second line
-      lcd.print(battCurr);
-      lcd.print(" mA");
-    }
-    else
-    { // print raw pin reads to LCD
-      lcd.clear();  // first clear screen
-      lcd.print("vPin " + String(round(newVavg)));
-      lcd.setCursor(0, 1);  // second line
-      lcd.print("cPin " + String(round(newCavg)));
-    }
-    pinPrint = !pinPrint;  // invert value
+  if (pinPrint == 0)
+  { // print V/C to 2 lines of LCD, if it's present, every 2.5 sec, while+readPin delay
+    lcd.clear();  // first clear screen and set the cursor to (0,0)
+    lcd.print(battVolt);
+    lcd.print(" mV");  // the averaged voltage
+    lcd.setCursor(0, 1);  // second line
+    lcd.print(battCurr);
+    lcd.print(" mA");
+  }
+  else
+  { // print raw pin reads to LCD
+    lcd.clear();  // first clear screen
+    lcd.print("vPin " + String(round(newVavg)));
+    lcd.setCursor(0, 1);  // second line
+    lcd.print("cPin " + String(round(newCavg)));
+  }
+  pinPrint = !pinPrint;  // invert value
 
   if (done == 1 && watch == 0)  // main loop does this block when done is true and not watching
   { // print a fresh value
@@ -287,13 +292,13 @@ void loop()   // read the batt volt, print elapsed time & values, more often as 
     if (watch == 0)  // don't beep if watching
     {
       for (byte i = 0; i <= 6; i++) // beep tone every 20 sec
-//      {
-//        tone(8, 2700);   // don't need pin config for toner
-//        delay(500);
-//        noTone(8);
-//        delay(200);
-//      } // end tone 
-      {  // active piezo beeper just needs voltage
+        //      {
+        //        tone(8, 2700);   // don't need pin config for toner
+        //        delay(500);
+        //        noTone(8);
+        //        delay(200);
+        //      } // end tone
+      { // active piezo beeper just needs voltage
         digitalWrite(8, HIGH);   //  need pin config for digiWrite to work
         delay(500);
         digitalWrite(8, LOW);
@@ -311,7 +316,7 @@ void loop()   // read the batt volt, print elapsed time & values, more often as 
 
     int battVolt = map(newVavg, mapA, mapB, 11500, 13000);
     int battCurr = map(newCavg, mapC, mapD, mapE, mapF);
-    
+
     if (pinPrint == 0)
     { // print V/C to 2 lines of LCD, if it's present, every 2.5 sec, while+readPin delay
       lcd.clear();  // first clear screen and set the cursor to (0,0)
@@ -341,17 +346,17 @@ void readPinAvg()
   prevVavg = analogRead(pinIn1);      //just a starting place for the MA of V,C
   prevCavg = analogRead(pinIn2);
   for (int i = 0; i < 5; i++) // get average of 5 readings over ~2 sec.
-   {
-  int pin1Sees = analogRead(pinIn1);
-  newVavg = (float)pin1Sees*0.2 + 0.8*prevVavg; // update expon moving average of voltage AR
-  prevVavg = newVavg;
- 
-  int pin2Sees = analogRead(pinIn2);
-  newCavg = (float)pin2Sees*0.2 + 0.8*prevCavg; // update expon MA of curr AR
-  prevCavg = newCavg;
- 
-  delay(400);
-   }  // end for
+  {
+    int pin1Sees = analogRead(pinIn1);
+    newVavg = (float)pin1Sees * 0.2 + 0.8 * prevVavg; // update expon moving average of voltage AR
+    prevVavg = newVavg;
+
+    int pin2Sees = analogRead(pinIn2);
+    newCavg = (float)pin2Sees * 0.2 + 0.8 * prevCavg; // update expon MA of curr AR
+    prevCavg = newCavg;
+
+    delay(400);
+  }  // end for
 }  // end readPin
 
 // *******************************
@@ -359,7 +364,7 @@ void readPinAvg()
 // prints elapsed min, mV, mA, resets prevTime
 void printVals(int battV, int curr)
 {
-       // Serial.print("elapsed min.= ");
+  // Serial.print("elapsed min.= ");
   Serial.print((millis() - starTime) / 60000);
   Serial.print(",");
   Serial.print(battV);
