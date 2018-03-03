@@ -1,6 +1,6 @@
 /* 2waySerial w/ mega -- to program BT mod w/ AT cmd from Ardu IDE
-  or Ser2 can be wired to USB-TTL or BT dongle for I/O w/ Proc to
-  test serial protocol: key or var in Proc sent variously, see how
+  soft ser. or Ser2 can be wired to USB-TTL or BT dongle for I/O w/ 
+  Proc to test serial protocol: key or var in Proc sent variously, see how
   displayed in Ardu ser. mon. or used in sketch; probably BLE module
   could I/O to phone app ?; later mod: ServoMega TxRx Serial / BT
 
