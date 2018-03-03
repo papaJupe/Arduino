@@ -20,7 +20,7 @@ const int targVolt = 12500; // discharge target in mV, varies with batt type, de
 // initialize new lcd object with the Arduino pins
 LiquidCrystal lcd(12, 11, 4, 5, 6, 7); // lib is smart enough to know if you're using 4 or 8 pins
 
-#define pinIn1 A5          // pin to read test batt voltage via op-amplification
+e#define pinIn1 A5          // pin to read test batt voltage via op-amplification
 #define pinIn2 A2          // pin to read curr sense voltage across Rc via op-amplification
 
 int mapA = 123;      // default V map params, A for 11.5, B for 13.0
@@ -41,8 +41,8 @@ int mapB = 975;
 //int mapE = 700;     // using curr calib sketch; C&D are AR pin values
 //int mapF = 900;     // E&F are corresponding measured currents
 
-int mapC = 347;      // empiric C map params, pinIn2 to disch current mA
-int mapD = 868;     // these are values from calib using 2 ohm Rc and total Rl 14
+int mapC = 339;      // empiric C map params, pinIn2 to disch current mA
+int mapD = 844;     // these are values from calib using 2 ohm Rc and total Rl 14
 int mapE = 400;     // using curr calib sketch; C&D are AR pin values
 int mapF = 800;     // E&F are corresponding measured currents
 
