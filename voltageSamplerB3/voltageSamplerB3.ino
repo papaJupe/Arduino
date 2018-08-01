@@ -1,7 +1,7 @@
 /*
 voltageSamplerB3 -- modif from VoltageSamplerB2, adds curr readout
     and other refinements, do/while loop, function for value reading;
-   -- converts 0-5 v from diff. op-amps to actual ~11-13 v from batt source
+   -- converts 0-5 v from diff. op-amps to actual ~11.5-13 v from batt source
     and Rcurr drop to current draw; calib phase for V in setup; C params
     come from previous calib
  */

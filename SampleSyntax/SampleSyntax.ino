@@ -135,11 +135,14 @@ enum {zilch, alpo, burka, carly, darpa};
      } //end else
    } //end while - repeats actions until Serial buffer empty,i.e. = 0
 
- convert serial input or char[] to String
+ convert serial input or char[] to String and back
  ------------------------------------------
  v. Read Serial Int C can use int i=atoi(char[]) or
  cast to String s = String(ch[]) then s.toInt()
  
+ convert String object back to char[] from SFM Roo Comm 0.4
+    sensorsAsString().toCharArray(data, 120);
+    
  Simpler way to read int from serial input:
  ---------------------------------------
    if (Serial.available())
@@ -365,13 +368,16 @@ OK w/ conversion to String
 
 ------------------------------------------
 using string operators on float value, first convert it to string, then strcat, etc:
-  -- from SerialReadWriteAM2
+  -- from SerialReadWriteAM2,3
   float vFlt = 4.77 *((float)analogRead(0)/1023);  // need the cast from an int var
   char vStr[] = "0";    // make the buffer array, works; char vStr[6] ={0} maybe better init
         // dtostrf(sourceFLOAT,WIDTH,PRECISION,targetBUFFER);
   dtostrf (vFlt,4,3,vStr);      // makes float into a string
   sprintf(tempstr,"%s;",vStr);   // put string into tempstr
   strcat(out,tempstr);           // -- and appends it to out
+  also works to convert int to char string
+    sprintf(tempstr,"%d",someInt);   // put numbers into ch array buffer
+    strcat(out,tempstr)          // add buffer string to array
   
  or print(flote,3) -- to print 3 digit precis
  
@@ -394,9 +400,13 @@ reading a char string one by one using pointer to it
  
  // does c need a type? no
 ------------------------------------------------------------------------ 
- 
+ enhanced if, ternary, conditional operator: from SFM RooCoom v0.3
+     // gentler turns if going fast c.f. C prog p 116
+    int spd = (speed > 160) ? round(speed * 0.8) : speed;
+------------------------------------------------------------------------ 
+
 using flash memory to store some program data like strings that doesn't change much
---------------------------
+
 from my makingTTerrata.txt
 p. 346, "Saving Program Memory": Using the F() syntax to store string
 constants in this sketch is a very good idea, but the text misstates the
@@ -421,10 +431,15 @@ see: http://playground.arduino.cc/Learning/Memory
 
 ----------------------------------------
 put function in its own tab to improve code readability; name tab something
-nice and save; tab will be made into .ino file in same folder as sketch
+nice and save; tab will be made into .ino file in same folder as sketch (may
+not need to be #included ?)
 
-eg my MorseToneRandTabbed
+eg my MorseToneRandTabbed; eg. below SFM Roo Comm uses many .h files
+for images and constants; images converted using xxd -i old.png > new.h
 
+or if you have a bunch of constants or functions they can go into their own
+header.h (text) file in sketchFldr/Libraries/ which you then #include 
+@ top of sketch
 ----------------------------------------
 debounce an Interrupt signal inside the ISR
    << from turrentInterruptC

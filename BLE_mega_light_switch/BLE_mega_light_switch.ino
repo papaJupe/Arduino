@@ -3,15 +3,17 @@
   HC-08 (lite HM10?) fails w/fatBeard app, OK w/ HM10 Serial app
   HM-10 mod fine with both as long as name HMSoft, pass 000000
   HM-12 dual module connects good w/ HM-10SerPro for lite control
-    w/o needing PIN
-  
+    w/o PIN
+
   HM-10 Serial Pro app can send char (UTF), raw # (dig) or bin
     -- need to tweak vars and .print/write so I/O formats right
-  
-  Uses: Ser2 + BLE HM 10, hc08, for comm w/ iPhone, TX=16, RX=17 on Mega
-    also Mega + HM-12
+
+  Uses: Ser2 + BLE HM 10, hc08, H3 for comm w/ iPhone, TX=16, RX=17 on Mega
+    also Mega + HM-12; peripheral can send to HM10 on serial dongle on PC
+    but not recv anything on Ser2 -- probably central not sending, ? why
+    
   Setup for MEGA:
-   level shifter gnd to pin 13+1; Serial2 to BLE module, 
+   level shifter gnd to pin 13+1; Serial2 to BLE module,
    pins: TX=16, RX=17; or Ser Soft on Uno
 */
 
@@ -36,13 +38,13 @@ void loop() {
   if (Serial2.available()) {
     c = Serial2.read();
     Serial.println("Got input:");
-    if (c == '0')  // char value works if input is ascii #
+    if (c == '1')  // char value works if input is ascii #
     {
       Serial.println(" on");
       digitalWrite(LED_PIN, HIGH);
 
     }
-    if (c == '1')
+    if (c == '0')
     {
       Serial.println(" off");
       digitalWrite(LED_PIN, LOW);
@@ -54,10 +56,20 @@ void loop() {
       digitalWrite(LED_PIN, HIGH);
       delay(500);
       digitalWrite(LED_PIN, LOW);
+      delay(500);
+      digitalWrite(LED_PIN, HIGH);
+      delay(500);
+      digitalWrite(LED_PIN, LOW);
+      delay(500);
+      digitalWrite(LED_PIN, HIGH);
+      delay(500);
+      digitalWrite(LED_PIN, LOW);
+      delay(500);
     }
-  Serial2.write("gotsum ");Serial2.write(c); // write sends char back
-     // for HM10SerPro this sends incoming # back as char 
+    Serial2.write("gotsum "); Serial2.write(c); // write sends char back
+    // for HM10SerPro this sends incoming # back as char
   }
-  // Serial.println(c);
+   Serial.println(c);
+   //Serial2.write("nogot ");
   delay(500);
 }

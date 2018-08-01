@@ -1,5 +1,5 @@
 /* -- todo -- test if array is clearing by input various numbers, make parsing work w/ strcat etc
- SerialReadWrite4   -- AM 2nd revision of PY's for Ardu <-> SmartDesktop comm
+ SerialReadWrite4   -- AM 4th revision of PY's for Ardu <-> SmartDesktop comm
  v.2 adds float output & Streaming lib to print C++ style using insertions;
  v.4 to experiment with parsing an int from char array and String
  
@@ -54,8 +54,8 @@ void loop()
   counter++;  // increm each loop to calm down printing
   
     // .readBytes(buffer,length) puts (length) incoming bytes into 'in' (buffer) array
-//  Serial.readBytes(in,Serial.available());  // reads all bytes in Serial buffer into buffer, 
-//  if (strlen(in)>0)                         //  -- puts them into 'in' char array
+//  Serial.readBytes(in,Serial.available());  // reads all bytes in Serial buffer into buffer ==> into 'in' char array
+//  if (strlen(in)>0)             
 //  {    // incoming string assumed to look like: D01100 or longer 
 //    //-- char elements [1 to (strlen-1)] are counted; only 1 - numLites affect lites
 //    for (int i=1;i<strlen(in);i++)       //loop thru all incoming starting with element [1]

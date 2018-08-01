@@ -79,24 +79,24 @@ void setup()
   {
     case 0:  // red, 4/sec
       {
-        liteOn = 50;
-        liteOff = 200;
+        liteOn = 20;
+        liteOff = 230;
         C = CRGB::Red;
         pulse = 0;
         break;
       }
     case 1:  // 3/sec
       {
-        liteOn = 66;
-        liteOff = 266;
+        liteOn = 20;
+        liteOff = 310;
         C = CRGB::Red;
         pulse = 0;
         break;
       }
-    case 2:  // 4 -> 1/sec slowdown in 20", no pulse
+    case 2:  // red 4 -> 1/sec slowdown in 20", no pulse
       {
-        liteOn = 50;
-        liteOff = 200;
+        liteOn = 20;
+        liteOff = 230;
         C =  CRGB(255, 0, 0);
         pulse = 0;
         slowdown = 1;

@@ -1,6 +1,6 @@
 /* 
- VoltageSamplerB5, modif of VoltageSamplerB4, made to roughly monitor discharge, using external R,
- to 12.4 v for conditioning; drops curr monitor, etc. 
+ VoltageSamplerB5, modif of VoltageSamplerB4, made to roughly monitor discharge, 
+ using external R, to 12.4 v for conditioning; drops curr monitor, etc. 
  
  */
 
@@ -254,6 +254,7 @@ void printVals(int battV)    // Serial prints batt in mV, resets prevTime
   Serial.print(" mV");
   prevTime = millis(); 
 }  //end printVals
+
 
 
 

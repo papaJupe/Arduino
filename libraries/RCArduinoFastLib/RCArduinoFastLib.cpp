@@ -1,28 +1,28 @@
-/*****************************************************************************************************************************
-// RCArduinoFastLib by DuaneB is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+/**********************
+// RCArduinoFastLib by DuaneB 
 //
 // http://rcarduino.blogspot.com
 //
-*****************************************************************************************************************************/
+****************************************************************/
 
 #include "Arduino.h"
 #include "RCArduinoFastLib.h"
 
-/*----------------------------------------------------------------------------------------
+/*--------------------------------------------------------------------
 
-This is essentially a derivative of the Arduino Servo Library created by Michael Margolis
+This is a derivative of the Arduino Servo Library created by Michael Margolis
 
-As the technique is very similar to the Servo class, it can be useful to study in order
+As the technique is very similar to the Servo class, it can be useful
 to understand the servo class.
 
-What does the library do ? It uses a very inexpensive and common 4017 Counter IC
-To generate pulses to independently drive up to 10 servos from two Arduino Pins
+What does the library do ? It uses the common 4017 Counter IC
+to generate pulses to independently drive up to 10 servos from two Arduino Pins
 
-As previously mentioned, the library is based on the techniques used in the Arduino Servo
-library created by Michael Margolis. This means that the library uses Timer1 and Timer1 output
+The library is based on the techniques used in the Arduino Servo
+library created by Michael Margolis, i.e. uses Timer1 and Timer1 output
 compare register A.
 
-OCR1A is linked to digital pin 9 and so we use digital pin 9 to generate the clock signal
+OCR1A is linked to digital pin 9  to generate the clock signal
 for the 4017 counter.
 
 Pin 12 is used as the reset pin.
@@ -47,7 +47,7 @@ void CRCArduinoFastServos::setup()
 
 // Timer1 Output Compare A interrupt service routine
 // call out class member function OCR1A_ISR so that we can
-// access out member variables
+// access member variables
 ISR(TIMER1_COMPA_vect)
 {
     CRCArduinoFastServos::OCR1A_ISR();
@@ -97,7 +97,7 @@ void CRCArduinoFastServos::setCurrentChannelPinHighA()
      *pPortPin->m_pPort |= pPortPin->m_sPinMask;
 }
 
-// After we set an output pin high, we need to set the timer to comeback for the end of the pulse
+// After we set output pin high, we set the timer to comeback for the end of the pulse
 void CRCArduinoFastServos::setOutputTimerForPulseDurationA()
 {
   OCR1A = TCNT1 + m_ChannelOutA[m_sCurrentOutputChannelA].m_unPulseWidth;
@@ -298,7 +298,7 @@ volatile uint8_t* CRCArduinoFastServos::getPortFromPin(uint8_t sPin)
     return pPort;
 }
 
-// Easy to optimise this, but lets keep it readable instead, its short enough.
+// Easy to optimise this, but lets keep it readable instead
 uint8_t CRCArduinoFastServos::getPortPinMaskFromPin(uint8_t sPin)
 {
     uint8_t sPortPinMask = RC_CHANNELS_NOPIN;
@@ -330,7 +330,7 @@ void CRCArduinoFastServos::begin()
 
     // Initilialise Timer1
     TCCR1A = 0;             // normal counting mode
-    TCCR1B = 2;     // set prescaler of 8 = 1 tick = 0.5us (see ATmega328 datasheet pgs. 134-135)
+    TCCR1B = 2; // set prescaler of 8 = 1 tick = 0.5us; v. ATmega328 datasheet p134-135
 
     // ENABLE TIMER1 OCR1A INTERRUPT to enabled the first bank (A) of ten servos
     TIFR1 |= _BV(OCF1A);     // clear any pending interrupts;
@@ -376,15 +376,18 @@ void CRCArduinoPPMChannels::begin()
  attachInterrupt(0,CRCArduinoPPMChannels::INT0ISR,RISING);
 }
 
-// we could save a few micros by writting this directly in the signal handler rather than using attach interrupt
+// we could save a few micros by writting this directly in the signal handler
+//  rather than using attach interrupt
 void CRCArduinoPPMChannels::INT0ISR()
 {
   // only ever called for rising edges, so no need to check the pin state
  
-  // calculate the interval between this pulse and the last one we received which is recorded in m_unChannelRiseTime
+  // calculate the interval between this pulse and the last one we received
+  //  which is recorded in m_unChannelRiseTime
   uint16_t ulInterval = TCNT1 - m_unChannelRiseTime;
  
-  // if all of the channels have been received we should be expecting the frame space next, lets check it
+  // if all of the channels have been received we should be expecting the
+  // frame space next, lets check it
   if(m_sCurrentInputChannel == RC_CHANNEL_IN_COUNT)
   {
     // we have received all the channels we wanted, this should be the frame space

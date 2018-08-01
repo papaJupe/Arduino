@@ -1,9 +1,17 @@
 /*
-  The sketch demonstrates how to make a Bluetooth Low Energy 4
-  Advertisement connection with the Simblee, then see its CPU temperature
-  updates once a second on the SimbleeForMobile phone app.
-*/
+  SFM temp read demonstrates how to make a Bluetooth Low Energy 4
+  Advertisement connection with the Simblee, then see its CPU temp
+  updates 2x a second on the SimbleeForMobile phone app.
 
+  Uses: subdomain for cache, float print, updateText, updateRect, remote
+  deviceType, setVisible
+
+  Every 3-5 sec. temp drops to lower limit, then gradually rises to correct
+  value. Unclear why. I added some constraints and averaging to stabilize,
+  and warning when rapid change. Spark board seems to send high temp, not
+  accurate.
+
+*/
 
 #include <SimbleeForMobile.h>
 
@@ -11,22 +19,23 @@
 
 void setup()
 {
-  // this is the data we want to appear in the advertisement
-  // (if the deviceName and advertisementData are too long to fit in the 31 byte
-  // ble advertisement packet, first the advertisementData is truncated down to
-  // a single byte, then the deviceName is truncated)
-  SimbleeForMobile.advertisementData = "temp";
+  // this is the data we want to appear in the advertisement;
+  // if the deviceName + advertisementData are too long to fit 15 char
+  // ble advertisement packet, first the advertisementData is truncated to
+  // (whatever fits, or) a single byte prn, then the deviceName is truncated)
   SimbleeForMobile.deviceName = "RF-Simblee";
-  // use a subdomain to create an application specific cache
-  SimbleeForMobile.domain = "temp.Simblee.com";
+  SimbleeForMobile.advertisementData = "temp";
 
-  // establish a baseline to use the cache during development to bypass uploading
-  // the image each time
-  SimbleeForMobile.baseline = "180225";
+//  // use a subdomain to create an application specific cache
+//  SimbleeForMobile.domain = "temp.Simblee.com";
+//
+//  // establish a baseline to use the cache during development to bypass
+//  //  uploading the image each time
+//  SimbleeForMobile.baseline = "180225";
 
   // start SimbleeForMobile
   SimbleeForMobile.begin();
-}
+}  // end setup
 
 bool first_sample;
 
@@ -36,6 +45,7 @@ float max_temp;
 float temp_range;
 
 uint8_t text;
+uint8_t warning;
 uint8_t mercury;
 unsigned long lastUpdated = 0;
 unsigned long updateRate = 500; // sample 2 x / sec
@@ -53,26 +63,32 @@ void loop()
   if (SimbleeForMobile.updatable && updateRate < (loopTime - lastUpdated))
   {
     lastUpdated = loopTime;
-
+    SimbleeForMobile.updateText(warning, ""); // clear old warning
     // get a cpu temperature sample
     // degrees c (-128.00 to +127.00)
     // degrees f (-198.00 to +260.00)
     // CELSIUS / FAHRENHEIT
     float temp = Simblee_temperature(CELSIUS);
+    // make range constraint to ignore wild values, warn user
+    if (temp < prev_temp - 0.3 || temp > prev_temp + 0.3)
+    {
+      temp = prev_temp;
+      SimbleeForMobile.updateText(warning, "moving too fast");
+    }
     // probably want a moving average of temp
     temp = (prev_temp * 0.8) + (temp * 0.2);
     // requires newlib printf float support
-    char buf[16];
+    char buf[8];  // ? need to convert float to chars?
     sprintf(buf, "%.02f", temp);
 
-    // base everything on the first sample / ambient temperature
+    // base plot and limits on the first sample / ambient temperature
     // this limits image and numbers to very narrow range
     if (first_sample)
     {
       first_temp = temp;
 
       // putting your finger on the Simblee chip raises the temp ~ 2 degrees
-      min_temp = first_temp - 0.5;
+      min_temp = first_temp - 1.5;
       max_temp = first_temp + 1.5;
       temp_range = max_temp - min_temp;
       first_sample = false;
@@ -81,7 +97,7 @@ void loop()
     // update the text first with the actual temp
     SimbleeForMobile.updateText(text, buf);
 
-    // restrict temp to range
+    // restrict temp to range around initial temp
     if (temp < min_temp)
       temp = min_temp;
     if (temp > max_temp)
@@ -95,12 +111,12 @@ void loop()
 
     // update the mercury
     SimbleeForMobile.updateRect(mercury, 65, 136 + mercury_position, 33, 262 + 15 - mercury_position);
-  prev_temp = temp;
+    prev_temp = temp;
   }  // end updating
 
   // .process must be called in the loop
   SimbleeForMobile.process();
-  delay(20);
+  delay(10);  // may not need at all since
 }
 
 void SimbleeForMobile_onConnect()
@@ -128,6 +144,8 @@ void ui()
 
   text = SimbleeForMobile.drawText(145, 240, "", BLUE, 45);
 
+  warning = SimbleeForMobile.drawText(125, 285, "", RED, 24);
+
   // usable area: 56, 136, 51, 262
   // mercury area: 65, 136, 33, 262 + 15
   mercury = SimbleeForMobile.drawRect(65, 136, 33, 262 + 15, rgb(160, 0, 0), rgb(204, 0, 0));
@@ -141,8 +159,8 @@ void ui()
   SimbleeForMobile.setVisible(mercury, true);
 
   SimbleeForMobile.endScreen();
-}
+}  // end ui
 
 void ui_event(event_t &event)
-{
+{ // refresh button could reset first pass etc
 }

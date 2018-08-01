@@ -1,8 +1,7 @@
 /***************************************************
   This is a library of utility functions
 
-  Designed specifically to work with ESP8266 in the
-  Arduino IDE platform.
+  Designed specifically to work with ESP8266 on the Arduino IDE platform.
 https://github.com/internetofhomethings/ESP8266-Weather-Sensor-Webserver
   Written by Dave St. Aubin.
   Creative Commons license.

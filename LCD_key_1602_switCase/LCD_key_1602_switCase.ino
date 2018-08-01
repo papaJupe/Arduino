@@ -62,7 +62,7 @@ void loop()
    lcd.print(millis()/1000);       // display seconds elapsed since power-up
 
    lcd.setCursor(0,1);             // move to the begining of the second line
-   lcd_key = read_LCD_buttons();   // read the buttons, put a number into variable for switch
+   lcd_key = read_LCD_buttons();   // read buttons, put number into switch var
 
    switch (lcd_key)
    {           // depending on which button was pushed, we perform an action;

@@ -1,10 +1,12 @@
 /*
- input analog voltage, from pot or sonar, map to useful values, activate toner using beep
- rate and frequency to indicate distance (inversely), when target distance reached, stop tone and
- turn on a light; set adjacent analog pins (gnd, 5v, signal) to 0 and 5 v to power pot or US device
+input analog voltage, from pot or sonar, map to useful values, activate toner using beep
+rate and frequency to indicate distance (inversely), when target distance reached, stop
+tone and
+ turn on a light; set adjacent analog pins (gnd, 5v, signal) to 0 and 5 v to power pot 
+ or US device
  mod A worked fine but not optimal -- long delays make loop execute very slowly when AR big;
- mod B uses timed event method to eliminate loop delays, much more complex logic, and tone quality
- suffers from beat frequency I assume
+ mod B uses timed event method to eliminate loop delays, much more complex logic, 
+ and tone quality suffers from beat frequency I assume
  */
 
 // preprocessor directives

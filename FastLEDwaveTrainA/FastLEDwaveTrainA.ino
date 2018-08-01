@@ -9,7 +9,7 @@ FASTLED_USING_NAMESPACE
 // How many leds to control?
 #define NUM_LEDS 2
 #define BRIGHTNESS 12
-#define DATA_PIN 15  // A1
+#define DATA_PIN A1  // A1
 #define LED_TYPE WS2812B
 int brite = 0; // will set brightness from pot input during looping
 
@@ -26,15 +26,22 @@ void setup()
   FastLED.addLeds<LED_TYPE, DATA_PIN, GRB>(leds, NUM_LEDS);
 
   FastLED.setBrightness( BRIGHTNESS );
+  
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+  pinMode(A3, OUTPUT);
+  digitalWrite(A2, HIGH);
+  digitalWrite(A3, LOW);
+  
 }  // end setup
 
 void loop()
 {
   brite = analogRead(A2);
   brite = map(brite,1,666,1,44); // map 0-3 v pot range to briteness
-  FastLED.setBrightness(brite);
+  // FastLED.setBrightness(brite);
   // Turn the lites on, pause, then off; freq = 1000 msec / loop total msec
-  leds[0] = CRGB::Red;
+  leds[0] =  CRGB(255, 0, 100);;
   leds[1] = CRGB::Red;
   
 //    leds[0] = CRGB::White;

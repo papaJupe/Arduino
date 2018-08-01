@@ -1,9 +1,10 @@
-///* 
-// VoltageSamplerB4, modif of VoltageSamplerB3, adds live LCD display, et. al.;
-// -- converts 0-5 v from diff. op-amps to read ~11.5-13 v from batt source
-// and Rcurr drop to current draw; calib phase for V in setup; Curr map params
-// come from previous calib sketch -- do that first with current Rc and load Rl being used
-// */
+/* 
+ VoltageSamplerB4, modif of VoltageSamplerB3, adds live LCD display, et. al.;
+ -- converts 0-5 v from diff. op-amps to read ~11.5-13 v from batt source
+ and Rcurr drop to current draw; calib phase for V in setup; Curr map params
+ come from previous calib sketch -- do that first with current Rc and load Rl 
+ being used
+*/
 
 unsigned long starTime;  // starting time for discharge, msec, (global) used in setup and printVals fx
 unsigned long prevTime;  // initially = starTime, updated with each printVals, (global, same reason)
@@ -344,7 +345,7 @@ void readPinAvg()
 
 // *******************************
 
-void printVals(int battV,int curr) //prints batt in mV, current in mA, resets prevTime
+void printVals(int battV,int curr) // prints batt in mV, current in mA, resets prevTime
 {  
   Serial.print("elapsed min.= "); 
   Serial.print((millis() - starTime) / 60000);
@@ -357,5 +358,6 @@ void printVals(int battV,int curr) //prints batt in mV, current in mA, resets pr
   Serial.println(" mA");
   prevTime = millis(); 
 }  //end printVals
+
 
 

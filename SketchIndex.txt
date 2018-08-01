@@ -4,7 +4,10 @@ SketchIndex.txt as of 180210
   or Ser2 can be wired to USB-TTL dongle for I/O w/ Proc to test
   serial protocol: key or var in Proc sent variously, see how
   displayed in Ardu ser. mon. or used in sketch; ideas here used in
-  ServoMega TxRx Serial and BT
+  ServoMega TxRx Serial and BT, Proc SerStringReadBT
+ 
+  Uses: serial.write, read, print, TimedAction lib for repeats w/o 
+  blocking, Serial.flush, readBytes
   
 ADXL345-FRCada 
       adapted from Adafruit's _345 code for FRC accel breakout board to display 3 axis accel-
@@ -345,7 +348,7 @@ SerialReadWriteAM2   -- AM 2nd revision of PY's for Ardu <-> SmartDesktop comm
    v.2 adds float output & Streaming lib to print C++ style using insertions;
    reads digital and analog pin values, prints to serial output
    Uses: Streaming lib, boolean I/O,  strcat, sprintf, dtostrf, Serial.readBytes
-   ? still have basic questions about what char arrays actually contain after strcat, sprintf
+   ? still have questions about what char arrays actually contain after strcat, sprintf
 
 serialReadWriteAM3 -- AM 3rd revision of PY's for Ardu <-> SmartDesktop comm;
     digi & anal inputs & reading ser bool input to control leds; uses readBytes()
@@ -354,7 +357,8 @@ serialReadWriteAM3 -- AM 3rd revision of PY's for Ardu <-> SmartDesktop comm;
     v. 3 tests various ways to re-init/clear the 'out' array each loop
     Uses: char/string array, boolean input/output, Serial.readBytes
     dtostrf (vFlt,4,3,vStr) convert float to string,
-    sprintf(tempstr,"%s;",vStr);   // put numbers / string into ch array buffer
+    sprintf(tempstr,"%s",vStr);   // put numbers / string into ch array buffer
+    same for number to str: sprintf(tempstr,"%d", someInt);
     strcat(out,tempstr)          // add buffer string to array
        
 SeriPrintWrite -- to show output of ser.mon. using .write vs .print for a byte argument; 
@@ -388,6 +392,72 @@ Servo Mega tx rx Serial -- send / recv bytes over USB-TTL serial
   elapsedMillis for timed print, convert incoming data to change angle
   for servo
   
+SFM Color Wheel B -- adapted from SFM/Color Wheel example
+  version B added stepper control, sending bytes to other device
+  
+  Uses: deviceName, advertData, drawText, drawTextField, drawImage,
+  drawSlider, Serial.printf, screenWidth, update(), color_wheel, setEvent
+  for color press, volatile var (changed in event thread),
+  serial.write(byte array,len)
+  
+Simblee examples from RFduino deep in:
+   ~/Library/Arduino15/packages/Simblee/hardware/Simblee/1.1.4/libraries
+  -- show when Simb. board selected in Tools
+
+SFM Color Wheel B -- adapted from SFM/Color Wheel example
+  version B added stepper control, sending bytes to other device
+
+  Code here is uploaded to Simblee board that can be freestanding w/ (batt
+  power) or USB powered to keep Serial comm to Ardu's IDE Ser Mon for
+  debugging or whatever. Board's Serial could also comm to / from
+  another serial device like Mega (v.i.).
+  For wireless comm to whatever Simblee's Serial is connected to -- Simblee
+  phone app (iOS / Android) makes BLE connection to the Simblee, with the
+  app displaying the user interface created here. For this sketch:
+
+  Uses: deviceName, advertData, drawText, drawTextField, drawImage,
+  drawSlider, Serial.printf, screenWidth, update(), color_wheel, setEvent
+  for color press, volatile var (changed in event thread),
+  serial.write(byte array,len)
+    
+Sibl Low Power example: uses SFM lib but just does local, board
+   actions, nothing sent or recvd from mobile app. Some delay code
+   imported from SFM buttonLEDdemo
+
+   Uses: SFM.txPowerLevel, various pinWake callbacks, ULPdelay,
+   pinWakeReset, delay until button,
+
+Simb PinWake Demo shows plain wake and wake w/ specific callback
+  adapted from Simb NonBLE/PinWake example
+
+  Uses: specific callback fx, pinwake setups, ULPdelay call in loop and
+  different LED response to plain wake and callback wake from different
+  pins using pinWoke() conditionals,  Serial.printf, resetPinWake
+  
+SFM_Read_Input  -- display a Simblee board input on smart phone app
+
+SFM RoomCommTest02  -- experiments for R control from iOS/Andr
+    v. 0.1 has images for ui and few trial controls
+    v. 0.2 adds libs for byte constants, links screen events to
+    commands: completed control of power, drive, stop, brush, clean
+
+  Uses: deviceName, advertData, drawText, drawTextField, drawImage,
+  drawSlider, Serial.printf, screenWidth, update(), color_wheel, setEvent
+  for various inputs, volatile var (changed in event thread), xxd util to
+   load .h images, serial.write(byte array,len), drawText, _Rect, _Slider
+   byte constants in lib,  sprintf to make # and text into displayable str
+  
+SFM temp read demonstrates how to make a Bluetooth Low Energy 4
+  Advertisement connection with the Simblee, then see its CPU temp
+  updates 2x / second on the SimbleeForMobile phone app.
+
+ Uses: subdomain for cache, float print, updateText, updateRect, remote
+ deviceType, setVisible
+ 
+SiblDigitalReadLED -- non BLE, board test of button controlling LED
+ Reads digital input on pin 3 (of Spark BOB), prints to the serial monitor 
+
+
 SR04+VL53L LCD uno uses polo's code vl53l0x_ContinuousRanging TOF
   (on adafrut board) + SR04 US module for demo of 2 rangefinders 
   on 1 LCD display
