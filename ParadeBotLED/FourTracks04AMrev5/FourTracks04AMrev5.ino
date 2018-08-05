@@ -21,7 +21,7 @@
 
 // How many leds are in the strip?
 #define NUM_LEDS 298   // 155 for test strip;  full strip 298
-#define DATA_PIN 4
+#define DATA_PIN 3
 #define IS_LEFT_FORWARD_PIN 8
 #define IS_RIGHT_FORWARD_PIN 9
 #define GOING_PIN 10
@@ -46,7 +46,7 @@ void setup()
   pinMode( DATA_PIN, OUTPUT );
 
   digitalWrite(GOING_PIN, LOW);  // uncomment if using HIGH = true below
-  digitalWrite(IS_RIGHT_FORWARD, LOW);
+  digitalWrite(IS_RIGHT_FORWARD_PIN, LOW);
   digitalWrite(IS_LEFT_FORWARD_PIN, LOW);
 
   for (int i = 0; i < NUM_LEDS; i++)
@@ -200,7 +200,7 @@ void rightIterate()
   } // end for front R quadrant
 }  // end R iterate
 
-void leftIterate()   // uncomment if L side lites  present
+void leftIterate()   // uncomment if L side lites present
 {
   for (int i = 149; i < 223; i++ )  // left front string
   {
