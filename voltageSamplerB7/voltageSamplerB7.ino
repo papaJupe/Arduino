@@ -5,7 +5,7 @@
    
   -- just the numbers for min,mV,mA
  
-  -- converts 0-5 v from diff. op-amps to read ~11.5-13 v from batt source
+  -- converts 0-5 v from diff. op-amps to read ~11.4-12.4 v from batt source
   and Rcurr drop to current draw; [calib phase for V in setup]; Curr map params
   come from previous calib sketch -- do that first with current Rc and load Rl
   being used
@@ -15,8 +15,8 @@
 unsigned long starTime;  // starting time for discharge, msec, (global) used in setup and printVals fx
 unsigned long prevTime;  // initially = starTime, updated with each printVals, (global, same reason)
 
-const int targVolt = 11500; // discharge target in mV, varies with batt type, depth you want;
-// this is 20% dc at C/20 for SLA; variable used only in loop, init here for clarity
+const int targVolt = 11400; // discharge target in mV, varies with batt type, depth you want;
+
 
 // for 8x2 LCD, include the library
 #include <LiquidCrystal.h>
@@ -26,8 +26,8 @@ LiquidCrystal lcd(12, 11, 4, 5, 6, 7); // lib is smart enough to know if you're 
 #define pinIn1 A5          // pin to read test batt voltage via op-amplification
 #define pinIn2 A2          // pin to read curr sense voltage across Rc via op-amplification
 
-int mapA = 123;      // default V map params, A for 11.5, B for 13.0
-int mapB = 975;
+int mapA = 414;      // default V map params, A for 11.4, B for 12.4
+int mapB = 997; // w/ VR set to 10.60 v
 
 //int mapC = 640;      // empiric C map params, pinIn2 to dc current mA
 //int mapD = 928;      // these are values from calib using 2 ohm Rc and Rl 8.6
@@ -170,7 +170,7 @@ void setup()   // check & calibrate voltage readout, if OK sets starTime for dc 
   }  //end for
 
   // convert analog reading (0 - 1023) to batt voltage (11.5-13) using map params
-  voltage = map(newVavg, mapA, mapB, 11500, 13000); // in mV, resolves ~2 mV
+  voltage = map(newVavg, mapA, mapB, 11400, 12400); // in mV, resolves ~2 mV
   // convert analog reading (0 - 1023) to current (via amplified voltage (0-1.9 across Rc)
   current = map(newCavg, mapC, mapD, mapE, mapF); // map AR ticks to current (mA) for X ohm Rc
 
@@ -193,7 +193,7 @@ void loop()   // read the batt volt, print elapsed time & values, more often as 
   readPinAvg();  // gets MA x5 of V, C pins, puts it in new_avg global float variables
 
   // convert analog reading (0 - 1023) to a voltage (11.5-13) using map params
-  int battVolt = map(newVavg, mapA, mapB, 11500, 13000); // in mV, resolves ~2 mV
+  int battVolt = map(newVavg, mapA, mapB, 11400, 12400); // in mV, resolves ~2 mV
   int battCurr = map(newCavg, mapC, mapD, mapE, mapF); // same for current
 
   static int baseVolt = battVolt;          // batt V in mV when we started discharging, set once
@@ -215,7 +215,7 @@ void loop()   // read the batt volt, print elapsed time & values, more often as 
     // refresh battVolt 'while looping'
     readPinAvg();  // gets average of V, C pins, puts them in new_avg global variables
     // takes 2 sec.
-    battVolt = map(newVavg, mapA, mapB, 11500, 13000); // in mV, resolves ~2 mV
+    battVolt = map(newVavg, mapA, mapB, 11400, 12400); // in mV, resolves ~2 mV
     battCurr = map(newCavg, mapC, mapD, mapE, mapF);
     //  Serial.println("main loop just read battV");
     if (pinPrint == 0)
@@ -329,7 +329,7 @@ void loop()   // read the batt volt, print elapsed time & values, more often as 
     // refresh values
     readPinAvg();  // gets average of V, C pins, puts them in new_avg global variables
 
-    int battVolt = map(newVavg, mapA, mapB, 11500, 13000);
+    int battVolt = map(newVavg, mapA, mapB, 11400, 12400);
     int battCurr = map(newCavg, mapC, mapD, mapE, mapF);
 
     if (pinPrint == 0)
