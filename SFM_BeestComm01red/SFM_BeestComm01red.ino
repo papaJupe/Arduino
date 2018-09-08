@@ -2,8 +2,7 @@
 /* SFM Beest Comm 1  -- 2 motor beest control from iOS/Andr
 
   v. 0.1 mods of SFM RoomComm for dual motor control from 6 simb pins
-
-  toDo: 
+  read batt V on one pin
 
   Code here is uploaded to Simblee board to control 2 motors.
   Simblee phone app (iOS / Android) makes BLE connection to the Simblee,
@@ -17,7 +16,7 @@
   for various inputs, [prev. RooComm used xxd util toload .h images],
   serial.write(byte array,len), drawText, _Rect, _Slider
   byte constants in lib, sprintf to make # and text into displayable str,
-  analog read motor batt V on A4/D3 pin -- display in data field;
+  analog read motor batt V on pin 6 -- display in data field;
   
 */
 
@@ -55,7 +54,7 @@ uint8_t textControl;  // reports current control var
 uint8_t textData;  // field ID for sensor data
 
 // volatile bool needsUpdate;  // volatile -- true on event input,
-// -- if true, loop called update() to do stuff,
+// --  B4 if true, loop called update() to do stuff,
 // now ui_event just calls update() itself
 
 uint8_t eventId;
@@ -63,8 +62,6 @@ uint8_t eventId;
 void setup() {
   // Serial.begin(57600); // no use for serial except testing
 
-  // onboard led flashes w/ loop
-  // pinMode(led, OUTPUT);  // done below
   pinMode(6, INPUT); // anal read motor batt voltage thru divider
   // set pins 2 through 14 for m.c. outputs: only some used
   for (int thisPin = 2; thisPin <= 14; thisPin++)
@@ -86,7 +83,7 @@ void setup() {
 
 void loop()
 { // loop implements current drive vars set in update()
-  static int count = 0; // cts manage [led flash and] volt read
+  static int count = 0; // counts manage [led flash and] volt read
   if (SimbleeForMobile.updatable) // current cmd sent to field
   {
     SimbleeForMobile.updateText(textControl, cont);

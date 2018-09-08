@@ -1,5 +1,5 @@
 /* 
- VoltageSamplerB5, modif of VoltageSamplerB4, made to roughly monitor discharge, 
+ VoltageSamplerDisch, modif of VoltageSamplerB4, made to roughly monitor discharge, 
  using external R, to 12.4 v for conditioning; drops curr monitor, etc. 
  
  */

@@ -6,3 +6,4 @@ libraries/elapsedMillis/LICENSE
 *.yml
 
 .sync.ffs_db
+*.DAT
