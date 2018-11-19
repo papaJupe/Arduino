@@ -4,13 +4,13 @@
  I modified to accept input from serial mon or pot, and show the delay
  */
 
-// Pin 13 has an LED on most Arduino boards;
+// Pin 13 wired to LED on most Arduino boards;
 // give it a name:
 int led = 13;
 int blinkDelay = 1500;
 
 // the setup routine runs once when you power up, press reset
-// or open new Serial Monitor window (mac only?):
+// or open new Serial Monitor window:
 
 void setup() 
 { 

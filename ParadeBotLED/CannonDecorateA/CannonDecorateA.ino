@@ -23,14 +23,15 @@
 #define purple 0x00FFFF
 
 // How many leds are in the strip
-#define NUM_LEDS 300
-#define DATA_PIN 3
+#define NUM_LEDS 11
+#define DATA_PIN 12
 
 CRGB leds[NUM_LEDS];
 int count = 0;  // loop count increments -- loop speed affects rate
 // of flash and segment movement
 int superCount = 0;   // whether flash or alternative when stopped
 uint8_t gHue = 0; // rotating "base color" used by alternate pattern
+boolean IS_FIRING = true;
 
 void setup()
 {
@@ -38,7 +39,7 @@ void setup()
   FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, NUM_LEDS);
   // FastLED.setBrightness(60);  // 0-255, use min value needed for environment
   // or FastLED.setMaxPowerInVoltsAndMilliamps(uint8_t volts, uint32_t milliamps}
-  FastLED.setMaxPowerInVoltsAndMilliamps(5, 1000);
+  FastLED.setMaxPowerInVoltsAndMilliamps(5, 100);
 
   // Serial.begin(9600);  // for debugging only
 
@@ -64,20 +65,50 @@ void loop()
 //    else  flash();
   
   // make series of 4 colored segments, each 5 lites long
-  for (int i = 0; i < NUM_LEDS; i++)
-  {  
-    byte idx = i % 20;
-    if (idx >= 15) leds[i] = green;
-    else if (idx >= 10) leds[i] = blue;
-    else if (idx >= 5) leds[i] = yellow;
-   // the rest stay red from setup assignments
-  }
+//  for (int i = 0; i < NUM_LEDS; i++)
+//  {  
+//    byte idx = i % 20;
+//    if (idx >= 15) leds[i] = green;
+//    else if (idx >= 10) leds[i] = blue;
+//    else if (idx >= 5) leds[i] = yellow;
+//   // the rest stay red from setup assignments
+//  }
 
+// example moving segment of 10 lites
+// moving 10 lite segments (some color, some blk) look like this
+// subtracting ct shifts forward
+   for (int i = 0; i < 10; i++ )
+  {
+    if (digitalRead(IS_FIRING))    // true when 'firing' pin pulls high
+    {  // need add # > max count, for small i lite numbers to work;
+      if ( ((i+10 - count) % 10) < 6 ) // make last # larger to light up more lites
+      {
+        leds[i] = red;
+      }
+      else
+      {
+        leds[i] = black;
+      }
+    } // end if firing  true
+    else  // reverse 'movement' of lite segments
+    {
+      // adding count offset reverses segment motion
+      if ( ((i + count) % 10) < 6 )
+      {
+        leds[i] = red;
+      }
+      else
+      {
+        leds[i] = black;
+      }
+    }  // end else: reversed
+  } // end for moving segments
+  
   FastLED.show(); // functions above fill light arrays, this fx sends data to led strip
 
-//    count++;  // count increments each loop
+    count++;  // count increments each loop
 //    superCount++;
-//    if (count > 14)   count = 0;  // cycles count 0-->14
+    if (count > 9)   count = 0;  // should be same # of counts as modulo
 //    if (superCount > 200)   superCount = 0;
 
   delay(50);  // loop delay controls iteration rate, thus speed of all functions that use count

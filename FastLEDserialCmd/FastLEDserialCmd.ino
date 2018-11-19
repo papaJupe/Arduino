@@ -1,7 +1,8 @@
 /* FastLEDserialCommand adapted from FastLEDwaveTrain
     Uses one or two flashing Neopixls on Mega, with color values input
     over Serial1 from another device, e.g. Simblee module linked w/
-    BLE to phone app. To test sending of byte array.
+    BLE to phone app. To test sending of byte array. Can mod to get
+    byte input from ser mon.
 
     Uses: FastLED, map, setBrightness,
 */
@@ -46,7 +47,7 @@ void setup()
 
 void loop()
 { // void * memset ( void * ptr, int value, size_t num );
-  memset(inByt, 0, 5);  // now all null ?
+  memset(inByt, 0, 5);  // now all null ? or '0'
 
   // read input to Serial1 from Simblee et. al., put values in color vars
   if (Serial1.available() > 0)
@@ -62,7 +63,7 @@ void loop()
     brite = inByt[3];
     // print new data in Ser Mon
     for (int i = 0; i < sizeof(inByt); i++)
-    { Serial.print(inByt[i]);  // prints bytes as number
+    { Serial.print(inByt[i]);  // prints bytes as ascii number
       Serial.print(" ");
     }
     Serial.println();
@@ -83,7 +84,7 @@ void loop()
   //    leds[0] = CRGB::White;
   //    leds[1] = CRGB::White;
 
-  FastLED.show();
+  FastLED.show();  // flash new colors
   delay(240);
 
   leds[0] = CRGB::Black;

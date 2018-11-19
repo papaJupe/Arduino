@@ -1,28 +1,28 @@
 
-/* SFM Beest Comm 1  -- 2 motor beest control from iOS/Andr
+/* SFM Beest Comm 1  -- 2 motor strandbeest control from iOS/Andr
 
-  v. 0.1 mods of SFM RoomComm for dual motor control from 6 simb pins
-  read batt V on one pin
+  v. 0.1 mods of SFM RoomComm for dual motor control from 6 simblee pins,
+  read batt V on one analog pin
 
   Code here is uploaded to Simblee board to control 2 motors.
   Simblee phone app (iOS / Android) makes BLE connection to the Simblee,
-  with the app displaying the user interface created here to write to
-  motor controller inputs. To operate, power up Beast & Simb bd,
-  open app, connect to Simb, press Power square, then drive or other. Stop
-  square stops any action; Power down just blocks drive code
+  with the app displaying the user interface created here to send
+  motor controller commands. To operate, power up Beast & Simblee board,
+  open app, connect to board, press Power square, then drive or other. 
+  Stop square stops any action; Power down just blocks drive code
 
   Uses: deviceName, advertData, drawText, drawTextField, drawImage,
   drawSlider, [Serial.printf], screenWidth, update(), setEvent
-  for various inputs, [prev. RooComm used xxd util toload .h images],
-  serial.write(byte array,len), drawText, _Rect, _Slider
-  byte constants in lib, sprintf to make # and text into displayable str,
-  analog read motor batt V on pin 6 -- display in data field;
+  for various inputs, [prev. RooComm used xxd util to load images as 
+  .h file], drawText, _Rect, _Slider, byte constants in lib for image
+  id's, sprintf to convert vars to # and text into displayable string,
+  analog read motor batt V on pin 6 -- display in data field
   
 */
 
 #include <SimbleeForMobile.h>
 
-// image of drive arrows x 6 OK; > 7 crash compiler, ? still
+// image of drive arrows x 6 OK; > 7 crash compiler
 #include "arrowU.h"
 #include "arrowL.h"
 #include "arrowR.h"
@@ -30,40 +30,42 @@
 #include "upLeft.h"
 #include "upRt.h"
 
-// int led = 2;  2 used for motor control
+// int led = 2;  pin 2 now used for motor control
 
 // update() uses these vals to init screen objects when called in ui()
 uint8_t speed = 80;
 
-bool powerMode = 0; // power down, can't drive
+bool powerMode = 0; // power down, can't drive until power up
 
-// vars used in driveX() for R/L motor cmds
+// vars used in drive_() for R/L motor cmds
 bool r1 = 0;
 bool r2 = 0;
-byte rP = 0; // speed range 0-254
+byte rP = 0; // speed range 0-254 (pwm range)
 
 bool l1 = 0;
 bool l2 = 0;
 byte lP = 0;
 
-char cont[62];  // string to show current control commands in top box
+char control[62];  // string to show current control commands in top box
 char data[52] = "";  // string to show sensor data as text in 2nd frame
-// byte sensIn[26];  // todo -- byte array to recv sensor data
+// byte sensIn[26];  // todo -- byte array to recv more sensor data ?
 
-uint8_t textControl;  // reports current control var
-uint8_t textData;  // field ID for sensor data
+uint8_t textControl;  // reports current control variables
+uint8_t textData;  // field ID for batt volt / sensor data
 
-// volatile bool needsUpdate;  // volatile -- true on event input,
-// --  B4 if true, loop called update() to do stuff,
-// now ui_event just calls update() itself
+// volatile bool needsUpdate -- true on event input,
+// --  before, if true, loop called update() to do stuff,
+// now not needed, ui_event just calls update() itself
+// variable set by external process that's called in loop must be volatile
 
 uint8_t eventId;
 
 void setup() {
-  // Serial.begin(57600); // no use for serial except testing
+  // Serial.begin(57600); // no need for serial except testing
 
   pinMode(6, INPUT); // anal read motor batt voltage thru divider
-  // set pins 2 through 14 for m.c. outputs: only some used
+  
+  // set pins 2 through 14 for motor control outputs: only some used
   for (int thisPin = 2; thisPin <= 14; thisPin++)
   {
     pinMode(thisPin, OUTPUT);
@@ -83,27 +85,25 @@ void setup() {
 
 void loop()
 { // loop implements current drive vars set in update()
-  static int count = 0; // counts manage [led flash and] volt read
+  static int count = 0; // counts manage occasional batt volt read
   if (SimbleeForMobile.updatable) // current cmd sent to field
   {
-    SimbleeForMobile.updateText(textControl, cont);
+    SimbleeForMobile.updateText(textControl, control);
     SimbleeForMobile.updateText(textData, data);
   }
 
   driveR(r1, r2, rP);
   driveL(l1, l2, lP);
 
-  // board led on 2 shows motor B pin 1 active (flashed LED before)
   if (count == 2)
   {
-    // digitalWrite(led, HIGH);
     int battV = analogRead(6);  // AR voltage, D3 on Lily, D6 on SparkRed
     battV = map(battV, 1, 963, 0, 8400); // map to motor batt max mV
     sprintf(data, "     batt voltage = %d ", battV);  // put int's chars in array
     // Serial.println(battV);
   }
-  // if (count == 8) digitalWrite(led, LOW);
-  if (count > 19) count = 0; // delay & count ==> gets data every 2 sec
+ 
+  if (count > 19) count = 0; // loop delay + count ==> get data every 2 sec
 
   // SFM.process must be called in the loop
   SimbleeForMobile.process();
@@ -134,12 +134,12 @@ uint8_t dataRect;  // white frame around textControl & textData fields
 
 uint8_t speedSlide;  // control abs value of speed, used in all drive() cmd
 
-// 9 rects underlay arrow image for drive control
+// 9 rects underlay arrow images for drive control
 uint8_t rectA, rectB, rectC;
 uint8_t rectD, rectE, rectF;
 uint8_t rectG, rectH, rectI;
 
-// 3 bottom butts, as named, not all used now
+// 3 bottom buttons, as named, not all used now
 uint8_t rectBrush, rectPower, rectClean;
 // 3 bottom labels, as named
 uint8_t textBrush, textPower, textClean;
@@ -159,30 +159,30 @@ void update() // any ui_event calls this fx;
   // if only one event can affect var, or I don't care which, update the value
   // SimbleeForMobile.updateValue(britefield, brite);
 
-  memset(cont, 0, 62);
+  memset(control, 0, 62); // best way to clear the array
   // on any update I put speed into control field first
-  sprintf(cont, "     spd = %d ", speed);  // put int's as chars in array
+  sprintf(control, "     spd = %d ", speed);  // put int's as chars in array
 
-  //  pressing center square stops all drive, does not Power down
+  //  pressing center square stops all drive, does not Power Down
   if (eventId == rectE | eventId == textStop)
   {
     r1 = 0; r2 = 0; rP = 0;
     l1 = 0; l2 = 0; lP = 0;
-    sprintf(cont, "     drive stopped ");
+    sprintf(control, "     drive stopped ");
   }
 
   // turn power ON -- each press toggles power mode
   else if (eventId == rectPower &&  powerMode == 0)
-  { char spin[] = "    pressed power ON ";
-    strcat(cont, spin);
+  { char specific[] = "    pressed power ON ";
+    strcat(control, specific);
     powerMode = 1;
   }
 
   // turn power OFF
   else if (eventId == rectPower &&  powerMode == 1)
   { // if power up already, stop and power down
-    memset(cont, 0, 62);
-    strcat(cont, "    pressed power OFF");
+    memset(control, 0, 62);
+    strcat(control, "    pressed power OFF");
     powerMode = 0;
   }
 
@@ -191,8 +191,8 @@ void update() // any ui_event calls this fx;
   {
     r1 = 1; r2 = 0; rP = speed;
     l1 = 1; l2 = 0;  lP = speed;
-    char spin[] = "    drive FWD ";
-    strcat(cont, spin);
+    char specific[] = "    drive FWD ";
+    strcat(control, specific);
   }
 
   // straight back
@@ -200,16 +200,16 @@ void update() // any ui_event calls this fx;
   {
     r1 = 0; r2 = 1; rP = speed;
     l1 = 0; l2 = 1; lP = speed;
-    char spin[] = "    drive REV ";
-    strcat(cont, spin);
+    char specific[] = "    drive REV ";
+    strcat(control, specific);
   }
 
   else if (eventId == rectD && powerMode)
   {
     r1 = 1; r2 = 0; rP = (speed*4)/5;
     l1 = 0; l2 = 1; lP = (speed*4)/5;
-    char spin[] = "   L spin";
-    strcat(cont, spin);
+    char specific[] = "   L spin";
+    strcat(control, specific);
 
   }
 
@@ -217,31 +217,31 @@ void update() // any ui_event calls this fx;
   {
     r1 = 0; r2 = 1; rP = (speed*4)/5;
     l1 = 1; l2 = 0; lP = (speed*4)/5;
-    char spin[] = "   R spin";
-    strcat(cont, spin);
+    char specific[] = "   R spin";
+    strcat(control, specific);
   }
 
   else if (eventId == rectA && powerMode)
   {
     r1 = 1; r2 = 0; rP = (speed*5)/4;
     l1 = 1; l2 = 0; lP = (3*speed) / 4;
-    char spin[] = "   L fwd turn";
-    strcat(cont, spin);
+    char specific[] = "   L fwd turn";
+    strcat(control, specific);
 
   }
 
   else if (eventId == rectC && powerMode)
   {
-    char spin[] = "   R fwd turn";
-    strcat(cont, spin);
+    char specific[] = "   R fwd turn";
+    strcat(control, specific);
     r1 = 1; r2 = 0; rP = (speed*3)/4;
     l1 = 1; l2 = 0; lP = (speed*5)/4;
   }
 
   else if (eventId == rectG && powerMode)
   {
-    char spin[] = "   L bak turn";
-    strcat(cont, spin);
+    char specific[] = "   L bak turn";
+    strcat(control, specific);
     r1 = 0; r2 = 1; rP = (speed*5)/4;
     l1 = 0; l2 = 1; lP = (speed*3)/4;
 
@@ -249,8 +249,8 @@ void update() // any ui_event calls this fx;
 
   else if (eventId == rectI && powerMode)
   {
-    char spin[] = " R bak turn";
-    strcat(cont, spin);
+    char specific[] = " R bak turn";
+    strcat(control, specific);
     r1 = 0; r2 = 1; rP = (speed*3)/4;
     l1 = 0; l2 = 1; lP = (speed*5)/4;
   }
@@ -262,7 +262,7 @@ void update() // any ui_event calls this fx;
 
 void ui() // ui() loads the screen graphics, no role in
 // updating values. Screen params print once @ first update event.
-{ // where could printf print ? C editor console ?
+{ // where could printf print ? -- C editor console ?
   // printf("UI screen size: %dx%d", SimbleeForMobile.screenWidth,
   // SFM.screenHeight); --> same 320w x 568h in Andr/iOS
   //  Serial.printf("ScreenW: %d \n", SimbleeForMobile.screenWidth);
@@ -278,7 +278,7 @@ void ui() // ui() loads the screen graphics, no role in
 #define leftArro 3
 #define rtArro 4
 #define upLeft 5
-#define upRt 6  // only allowed 6-7 img, adding more crashes app
+#define upRt 6  // app only allows 6-7 img, adding more crashes app
   //  #define downLeft 7
 
   SimbleeForMobile.beginScreen(medblu);
@@ -286,7 +286,7 @@ void ui() // ui() loads the screen graphics, no role in
   // drwTexFld's 4th param for value is soon overwritten by update(), but
   // type is used (int vs. str) to configure field as Text or Numeric
   dataRect = SimbleeForMobile.drawRect(4, 24, 312, 88, WHITE);
-  textControl = SimbleeForMobile.drawTextField(5, 26, 310, cont,
+  textControl = SimbleeForMobile.drawTextField(5, 26, 310, control,
                 "    cmd display", WHITE, medblu);
   textData = SimbleeForMobile.drawTextField(5, 62, 310, data,
              "  data display", WHITE, medblu);
@@ -322,13 +322,13 @@ void ui() // ui() loads the screen graphics, no role in
   // draw transp image over rect, andr Y, iOS Y but may block rect event
   SimbleeForMobile.drawImage(bott3, 8, 362);
 
-  //  can't add >7 images?: compiles, but app fails to open
+  //  can't add >7 images: compiles, but app fails to open
   //  SimbleeForMobile.imageSource(downLeft, PNG, downLeft_png, downLeft_png_len );
   //  SimbleeForMobile.drawImage(downLeft, 11, 355);
 
   SimbleeForMobile.drawText(140, 248, "STOP", WHITE);
   SimbleeForMobile.drawText(120, 428, "Drive Speed", WHITE);
-  SimbleeForMobile.drawRect(8, 448, 300, 32, ltblu); // color not shown either app
+  SimbleeForMobile.drawRect(8, 448, 300, 32, ltblu); // color not shown iOS/andr 
   speedSlide = SimbleeForMobile.drawSlider(26, 449, 270, 0, 254, ltred);
 
   // 3 control rects, as buttons
@@ -342,7 +342,7 @@ void ui() // ui() loads the screen graphics, no role in
 
   // RAM overflow if I include big img -- why? compile says only 35% used!
   // SimbleeForMobile.imageSource(brushB, JPG, brushButt_jpg, brushButt_jpg_len );
-  //// will rect still work if I draw transp image over it, andr Y, iOS Y if not on it
+  // will rect still work if I draw transp image over it: andr Y, iOS Y if not on it
   //  SimbleeForMobile.drawImage(brushB, 4, 483);
 
   //rtextfield = SimbleeForMobile.drawTextField(245, 65, 50, red, "", WHITE, darkgray);
@@ -394,7 +394,6 @@ void ui() // ui() loads the screen graphics, no role in
 void ui_event(event_t &event)
 { // just resets vars according to event ID; kept small
   // for speed --> most actions done in loop & update()
-  // eventId = event.id; //  value that update() uses to set vars
 
   if (event.id == speedSlide)
   {
@@ -402,6 +401,7 @@ void ui_event(event_t &event)
     // green = event.green;
   } // I only update eventId if it's not speedSlide, so the new speed goes to
   // existing run mode immediately
+  // 'eventId = event.id' -- update() uses this global var to set drive params
   else eventId = event.id;
 
   //  else if (event.id == rslider || event.id == rtextfield)
