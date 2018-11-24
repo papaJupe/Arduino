@@ -46,7 +46,6 @@ void setup()
   pinMode( DATA_PIN, OUTPUT );
 
   digitalWrite(GOING_PIN, LOW);  // uncomment if using HIGH = true below
-  digitalWrite(IS_RIGHT_FORWARD_PIN, LOW);
   digitalWrite(IS_LEFT_FORWARD_PIN, LOW);
 
   for (int i = 0; i < NUM_LEDS; i++)
@@ -54,7 +53,7 @@ void setup()
     leds[i] = projectY;   // indicates init to stopped state
   }
   FastLED.show();  // for loop above fills the array; .show sends data to led string
-  delay(2000);
+  delay(1000);
 
 }  // end setup
 
@@ -69,7 +68,7 @@ void loop()
     rightIterate();
     leftIterate();
   }
-  else
+  else  //we're stopped, just flashing some patterns
   {
     if (superCount > 120)
     {
@@ -144,9 +143,9 @@ void flash()  // does this when not going
 
 void rightIterate()
 {
-  for (int i = 0; i < 75; i++ )   // R side Rear string
+  for (int i = 0; i < 75; i++ )   // R side Rear string (mounted reverse of R Front string now)
   {
-    if (digitalRead(IS_RIGHT_FORWARD_PIN) == 1) // true when pin pulls high
+    if (digitalRead(IS_RIGHT_FORWARD_PIN) == 0) // true when pin pulls high
     {
       if ( ((i + 14 - count) % 15) < 7 ) // make x, last #, larger to light up more lites
       {
@@ -200,7 +199,7 @@ void rightIterate()
   } // end for front R quadrant
 }  // end R iterate
 
-void leftIterate()   // uncomment if L side lites present
+void leftIterate()   // uncomment if L side lites  present
 {
   for (int i = 149; i < 223; i++ )  // left front string
   {
