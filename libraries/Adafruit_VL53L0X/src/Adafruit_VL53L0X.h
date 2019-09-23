@@ -38,7 +38,7 @@
 class Adafruit_VL53L0X
 {
   public:
-    boolean       begin(uint8_t i2c_addr = VL53L0X_I2C_ADDR, boolean debug = false );
+    boolean       begin(uint8_t i2c_addr = VL53L0X_I2C_ADDR, boolean debug = false, TwoWire *i2c = &Wire);
     boolean       setAddress(uint8_t newAddr);
 
     /**************************************************************************/
@@ -52,7 +52,7 @@ class Adafruit_VL53L0X
     VL53L0X_Error 
       rangingTest(VL53L0X_RangingMeasurementData_t* pRangingMeasurementData, 
 		  boolean debug = false) 
-    { getSingleRangingMeasurement(pRangingMeasurementData, debug); };
+    { return getSingleRangingMeasurement(pRangingMeasurementData, debug); };
 
     VL53L0X_Error getSingleRangingMeasurement( VL53L0X_RangingMeasurementData_t* pRangingMeasurementData, boolean debug = false );
     void          printRangeStatus( VL53L0X_RangingMeasurementData_t* pRangingMeasurementData );
