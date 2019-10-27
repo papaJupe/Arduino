@@ -18,7 +18,7 @@
 
 #include <SimbleeForMobile.h>
 
-const int btn = 3; // The Spark Simblee BOB (WRL-13632) button's on pin 3
+const int btn = 3; // The Spark Simblee BOB (WRL-13632) button goes to pin 3
 
 // Every draw command returns a uint8_t result which is the object id that was
 // created. If you wish to change the object later, you'll need this value, and
@@ -26,7 +26,8 @@ const int btn = 3; // The Spark Simblee BOB (WRL-13632) button's on pin 3
 // too. Make sure you create these id variables outside of any function, as
 // you'll need to refer to them in many other functions (globally)
 
-uint8_t boxID;
+uint8_t boxID;  // just defining the (byte) type here; value is set (internally -- we 
+    // never see it) when var is assigned to a box object later in ui()
 
 void setup() 
 {
@@ -58,7 +59,7 @@ void loop()
   if (SimbleeForMobile.updatable)
   {
     // Okay, *now* we can read the button. The updateColor()
-    //  function takes the id returned when we created the box and
+    // function takes the id returned when we created the box and
     // tells that object to change to the color parameter passed.
     if (digitalRead(btn) == LOW) SimbleeForMobile.updateColor(boxID, WHITE);
     else SimbleeForMobile.updateColor(boxID, BLACK);
@@ -107,7 +108,7 @@ void ui()
 // behavior, so you'll only rarely have to change them.
 void ui_event(event_t &event)
 {
-  // In this case, we're sending data back from the Simblee to the app, so we
-  // don't respond to any events on the phone app screen.
+  // In this case, we're sending data from the Simblee board to the app, so we
+  // don't respond to any events on the phone screen.
 }
 

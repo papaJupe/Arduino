@@ -1,33 +1,33 @@
 #FUNCTIONS COLOR 			#D35400 - ORANGE			KEYWORD1
 #FUNCTIONS COLOR			#D35400 - ORANGE			KEYWORD2
-#STRUCTURE COLORS 			#5E6D03 - GREEN			KEYWORD3
-#VARIABLES COLOR 				#00979C - BLUE				LITERAL1
+#STRUCTURE COLORS 			#5E6D03 - GREEN			    KEYWORD3
+#VARIABLES COLOR 			#00979C - BLUE				LITERAL1
 
-#ERROR COLOR					#A61717 - RED
+#ERROR COLOR				#A61717 - RED
 #COMMENTS // COLOR			#95A5A6 - LIGHT GREY
 #COMMENTS /**/ COLOR		#434F54	- DARK GREY
 
 
 # GUI - STATUS
-status.notice.fgcolor = #002325
-status.notice.bgcolor = #404040
+status.notice.fgcolor = #eeeeee
+status.notice.bgcolor = #333333
 status.error.fgcolor = #FFFFFF
-status.error.bgcolor = #E34C00
+status.error.bgcolor = #333333
 status.edit.fgcolor = #000000
-status.edit.bgcolor = #F1B500
-status.font = SansSerif,plain,12
+status.edit.bgcolor = #cccc00
+status.font = SansSerif,plain,14
 
 # GUI - TABS
 # settings for the tabs at the top
 # (tab images are stored in the lib/theme folder)
 header.bgcolor = #404040
-header.text.selected.color = #323232
+header.text.selected.color = #000000
 header.text.unselected.color = #3C3C3C
-header.text.font = SansSerif,plain,12
+header.text.font = SansSerif,plain,14
 
 # GUI - CONSOLE
 console.font = Monospaced,plain,11
-console.font.macosx = Monaco,plain,10
+console.font.macosx = Monaco,plain,12
 console.color = #000000
 console.output.color = #eeeeee
 console.error.color = #E34C00
@@ -76,31 +76,31 @@ editor.brackethighlight.color = #006699
 # TEXT - KEYWORDS
 
 # FUNCTIONS
-editor.keyword1.style = #d35400,bold
-editor.data_type.style = #d35400,bold
+editor.keyword1.style = #99CC33,bold
+editor.data_type.style = #99CC33,bold
 
 # METHODS
-editor.keyword2.style = #D35400,plain
-editor.function.style = #d35400,plain
+editor.keyword2.style = #eeCC33,plain
+editor.function.style = #eeCC33,plain
 
 # STRUCTURES
-editor.keyword3.style = #5E6D03,plain
-editor.reserved_word.style = #5E6D03,plain
+editor.keyword3.style = #66CC33,plain
+editor.reserved_word.style = #66CC33,plain
 
 
 # TEXT - LITERALS
 
 # constants & datatypes
-editor.literal1.style = #006699,plain
+editor.literal1.style = #0099ff,plain
 
 # p5 built in variables: e.g. mouseX, width, pixels
-editor.literal2.style = #00979C,plain
-editor.variable.style = #00979C,plain
-editor.reserved_word_2.style = #00979C,plain
-editor.literal_boolean.style = #00979C,plain
-editor.literal_char.style = #00979C,plain
-editor.literal_string_double_quote.style = #00979C,plain
-editor.preprocessor.style = #5E6D03,plain
+editor.literal2.style = #0099ff,plain
+editor.variable.style = #0099ff,plain
+editor.reserved_word_2.style = #0099ff,plain
+editor.literal_boolean.style = #0099ff,plain
+editor.literal_char.style = #0099ff,plain
+editor.literal_string_double_quote.style = #0099ff,plain
+editor.preprocessor.style = #ff9933,plain
 
 # http://www.arduino.cc/ - GET RID OF UNDERLINE!
 editor.url.style = #81A421,plain
@@ -115,8 +115,8 @@ editor.label.style = #7e7e7e,bold
 
 
 # TEXT - COMMENTS
-editor.comment1.style = #aaaaaa,plain
-editor.comment2.style = #aaaaaa,plain
+editor.comment1.style = #ffdddd,plain
+editor.comment2.style = #ccffff,plain
 
 
 # LINE STATUS - editor line number status bar at the bottom of the screen

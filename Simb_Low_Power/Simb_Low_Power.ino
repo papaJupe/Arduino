@@ -4,7 +4,7 @@
    imported from SFM buttonLEDdemo
 
    Uses: SFM.txPowerLevel, various pinWake callbacks, ULPdelay,
-   pinWakeReset, delay until button,
+   pinWakeReset, delay_until_button,
 
    Orig: 29 Jan 2016 https://github.com/sparkfun/Simblee_Tutorials
 
@@ -18,7 +18,7 @@
 
 const byte led = 13; // sparky BOB (WRL-13632) LED on pin 2, Lily is 13
 const int button = 3;  // BOB button is wired to D3, on Lily I use wire
-const int callbutt = 9; // pin 9 wakes & runs a specific fx, 3 blinx
+const int callbutt = 9; // pin 9 LOW wakes & runs a specific fx, 3 blinx
 
 void setup()
 {
@@ -35,37 +35,42 @@ void setup()
   // txPowerLevel can be any multiple of 4 between -20 and +4, inclusive. The
   // default value is +4; at -20 range is only a few feet.
   SimbleeForMobile.txPowerLevel = -4;
-  // wake setup for button is in loop but for callbutt I set here
+  
+  // wake setup for button (3) is in loop but for callbutt (9) I set action here
   Simblee_pinWakeCallback(callbutt, LOW, buttonCallback); // 3 blinx
+  
   // This must be called *after* you've set up the variables above; setup
   // values are only written by this function.
   SimbleeForMobile.begin();
 }  // end setup
 
-// I believe static pinWake vars should be called in setup but
-// this fx() also configs ULPdelay which must be inside loop I think
+// I believe static pinWake vars should be specified in setup but this
+// DUB fx() also configs ULPdelay and must be called by loop I think
+// may stop loop until condx are met
+
 int delay_until_button(int sumNum) // copy from buttonLEDemo; call
 // from setup/loop() sets options for pin/delay Wake: if param=0, pinWake
 // on HIGH wakes when button unpressed and ULP delay = 0, so same as
 // having no sleep code -- option never used unless code customized;
 // if param = 1, pinWake on LOW, so if long (default) ULPdelay, button
 // press gets immediate action on app, but if no new press, board reacts
-// w/ delay; if param is # > 1, pinWake on LOW (same), delay = param
-{ // does not look at callbutt until pinWoke() -- will it detect?
+// w/ delay; if param is # > 1, pinWakes on LOW (same), else loop delay = param
+
+{ // does not look at callbutt until pinWoke() -- will it detect press?
   if (sumNum == 0) // if zero, same as no sleep code, unless customized
   { Simblee_pinWake(button, HIGH); // wake on unpressed button
     Simblee_ULPDelay(sumNum); // custom config: if switch ON is HIGH,
-    // use INFINITE for ULPdelay--> would wake only on switch ON
+    // using INFINITE for ULPdelay--> would wake only on switch ON
   }
   else if (sumNum == 1)
   {
-    Simblee_pinWake(button, LOW);  // wake on pressed
+    Simblee_pinWake(button, LOW);  // wake on pressed = LOW
     // some default long delay -- use to mainly wake on some hardware
     // trigger from board (i.e. to request data or send an event)
     Simblee_ULPDelay(2500); // lo/hi # sets response speed for app-board
     // comm and rate of on-board loop tasks
   }
-  else   // assume param is some positive number, use it for delay
+  else   // assume param is some positive number, use it for loop delay
   { Simblee_pinWake(button, LOW);  // wake on pressed
     // custom delay -- affects responsiveness to phone app events,
     // still wakes immediately if hardware trigger from board
@@ -134,7 +139,7 @@ void loop()
   // behavior from ULPdelay wakeup ? which ? resets this by itself --
   // but if delay is infinite and I reset pin here to be active, I never
   // see blink except from button --> callback
-  //Simblee_resetPinWake(button);  // no effect if I put some # of mS in
+  // Simblee_resetPinWake(button);  // no effect if I put some # of mS in
   // ULPdelay -- to test this I could make a long ULPdelay and see
   // if it sleeps then wakes w/ pin; don't use if loop calls d_u_b
 

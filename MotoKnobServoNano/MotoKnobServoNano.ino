@@ -3,6 +3,7 @@
   -- assuming 90 deg sent to servo obj = 1500 uS pulse width = motor stopped or mid pt;
   below that, motor runs back or CCW; above, it runs forward or CW; also works for positioning
   mod for 2 channel Nano control box uses Anal pins for ground/5v of pot; my defective nanos can't handle servo and Serial in same sketch!
+  -- this code version has R control going 90-0 deg = finer control of speed in 1 direction, vs. L pot which goes 180-0, i.e. both directions, 90 = 1500 uS = stop
 */
 
 #include <Servo.h>  // lib defaults 0 -> 544 uS, 180 -> 2400 uS; servo goes to whatever its min/max are
@@ -44,12 +45,28 @@ void loop()
   static float prevAvgR = valaR;  // just set once, first loop
 
   int newAvgR = round((valaR + 4 * prevAvgR) * 0.2); // ? faster to * than / by 9
-  valR = map(newAvgR, 5, 1010, 180, 0); // scale it to degrees for servo (full range = 0 to 180 or partial range)
+  valR = map(newAvgR, 5, 1010, 90, 0); // scale it to degrees for servo (full range = 0 to 180 or partial range)
   // servo position center = 90, pulse = 1500 uS, motor still
   // 70-110 gives range of 1280 - 1680 uS
 
-  mymotoR.write(valR);             // sets the servo position (or motor speed) according to the scaled value
-  //  if (Serial.available())      //type any letter to get printout of vals, mostly for debugging
+  mymotoR.write(valR);    // sets the servo position (or motor speed) according to the scaled value
+
+  prevAvgR = newAvgR;
+  
+  valaL = analogRead(potpinL);       // reads the volts from the potentiometer (0 to 1023)
+  static float prevAvgL = valaL;  // just set once, first loop
+
+  int newAvgL = round((valaL + 4 * prevAvgL) * 0.2); // ? faster to * than / by 9
+  valL = map(newAvgL, 5, 1010, 180, 0); // scale it to degrees for servo (full range = 0 to 180 or partial range)
+  // servo position center = 90, pulse = 1500 uS, motor still
+  // 70-110 gives range of 1280 - 1680 uS
+
+  mymotoL.write(valL);   // sets the servo position (or motor speed) according to the scaled value
+  prevAvgL = newAvgL;
+  delay(50);                           // smaller delay = gets there faster
+}  // end loop
+
+  //  if (Serial.available())  //type any letter to get printout of vals, mostly for debugging
   //   { Serial.read();  // serves no purpose except to clear serial buffer
   //     Serial.print(newAvg); Serial.print("  "); Serial.println(val);
   //   }   //end if
@@ -61,19 +78,3 @@ void loop()
   //    Serial.print(" angle= ");
   //    Serial.println(val);
   //  }
-  prevAvgR = newAvgR;
-  
-  valaL = analogRead(potpinL);       // reads the volts from the potentiometer (0 to 1023)
-  static float prevAvgL = valaL;  // just set once, first loop
-
-  int newAvgL = round((valaL + 4 * prevAvgL) * 0.2); // ? faster to * than / by 9
-  valL = map(newAvgL, 5, 1010, 180, 0); // scale it to degrees for servo (full range = 0 to 180 or partial range)
-  // servo position center = 90, pulse = 1500 uS, motor still
-  // 70-110 gives range of 1280 - 1680 uS
-
-  mymotoL.write(valL);             // sets the servo position (or motor speed) according to the scaled value
-
-  prevAvgL = newAvgL;
-  delay(100);                           // smaller delay = gets there faster
-}  // end loop
-

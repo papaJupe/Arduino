@@ -72,7 +72,7 @@ void loop() {
   {
     //Serial2.print((char)Serial.read());
 
-    // reads 1st 8 input bytes from Ser buffer: inByt holds 8 ch
+    // reads 1st 8 input bytes from Ser buffer: array holds 8 ch
     Serial.readBytes(keyByt, 8);
     Serial.print(".write keyByt ");
     Serial.write(keyByt);  // input bytes print as chars
@@ -83,7 +83,7 @@ void loop() {
     Serial2.write(keyByt); // need for HC06, no \n or \cr in SerMon
     // H3 needs line ends sent to it, maybe not
     // send to Proc or phone app over BT or UART dongle
-    //Serial2.println(inByt);
+    //Serial2.println(keyByt);
     
   }
 

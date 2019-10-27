@@ -17,6 +17,7 @@ const [type] [NAME] = [value];  // safer than #define to set a constant, gcc che
     int x = -1;
     while( ABSOLUTE_VALUE( x ) )  // runs while body until x becomes 0? 
     ...
+    
 from cookbook p 88, after showing use of word(hi,low) to make 2 byte word from
 a high and low byte, also extract them from a word w/ highByte(), lowByte()
 

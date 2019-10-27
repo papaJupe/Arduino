@@ -3,7 +3,7 @@
 
   v. 0.1 mods of SFM RoomComm for dual motor control from 6 simb pins
   0.2 changes update() to case structure to handle eventId but won't compile
-  can't use eventId byte as case constant
+  can't use eventId byte as case constant, might if I cast to int, haven't tried
 
   toDo: analog read motor batt V on A2 (tx pin?) -- display
   in data field;
@@ -118,8 +118,8 @@ void loop()
   if (count == 8) digitalWrite(led, LOW);
   if (count > 19) count = 0; // delay & count ==> get data every 2 sec
 
-  //  if (count == 2) // get sensor data once in a while
-  //  {
+  //  if (count == 2) // get [Roo] sensor data once in a while
+  //  { use 0.1 Red code here for Beest not this
   //    memset(sensIn, 0, 26); // clear the byte array for data
   //
   //    // read sensor , may not need all below
@@ -329,7 +329,7 @@ void update() // any ui_event calls this fx;
   }
 
   else if (powerMode)  // set drive vars according to event
-  {
+  {  // might need an int param,? make by casting byte->int, converting w/ enum, or other way?
     switch (eventId)
     {
       case rectB:
@@ -411,7 +411,7 @@ void update() // any ui_event calls this fx;
   void ui_event(event_t &event)
   { // just resets vars according to event ID; kept small
     // for speed --> most actions done in loop & update()
-    eventId = event.id; //  value that update() uses to set vars
+    eventId = event.id; // assign byte value that update() uses to set vars, ? conv to int
 
     if (event.id == speedSlide)
     {

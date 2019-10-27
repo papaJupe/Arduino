@@ -21,10 +21,10 @@
 
 // To use the SimbleeForMobile library, you must include this file at the top
 // of your sketch. **DO NOT** include the SimbleeBLE.h file, as it will cause
-// the library to silently break.
+// the library to break.
 #include <SimbleeForMobile.h>
 
-const int led = 2; // The Simblee BOB (WRL-13632) has an LED on pin 2.
+const int led = 2; // The Spark Simblee BOB (WRL-13632) has an LED on pin 2.
 int ledState = LOW;
 
 /* Every draw command returns a uint8_t value which is the object's id that was
@@ -44,7 +44,7 @@ void setup()
   // that the length of these two fields combined must be less than 16
   // characters!
   SimbleeForMobile.deviceName = "SparkySimb";
-  SimbleeForMobile.advertisementData = "Blink"; // 5+10=15 works
+  SimbleeForMobile.advertisementData = "Blink"; // 5+10=15 char works
 
 
   // txPowerLevel can be any multiple of 4 between -20 and +4, inclusive. The
