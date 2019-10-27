@@ -10,14 +10,14 @@ unsigned long starTime;  // starting time for discharge, msec, (global) used in 
 unsigned long prevTime;  // initially = starTime, updated with each printVals, (global, same reason)
 
      // int analReed;   to simulate voltage value read from an analog pin
-const int targVolt= 12500; // discharge target in mV, varies with batt type, depth you want;
+const int targVolt= 11000; // discharge target in mV, varies with batt type, depth you want;
                    // this is 20% dc at C/20 for SLA; used only in loop, init here for clarity
 
-#define PinIn1 3          // pin to read test batt voltage
-#define PinIn2 5          // pin to read curr sense voltage
+#define PinIn1 A5          // pin to read test batt voltage
+#define PinIn2 A2         // pin to read curr sense voltage
 
-int mapA = 122;            // default V map params
-int mapB = 961;            // globals, used in calib and dc readout
+int mapA = 107;            // default V map params
+int mapB = 946;            // globals, used in calib and dc readout
 int mapC = 138;           // default C map params, pinIn2 to dc current mA
 int mapD = 982;           // these are values from calib using 2 ohm Rc
 int mapE = 230;           // C & D are raw AR pin values, E & F are corresponding mA values
