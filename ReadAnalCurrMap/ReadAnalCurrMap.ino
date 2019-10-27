@@ -34,6 +34,7 @@ void setup()
 
 void loop()
 {
+  static int count = 0;
   // read the input on current analog pin, use moving average to stabilize
   float pinSees = analogRead(PinIn);
   newAvg = pinSees * 0.2 + prevAvg * 0.8; // update expon moving average of AR
@@ -43,12 +44,12 @@ void loop()
   //int current = map(newAvg,575,948,600,900);  //  Rl 9.2
   // int current = map(newAvg,586,849,600,800);  //  Rl 14
   // int current = map(newAvg,210,656,300,650);  // with Rc 2, Rl 16
-  int current = map(newAvg, 109, 320, 200, 400); // with Rc 2, Rl 27
-  // int current = map(newAvg,168,504,200,400); //for 2.7 ohm Rc 27 ohm Rl
+ // int current = map(newAvg, 215, 262, 240, 340); // with Rc 2, Rl 30 cold
+   int current = map(newAvg,127,467,180,380); //for 2.7 ohm Rc 27 ohm Rl cold
   // int current = map(newAvg,121,625,80,250);  //with 5 Rc and 36 Rl(adj+2+5 in series)
 
   // print the new MA if changed
-  if (round(newAvg) != round(prevAvg))
+  if (round(newAvg) != round(prevAvg)|| count == 1)
   {
     Serial.print("pin out= ");
     Serial.print(newAvg, 0); // int part of float only
@@ -57,10 +58,12 @@ void loop()
     // indxAvg = newAvg;
     // print raw pin reads to LCD
     lcd.clear();  // first clear screen
-    lcd.print("cPin " + String(round(newAvg)));
+    lcd.print("cPin" + String(round(newAvg)));
     lcd.setCursor(0, 1);  // second line
-    lcd.print("curr " + String(current));
+    lcd.print("mA " + String(current));
   }
   prevAvg = newAvg;
+    count++;
+  if (count >= 11) count = 0;
   delay (200);   // five loops / second
 }

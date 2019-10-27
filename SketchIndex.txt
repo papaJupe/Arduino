@@ -1,4 +1,4 @@
-SketchIndex.txt as of 180210
+SketchIndex.txt as of 191025
 
 2waySerial for mega -- to program BT module w/ AT cmd from Ardu IDE
   or Ser2 can be wired to USB-TTL dongle for I/O w/ Proc to test
@@ -239,31 +239,19 @@ RCpulSense, pulSensePulseIn  -- mod  from  cookbook text
 // Uses: LiqCrystal display, interrupt or (12-3) pulseIn fx to capture w/o interrupt
 
 ReadAnalogCalMap --  (moving) averages analog pin input, 0-5 v. (as from batt
- discharger device with an op-amp reading V drop across load v. divider resistor); 
- maps that to the actual v. 11.5-13 being sampled; prints raw and calcul. voltage
- if it's changed;  gets crude reading, not actually used
- 
-ReadAnalogVaverage --  (expon moving) averages analog pin input, 0-5 v. (as from batt discharger 
-   device with an op-amp); 
-   maps that to the actual v. 11.5-13 being sampled; prints raw and calcul. voltage if it's changed; 
-   can thus calculate params for map function 
-   Uses: expon moving average, map, analRead
+  discharger board with an op-amp reading 12 v batt) --  maps that to the 
+  actual v. 11.6-13 being sampled; prints raw pin and calcul. voltage
+  if it's changed; use to get V map params for other sketches.
     
 ReadAnalCurrMap - prints averaged analog pin reading when it changes; 
     from this calculates current across R-curr; if calib wrong, can find new params
     to use for map function.  Reads an analog input on pin X, and prints the result
     to the serial monitor if it has changed; uses mapping values to map pin AR to
-    actual current (voltage/ 2 ohm) going to op-ampA.
+    actual current (voltage/ 2 ohm) going to op-ampA. Use to calib mA before loading
+    voltageSamplerB6 to Ardu then Proc2 app SerStringRead6 to graph dc chart. 
+    based
     Uses: analRead, expon moving averag, map, round
-    
-ReadAnalogVaverage - averages analog input on pin X, calcul actual 0-5000mV, and prints
- the result to (ser. mon. +/- lcd if present) if it has changed; plot this against measured input 
- voltage by voltmeter. 
- Use to calculate mult or map for pin reading of voltage, checking various A pins, monitor
- batt discharge; added tone when dc target V reached for small < 5 v batts.
- Attach the center pin of a potentiometer to PinIn, and the outside pins to +5V and ground.
- Uses: Liquid Crystal 8x2 display, map, analRead, expon moving average, round, toner
-    
+        
 ReadAnalogVaverage_3 -- averages (same) analog input to 3 pins X Y Z, and prints the result to 
     the serial monitor if it has changed.
     Used to calibrate and check op amp I/O params, compare accuracy of different AR pins

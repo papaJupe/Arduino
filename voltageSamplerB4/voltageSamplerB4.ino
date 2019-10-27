@@ -9,7 +9,7 @@
 unsigned long starTime;  // starting time for discharge, msec, (global) used in setup and printVals fx
 unsigned long prevTime;  // initially = starTime, updated with each printVals, (global, same reason)
 
-const int targVolt = 12500; // discharge target in mV, varies with batt type, depth you want;
+const int targVolt = 11400; // discharge target in mV, varies with batt type, depth you want;
             // this is 20% dc at C/20 for SLA; variable used only in loop, init here for clarity
 
 // for 8x2 LCD, include the library
@@ -24,8 +24,8 @@ LiquidCrystal lcd(12,11,4,5,6,7);  // lib is smart enough to know if you're usin
 //int mapD = 282;          // these are values from calib using 2 ohm Rc and Rl 27
 //int mapE = 200;         // using curr calib sketch; C&D are AR pin values
 
-int mapA = 132;           // default V map params, A for 11.5, B for 13.0
-int mapB = 958;           // globals, used in calib and dc readout
+int mapA = 128;           // default V map params, A for 11.5, B for 13.0
+int mapB = 998;           // globals, used in calib and dc readout
 int mapC = 166;           // empiric Curr map params, pinIn2 to dc current mA
 int mapD = 603;          // these are values from calib using 2.0 ohm Rc and Rl 16
 int mapE = 270;         // using curr calib sketch; C&D are AR pin values
@@ -358,6 +358,3 @@ void printVals(int battV,int curr) // prints batt in mV, current in mA, resets p
   Serial.println(" mA");
   prevTime = millis(); 
 }  //end printVals
-
-
-
