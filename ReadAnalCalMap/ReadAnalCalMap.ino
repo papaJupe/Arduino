@@ -16,7 +16,7 @@ LiquidCrystal lcd(12, 11, 4, 5, 6, 7); // lib is smart enough to know if you're 
 
 
 int mapA = 172;      // default V map params, A for 11.6, B for 13.0 w/ USB+batt power to Ardu
-int mapB = 960;  // so that Vcc is regulated 5 v -- must have stable reference for valid V
+int mapB = 963;  // so that Vcc is regulated 5 v -- must have stable reference for valid V
 
 float newAvg;
 float prevAvg;;

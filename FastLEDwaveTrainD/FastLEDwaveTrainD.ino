@@ -1,4 +1,4 @@
-/*  flash 2 neopixel LEDs at various brain wave entraining frequencies
+ /*  flash 2 neopixel LEDs at various brain wave entraining frequencies
     and colors; brightness adjusts with pot. v. B -- wherein he adds
     mode input switch for various freq and color sets; v. C simplifies mode I/O
     code, adds pulse option: flashes on for 'count' setting (eg 5), then off (dark)
@@ -192,6 +192,3 @@ void loop()
   
   count++;
 }  // end loop
-
-
-

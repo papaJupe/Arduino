@@ -24,17 +24,17 @@ LiquidCrystal lcd(12, 11, 4, 5, 6, 7); // lib is smart enough to know if you're 
 #define pinIn2 A2          // pin to read curr sense voltage across Rc via op-amplification
 
 int mapA = 172;      // default V map params, A for 11.6, B for 13.0 w/ USB+batt power to Ardu
-int mapB = 960;  // so that Vcc is regulated 5 v -- must have stable reference for valid V
+int mapB = 970;  // so that Vcc is regulated 5 v -- must have stable reference for valid V
 
 //int mapC = 640;      // empiric C map params, pinIn2 to dc current mA
 //int mapD = 928;      // these are values from calib using 2 ohm Rc and Rl 8.6
 //int mapE = 650;      // using curr calib sketch; C&D are AR pin values
 //int mapF = 880;      // E&F are corresponding measured currents
 
-//int mapC =688;      // empiric C map params, pinIn2 to disch current mA
-//int mapD = 997;     // these are values from calib using 2 ohm Rc and Rl 10.7 cold
-//int mapE = 650;     // using curr calib sketch; C&D are AR pin values
-//int mapF = 880;     // E&F are corresponding measured current
+int mapC =688;      // empiric C map params, pinIn2 to disch current mA
+int mapD = 930;     // these are values from calib using 2 ohm Rc and Rl 10.7 cold
+int mapE = 650;     // using curr calib sketch; C&D are AR pin values
+int mapF = 880;     // E&F are corresponding measured current
 
 //int mapC =740;      // empiric C map params, pinIn2 to disch current mA
 //int mapD = 1000;     // these are values from calib using 2 ohm Rc and Rl 12.5
@@ -51,10 +51,10 @@ int mapB = 960;  // so that Vcc is regulated 5 v -- must have stable reference f
 //int mapE = 300;      // using curr calib sketch; C&D are AR pin values
 //int mapF = 560;       // E&F are corresponding measured currents
 
-int mapC = 127;       // empiric C map params, pinIn2 to dc current mA
-int mapD = 467;       // these are values from calib using 2.7 ohm Rc and Rl 27 cold
-int mapE = 180;       // using curr calib sketch; C&D are AR pin values
-int mapF = 380;       // E&F are corresponding measured currents
+//int mapC = 127;       // empiric C map params, pinIn2 to dc current mA
+//int mapD = 467;       // these are values from calib using 2.7 ohm Rc and Rl 27 cold
+//int mapE = 180;       // using curr calib sketch; C&D are AR pin values
+//int mapF = 380;       // E&F are corresponding measured currents
 
 //int mapC = 121;      // empiric C map params, pinIn2 to dc current mA
 //int mapD = 226;      // ... using 2.0 ohm Rc and R total (max) cold 34
