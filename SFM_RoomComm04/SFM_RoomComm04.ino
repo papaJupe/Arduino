@@ -48,9 +48,9 @@ char cont[62];  // string to show current control commands in top box
 char data[52] = "";  // string to show sensor data as text in 2nd frame
 byte sensIn[26];  // byte array to recv sensor data
 
-uint8_t textData;  // field for select sensor feedback data
-volatile bool needsUpdate;  // volatile -- depends on event input, set in
-// ui-event -- if true loop calls update() to do stuff
+uint8_t textData;  // field displays select sensor feedback data
+volatile bool needsUpdate;  // volatile -- depends on event input, set true by
+// ui-event -- if true, loop calls update() to do stuff
 
 uint8_t eventId;
 
@@ -108,7 +108,9 @@ void loop() {  // loop farms out all action to update(), ? speedier
       delay(10);
       // .readBytes(buffer,length) puts (length) bytes into (buffer) array
       //Serial.readBytes(sensIn, 26); //  incoming bytes --> byte array
-      // should use above, but SFM won't readBytes into byte[] as Ardu C should
+      // should use above, but couldn't get readBytes to work here
+      // final v0.5 for Red and Lily uses if (), drops delay, sensIn = char[]
+      // move clearing while() inside if() and readBytes works fine
       inB = Serial.read();
       sensIn[i] = inB;
       i++;
@@ -451,7 +453,7 @@ void drive(int velo, int radi)
   char temp[28];  // view current control bytes in control textField
   sprintf(temp, " spd %d %d, rad %d %d ", cmd[1], cmd[2], cmd[3], cmd[4]);
   strcat(cont, temp); // for actual: "spd %d rad %", velo, rad
-  Serial.write( cmd, 5 );
+  Serial.write( cmd, 5 ); // to write array, len ?
 }  // end drive
 
 String sensorsAsString()

@@ -83,7 +83,7 @@ void loop() {
     Serial2.write(keyByt); // need for HC06, no \n or \cr in SerMon
     // H3 needs line ends sent to it, maybe not
     // send to Proc or phone app over BT or UART dongle
-    //Serial2.println(inByt);
+    //Serial2.println(keyByt);
     
   }
 

@@ -1,12 +1,13 @@
-// Bluetooth-bot v1 -- Ardu code but has .pde extension for no clear reason
-// could send commands from Proc I guess...
-// Arduino Robotics unofficial chapter 14
-// use Bluetooth Mate serial adapter to receive commands from PC (classic BT)
-// Arduino decodes commands into motor movements
-// Creates high-speed wireless serial link for robot control using keyboard
-// Uses keys "i" = forward, "j" = left, "k" = reverse, and "l" = right
-// speed control is also implemented using "," = speed down, "." = speed up, and "/" = max speed.
-
+/* Bluetooth-bot v1 -- Ardu code but has .pde extension for no clear reason
+>   appears serial input could come from BT on loose bot, or just Ser Mon if
+>   wired to PC
+>  Arduino Robotics unofficial chapter 14
+>  use Bluetooth Mate serial adapter to receive commands from PC (classic BT)
+>  Arduino decodes commands into motor movements
+>  Creates high-speed wireless serial link for robot control using keyboard
+>  Uses keys "i" = forward, "j" = left, "k" = reverse, and "l" = right
+>  speed control is also implemented using "," = speed down, "." = speed up, and "/" = max speed.
+*/
 
 // L298 motor control pins
 int M1_A = 12;
@@ -18,7 +19,7 @@ int M2_PWM = 3;
 int M2_B = 2;
 
 
-// LED pin attached to Arduino D13
+// LED pin is Arduino D13
 int LED = 13;
 
 // variable to store serial data
@@ -61,7 +62,7 @@ delay(500);
 
 void loop(){
 
-// check for serial data
+// check for serial data  (coming over BT or Ser Mon or either ???)
 if (Serial.available() > 0) {
 // read the incoming byte:
 incomingByte = Serial.read();
@@ -73,7 +74,7 @@ Serial.println(incomingByte);
 // delay 10 milliseconds to allow serial update time
 delay(10);
 
-// check incoming byte for direction, case structure faster?
+// check incoming byte for direction, maybe case structure faster?
 // if byte is equal to "46" or "," raise speed
 if (incomingByte == 46){
 speed_val = speed_val + 5;

@@ -54,6 +54,15 @@ AnalogReadSerialString -- first mod shows use of String obj for better printing,
    Attach the center pin of a potentiometer to pin A_, and the outside pins to +5V and ground.
    Uses: exit, String construct from int, analogRead, String concatenation
 
+AnalogReadSerialPrintBT -- Reads an analog input on pin A_, prints the result to the serial 
+  monitor and second serial for transmit over BT (Simblee et al) or other.
+  Attach the center pin of a pot to pin A5, and pwr pins to +5V & gnd.
+
+  Uses: Software Serial, cast of int to String
+
+  Can test serial#2 I/O by connecting rx and tx of USB-TTL dongle to
+  second serial pins and connecting Ser Mon to that port
+  
 AT Comm Set HC05 -- related to HC05 bluetooth board, somehow
 
 Atmega chip fuse detect -- sketch on master Ardu when programming another, can't remember why
@@ -379,6 +388,25 @@ Servo Mega tx rx Serial -- send / recv bytes over USB-TTL serial
   Uses: USB-TTL dongle on ser2, read/write bytes, servo.write,
   elapsedMillis for timed print, convert incoming data to change angle
   for servo
+
+SFM Beest Comm 1  -- 2 motor strandbeest control from iOS/Andr Simb app
+   Red Spark board hard wired to control, so this is code being used
+  v. 0.1 mods of SFM RoomComm for dual motor control from 6 simblee pins,
+  read batt V on one analog pin
+
+  Code here is uploaded to Simblee board to control 2 motors.
+  Simblee phone app (iOS / Android) makes BLE connection to the Simblee,
+  with the app displaying the user interface created here to send
+  motor controller commands. To operate, power up Beast & Simblee board,
+  open app, connect to board, press Power square, then drive or other. 
+  Stop square stops any action; Power down just blocks drive code
+
+  Uses: deviceName, advertData, drawText, drawTextField, drawImage,
+  drawSlider, [Serial.printf], screenWidth, update(), setEvent
+  for various inputs, [parent RooComm used xxd util to load images as 
+  .h file], drawText, _Rect, _Slider, byte constants in lib for image
+  id's, sprintf to convert vars to # and text into displayable string,
+  analog read motor power batt V on pin 6 -- display in data field
   
 SFM Color Wheel B -- adapted from SFM/Color Wheel example
   version B added stepper control, sending bytes to other device
@@ -407,7 +435,7 @@ SFM Color Wheel B -- adapted from SFM/Color Wheel example
   drawSlider, Serial.printf, screenWidth, update(), color_wheel, setEvent
   for color press, volatile var (changed in event thread),
   serial.write(byte array,len)
-    
+
 Sibl Low Power example: uses SFM lib but just does local, board
    actions, nothing sent or recvd from mobile app. Some delay code
    imported from SFM buttonLEDdemo
@@ -424,16 +452,40 @@ Simb PinWake Demo shows plain wake and wake w/ specific callback
   
 SFM_Read_Input  -- display a Simblee board input on smart phone app
 
-SFM RoomCommTest02  -- experiments for R control from iOS/Andr
+SFM RoomComm0_  -- BLE4 Roomba control from iOS/Andr
+
     v. 0.1 has images for ui and few trial controls
-    v. 0.2 adds libs for byte constants, links screen events to
-    commands: completed control of power, drive, stop, brush, clean
+    v. 0.2 adds libs for byte constants, links screen events
+    to commands: some control of power, drive, stop, brush, clean
+    v 0.3 fused bottom images into bottom3, add STOP txt, made fast turns
+    slower, add field for sensor data (not filled yet)
+    v 0.4 adds sensor reading, display some data to text field,Red,Lily vers
+    v 0.5 minor mods for Red and Lily bds, now readBytes for sensor read
+
+  Code here is uploaded to Simblee board for Serial comm w/ Roomba port.
+  Simblee phone app (iOS / Android) makes BLE connection to the Simblee,
+  with the app displaying the user interface created here to control &
+  see sensor data on the R. To operate, Enable R by grnding DD wire or button,
+  open app, connect to Simb, press Power square, then drive or other. Stop
+  square stops anything; Reds: always Power Down with Power square. Grays
+  can disable w/ button.
+  To see params while charging, power up then down w/ Power sq.
 
   Uses: deviceName, advertData, drawText, drawTextField, drawImage,
-  drawSlider, Serial.printf, screenWidth, update(), color_wheel, setEvent
+  drawSlider, Serial.printf, screenWidth, update(), setEvent
   for various inputs, volatile var (changed in event thread), xxd util to
-   load .h images, serial.write(byte array,len), drawText, _Rect, _Slider
-   byte constants in lib,  sprintf to make # and text into displayable str
+  load .h images, serial.write(byte array,len), drawText, _Rect, _Slider
+  byte constants in lib, sprintf to make # and text into displayable string,
+  enhanced if (ternary operator) to adjust turn speed, serial readBytes
+   
+SFM Ser Volt Read ==>  Ardu reads voltage on some pin, sends string
+  message about voltage over serial (softwareSerial 2nd port for Uno)
+  every 2 seconds to the Simb bd rx pin; this SFM code sends text to app
+  Ardu test sketch: AnalogReadSerialPrintBT, actual use would run Voltage
+  Sampler V_ w/ software serial added
+  
+  Uses: updateText, drawText, memset to clear array, readBytes to
+  fill array from serial input,
   
 SFM temp read demonstrates how to make a Bluetooth Low Energy 4
   Advertisement connection with the Simblee, then see its CPU temp

@@ -2,9 +2,9 @@
 /*
 Actually, our FRC bots have used both types of PWM for motor control. The first, basic type is what the Jag controllers (commanded by roboRio over CAN) send to the main drive motors: width of pulses determines the average analog voltage the motors get, hence their speed. A positive pulse train drives forward, a negative pulse train reverses.
 
-The second type, servo style, is what the roboRio uses to control the small VEX controllers over 3 servo wires. With this type, robotRIO sending the pulse width 0.5 -- 2 ms tells the controller what voltage and what polarity to send to the smaller motors: 1.5 ms tells it to stop the motor (0 volts); 1.5-2.5 ms is to go forward (sends motor positive pulse train, first type of PWM); 0.5-1.5 ms. is reverse (sends negative pulse train, first type of PWM), as with the drive motors.
+The second type, servo style, is what the roboRio uses to control various VEX and SPARK controllers over 3 servo wires. With this type, robotRIO sending the pulse width 0.5 -- 2 ms tells the controller what voltage and what polarity to send to the smaller motors: 1.5 ms tells it to stop the motor (0 volts); 1.5-2.5 ms is to go forward (sends motor positive pulse train, first type of PWM); 0.5-1.5 ms. is reverse (sends negative pulse train, first type of PWM), as with the drive motors.
 
-We haven't used small hobby servos as they are too weak to do much on our size bots -- but good on RC craft for steering wheels, ailerons, rudder, etc. For them, the servo signal pulse width tells the onboard circuits what position to go to, roughly 0-180 degrees, tho many will go more than this. E.g. if the arduino servo object receives 90 deg. parameter, it sends 1.5 ms pulse and the servo stops mid-position, 90 degrees. If you do myservo.write(0) the arduino sends ~0.5 ms, and the servo goes full CCW. If you do myservo.write(180) the arduino sends ~2.5 ms and the servo goes full CW.
+We haven't used small hobby servos as they are too weak to do much on our big bots -- but good on RC craft for steering wheels, ailerons, rudder, etc. For them, the servo signal pulse width tells the onboard circuits what position to go to, roughly 0-180 degrees, tho many will go more than this. E.g. if the arduino servo object receives 90 deg. parameter, it sends 1.5 ms pulse and the servo stops mid-position, 90 degrees. If you do myservo.write(0) the arduino sends ~0.5 ms, and the servo goes full CCW. If you do myservo.write(180) the arduino sends ~2.5 ms and the servo goes full CW.
 
 So code like this could either connect to a VEX controller and drive a regular DC motor forward or reverse (like we did on Jovan's turret project last year), OR control the angle of a small hobby servo.
 
@@ -12,6 +12,7 @@ Features of this code are customized for nano board and compact design:
   -- nano has an additional analog port A6
   -- to keep wiring simple, I supply voltage to 2 pots with adjacent analog ports, making one LOW and one HIGH
   -- exponential moving average of analog inputs from pots, probably not necessary here
+  -- this version of code runs both outputs from 0-180 deg or fwd and back, 90 = stopped
 */
 
 #include <Servo.h>  // lib defaults 0 -> 544 uS, 180 -> 2400 uS; servo goes to whatever its min/max are
@@ -81,6 +82,6 @@ void loop()
   mymotoL.write(valL);             // sets the servo position (or motor speed) according to the scaled value
 
   prevAvgL = newAvgL;
-  delay(100);                           // smaller delay = gets there faster
+  delay(50);                           // smaller delay = gets there faster
 }  // end loop
 

@@ -3,7 +3,7 @@ void drive( int velocity, int radius) {
       (byte)DRIVE, (byte)(velocity>>8 & 0xff), (byte)(velocity & 0xff), 
       (byte)(radius >> 8 & 0xff), (byte)(radius & 0xff)
     };
- // Serial.write( cmd, 5 ); // worked as well as loop
+ // Serial.write( cmd, 5 ); // worked as well as this loop
    for (int i = 0; i < sizeof(cmd); i++)
     {
        Serial.write(cmd[i]);
@@ -13,3 +13,4 @@ void drive( int velocity, int radius) {
       //Serial.println();
 
   }
+  // this is now in the .ino, why is it here?

@@ -1,6 +1,6 @@
 /*  ESPrim_UDP_test -- connect to adhoc AP on shield running UDP
   -- primary ESP bd like Huzz-Feat tries to connect to another ESP bd's AP,
-  both use UDP to send / receivePacket. e.g. AP on Ardu ESP shield to 
+  both use UDP to send / receivePacket. e.g. AP on Ardu ESP shield to
   send data, respond to prompt variously, etc. see also ESPrimUDPtxrx_
   UDP data sketch, similar but connected remote Huzz-Feat w/ LED, to Proc
   app on iMac using UDP and comm over built-in iMac wifi; this test is for
@@ -9,7 +9,7 @@
 
   created 4 Sep 2010 by M Margolis mod 9 Apr 2012 by Tom Igoe (for shield?)
   updated for the (primary) ESP8266 12 Apr 2015 by Ivan Grokhotkov
-  mod AM 1711 from NTPquery: 
+  mod AM 1711 from NTPquery:
   for primary ESP (on PC's USB)--wifi connect--Ardu w/ shield sends data
   from US device
 
@@ -19,7 +19,7 @@
 #include <WiFiUdp.h>
 
 char ssid[] = "espShe";  //  network SSID, (name) of ESP shield AP
-char pass[] = "twerpton";       // shield AP's password
+char pass[] = "twerp";       // shield AP's password
 
 unsigned int localPort = 2390; // port (this device) listens for UDP
 
@@ -105,7 +105,7 @@ void loop()
          }
     delay(10);  // fast loop in case there's more coming
   }  // end else got pkt
-  
+
     // send udp only if some keybd entry, I don't care what
     if (Serial.available()) {
       Serial.read();  // just type one ch
@@ -122,7 +122,7 @@ void sendPacket(IPAddress& address, uint16_t port) // called in loop
   // set all bytes in the buffer to 0
   memset(packetBuffer, 0, PACKET_SIZE);
   Serial.println("sending packet...");
-  
+
   // set values of probe pkt
   packetBuffer[0] = 54;  // ascii 6
   packetBuffer[1] = 44;  // ,
@@ -136,4 +136,3 @@ void sendPacket(IPAddress& address, uint16_t port) // called in loop
   udp.write(packetBuffer, PACKET_SIZE);
   udp.endPacket();
 }  // end sendPack
-

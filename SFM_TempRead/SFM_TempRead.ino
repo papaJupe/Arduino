@@ -116,7 +116,7 @@ void loop()
 
   // .process must be called in the loop
   SimbleeForMobile.process();
-  delay(10);  // may not need at all since
+  delay(10);  // may not need at all
 }
 
 void SimbleeForMobile_onConnect()

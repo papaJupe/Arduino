@@ -1,16 +1,15 @@
 
 /* SFM Beest Comm 1  -- 2 motor beest control from iOS/Andr
-
+  Red Spark bd hardwired to Beest, so no reason to keep Lily version unless some
+  future application
   v. 0.1 mods of SFM RoomComm for dual motor control from 6 simb pins
-
-  toDo: 
 
   Code here is uploaded to Simblee board to control 2 motors.
   Simblee phone app (iOS / Android) makes BLE connection to the Simblee,
   with the app displaying the user interface created here to write to
   motor controller inputs. To operate, power up Beast & Simb bd,
   open app, connect to Simb, press Power square, then drive or other. Stop
-  square stops any action -- hopefully; Power down just blocks drive code
+  square stops any action; Power down just blocks drive code
 
   Uses: deviceName, advertData, drawText, drawTextField, drawImage,
   drawSlider, [Serial.printf], screenWidth, update(), setEvent
@@ -64,8 +63,7 @@ void setup() {
   // Serial.begin(57600); // no use for serial except testing
 
   // onboard led flashes w/ loop
-  // pinMode(led, OUTPUT);  // done below
-  pinMode(3, INPUT); // to read motor batt voltage thru divider
+  pinMode(3, INPUT); // to read motor batt voltage thru V divider
   // set pins 5 through 15 as outputs: only some used
   for (int thisPin = 5; thisPin <= 15; thisPin++)
   {
@@ -395,10 +393,10 @@ void ui() // ui() loads the screen graphics, no role in
 /********************************/
 
 void ui_event(event_t &event)
-{ // just resets vars according to event ID; kept small
-  // for speed --> most actions done in loop & update()
-  // eventId = event.id; //  value that update() uses to set vars
-
+{ /* just resets vars according to event ID; kept small
+   for speed --> most actions done in loop & update()
+   eventId = event.id; //  value that update() uses to set vars
+  */
   if (event.id == speedSlide)
   {
     speed = (byte)event.value; // was uint16
@@ -431,7 +429,7 @@ void ui_event(event_t &event)
 
 /********************************/
 
-//String sensorsAsString()
+//String sensorsAsString() left over from Roo Comm, no use here
 //{
 //  return
 //    (" chgState: " + String(sensIn[CHARGINGSTATE] & 0xff) +

@@ -1,6 +1,6 @@
 
 /* SFM Beest Comm 1  -- 2 motor strandbeest control from iOS/Andr
-
+   Red Spark board hard wired to control, so this is code being used
   v. 0.1 mods of SFM RoomComm for dual motor control from 6 simblee pins,
   read batt V on one analog pin
 
@@ -48,7 +48,7 @@ byte lP = 0;
 
 char control[62];  // string to show current control commands in top box
 char data[52] = "";  // string to show sensor data as text in 2nd frame
-// byte sensIn[26];  // todo -- byte array to recv more sensor data ?
+// byte sensIn[26];  // todo -- byte/char? array to recv more sensor data ?
 
 uint8_t textControl;  // reports current control variables
 uint8_t textData;  // field ID for batt volt / sensor data
@@ -97,7 +97,7 @@ void loop()
 
   if (count == 2)
   {
-    int battV = analogRead(6);  // AR voltage, D3 on Lily, D6 on SparkRed
+    int battV = analogRead(6);  // AR voltage, D3 on Lily, D6 on Spark Red
     battV = map(battV, 1, 963, 0, 8400); // map to motor batt max mV
     sprintf(data, "     batt voltage = %d ", battV);  // put int's chars in array
     // Serial.println(battV);
@@ -139,7 +139,7 @@ uint8_t rectA, rectB, rectC;
 uint8_t rectD, rectE, rectF;
 uint8_t rectG, rectH, rectI;
 
-// 3 bottom buttons, as named, not all used now
+// 3 bottom buttons, as named, not all used in Beest
 uint8_t rectBrush, rectPower, rectClean;
 // 3 bottom labels, as named
 uint8_t textBrush, textPower, textClean;
@@ -150,7 +150,7 @@ void update() // any ui_event calls this fx;
 {
   // its actions could have been done in loop.
   // instead this fx resets control vars according to
-  // eventId from ui_event; cmd and sensor data display
+  // eventId from ui_event; get sensor cmd and data display
   // to phone app will be sent in loop.
 
   // on 1st call from ui(), there's no eventId, so this inits things
@@ -227,7 +227,6 @@ void update() // any ui_event calls this fx;
     l1 = 1; l2 = 0; lP = (3*speed) / 4;
     char specific[] = "   L fwd turn";
     strcat(control, specific);
-
   }
 
   else if (eventId == rectC && powerMode)
@@ -244,7 +243,6 @@ void update() // any ui_event calls this fx;
     strcat(control, specific);
     r1 = 0; r2 = 1; rP = (speed*5)/4;
     l1 = 0; l2 = 1; lP = (speed*3)/4;
-
   }
 
   else if (eventId == rectI && powerMode)
@@ -322,7 +320,7 @@ void ui() // ui() loads the screen graphics, no role in
   // draw transp image over rect, andr Y, iOS Y but may block rect event
   SimbleeForMobile.drawImage(bott3, 8, 362);
 
-  //  can't add >7 images: compiles, but app fails to open
+  //  can't add >7 images: compiles, but app fails to open, these were combined, v.s.
   //  SimbleeForMobile.imageSource(downLeft, PNG, downLeft_png, downLeft_png_len );
   //  SimbleeForMobile.drawImage(downLeft, 11, 355);
 
@@ -373,10 +371,6 @@ void ui() // ui() loads the screen graphics, no role in
   // need all such events set for Android, not iOS
   SimbleeForMobile.setEvents(rectPower, EVENT_PRESS);
   SimbleeForMobile.setEvents(textPower, EVENT_PRESS);
-  //  SimbleeForMobile.setEvents(rectBrush, EVENT_PRESS);
-  //  SimbleeForMobile.setEvents(textBrush, EVENT_PRESS);
-  //  SimbleeForMobile.setEvents(rectClean, EVENT_PRESS);
-  //  SimbleeForMobile.setEvents(textClean, EVENT_PRESS);
 
   SimbleeForMobile.setEvents(speedSlide, EVENT_DRAG | EVENT_RELEASE);
 
@@ -426,17 +420,19 @@ void ui_event(event_t &event)
 
 } // end ui_event
 
-/********************************/
+/*
 
-//String sensorsAsString()
-//{
-//  return
-//    (" chgState: " + String(sensIn[CHARGINGSTATE] & 0xff) +
-//     " volt: " + String((sensIn[VOLTAGE_HI] << 8) | (sensIn[VOLTAGE_LO] & 0xff)) +
-//     " curr: " + String(int16_t((sensIn[CURRENT_HI] << 8) | (sensIn[CURRENT_LO] & 0xff))) +
-//     " temp: " + String(sensIn[TEMPERATURE] & 0xff) );
-//  //      " chrg:" + charge() +
-//  //      " capa:" + capacity() +
-//  // current needs cast back to signed int, + = charge, - = discharge mA
-//}  // end sensAsStr
+String sensorsAsString() inherited from RoomComm; no use in Beest; masks/ shifts seemed
+to work on char element as well as byte
+{
+  return
+    (" chgState: " + String(sensIn[CHARGINGSTATE] & 0xff) +
+     " volt: " + String((sensIn[VOLTAGE_HI] << 8) | (sensIn[VOLTAGE_LO] & 0xff)) +
+     " curr: " + String(int16_t((sensIn[CURRENT_HI] << 8) | (sensIn[CURRENT_LO] & 0xff))) +
+     " temp: " + String(sensIn[TEMPERATURE] & 0xff) );
+  //      " chrg:" + charge() +
+  //      " capa:" + capacity() +
+  // current needs cast back to signed int, + = charge, - = discharge mA
+}  // end sensAsStr
 
+*/

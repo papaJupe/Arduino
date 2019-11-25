@@ -16,8 +16,8 @@
 */
 
 #include <SimbleeForMobile.h>
-// pin 2 on the spkfun BOB is the LED, 13 on SimbLily
-// (will turn on/off from the iPhone app)
+// pin 2 on the spkfun BOB, 13 on SimbLily is the LED,
+// (lite turns on/off from the iPhone app)
 int led = 13;
 
 // pin 3 on the spkfun BOB is button
@@ -37,7 +37,7 @@ void setup() {
   // led turned on/off from the iPhone app
   pinMode(led, OUTPUT);
 
-  // button press, effects to be shown on the iPhone screen)
+  // button press, effect is shown on the iPhone screen)
   pinMode(button, INPUT_PULLUP);  //unstable w/o pullup
 
   // this is the data to appear in the advertisement field
@@ -79,7 +79,7 @@ int delay_until_button(int sumNum) // originally not called; my total
 // having no sleep code -- option never used unless code customized;
 // if param = 1, pinWake on LOW, so if long (default) ULPdelay, button
 // press gets immediate action on app, but if no new press, board reacts
-// w/ delay; if param is # > 1, pinWake on LOW (same), delay = param 
+// w/ long delay; if param is # > 1, pinWake's on LOW (same), delay = param 
 {
   if (sumNum == 0) // if zero, same as no sleep code, fx() useless
   { Simblee_pinWake(button, HIGH); // wake on unpressed button
@@ -91,18 +91,18 @@ int delay_until_button(int sumNum) // originally not called; my total
     Simblee_pinWake(button, LOW);  // wake on pressed
     // some default long delay -- use to mainly wake on some hardware
     // trigger from board (i.e. to request data or send an event)
-    Simblee_ULPDelay(2500); // lo/hi # sets response speed for app-board
-    // and rate of on-board loop tasks
+    Simblee_ULPDelay(2500); // lo/hi # sets response speed for board
+    // response to app, and rate of on-board loop tasks
   }
   else   // assume param is some positive number, use it for delay
-  { Simblee_pinWake(button, LOW);  // wake on pressed
+  { Simblee_pinWake(button, LOW);  // wake on pressed butt;
     // custom delay -- affects responsiveness to phone app events,
     // still wakes immediately if hardware trigger from board
     Simblee_ULPDelay(sumNum);  // e.g. 100 still looks instantaneous
   }
 
   // do/while in example kept doing ULPdelay until button press; not
-  // sure needed; just calling this in loop should do same
+  // sure needed; just calling this in loop (or setup?) should do same,
   // switch to lower power mode until a button edge wakes us up
   //Simblee_ULPDelay(someNum);  // use param or code 2 customize sleep;
   // if INFINITE here, only pin will Wake
@@ -129,7 +129,7 @@ void loop() {
   // get events on the board, to send to app on phone if it's ready
   if (SimbleeForMobile.updatable)
   {
-    //currentState = digitalRead(button);  // orig had no debounce
+    // currentState = digitalRead(button);  // orig had no debounce
     // onboard button, OR some pin you can ground to turn ON
     // if d_u_b not 0, then button also wakes board from sleep
     buttPress = digitalRead(button); // false when pressed
@@ -148,7 +148,7 @@ void loop() {
   // .process must be called in the loop for SimbleeForMobile to work
   SimbleeForMobile.process();
   
-  // v.s. fx() ops -- if called w/ 0 does nothing;
+  // v.s. fx() ops -- if called w/ 0 does nothing; do this here or setup ?
   delay_until_button(100); // 0 does nada, 1 long delay, # sets delay mS
 
 }  // end loop

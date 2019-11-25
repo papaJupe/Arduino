@@ -10,7 +10,7 @@
 Servo mymotoR;  // creates servo object to control something
 // Servo mymotoL;
 
-int potpinR = A4;  // analog pin to read the potentiometer voltage
+int potpinR = A3;  // analog pin to read the potentiometer voltage
 float valaR;    //  variable reads the value from the analog pin R
 int valR;     // mapped int to write a variable width pulse to output pin
 
@@ -22,10 +22,10 @@ int valR;     // mapped int to write a variable width pulse to output pin
 void setup()
 {
   pinMode(potpinR, INPUT);   // A4 input for R
-  pinMode(15, OUTPUT); // A3 is ground for pot
-  digitalWrite(15, LOW);
-  pinMode(16, OUTPUT); // A5 gives 5v for pot
-  digitalWrite(16, HIGH);
+  pinMode(A1, OUTPUT); // A3 is ground for pot
+  digitalWrite(A1, LOW);
+  pinMode(A2, OUTPUT); // A5 gives 5v for pot
+  digitalWrite(A2, HIGH);
 
 //  pinMode(potpinL, INPUT);   // A6 input for L
 //  pinMode(A4, OUTPUT); // A4 works as ground for pot
@@ -33,7 +33,7 @@ void setup()
 //  pinMode(A5, OUTPUT); // A5 gives 5v for pot
 //  digitalWrite(A5, HIGH);
    Serial.begin(9600);   // for printout of values, my nano/mini ch340 can't handle Serial & servo
-  mymotoR.attach(2);     // attach some dig (needs PWM? - no) pin to servo, or e.g. (pin,default min 544,max 2400)
+  mymotoR.attach(3);     // attach some dig (needs PWM? - no) pin to servo, or e.g. (pin,default min 544,max 2400)
  // mymotoL.attach(3);
 
 }
@@ -44,7 +44,7 @@ void loop()
   static float prevAvgR = valaR;  // just set once, first loop
 
   int newAvgR = round((valaR + 4 * prevAvgR) * 0.2); // ? faster to * than / by X
-  valR = map(newAvgR, 50, 980, 180, 0); // scale it to degrees for servo (full range = 0 to 180 or partial range)
+  valR = map(newAvgR, 20, 1000, 180, 0); // scale it to degrees for servo (full range = 0 to 180 or partial range)
   // servo position center = 90, pulse = 1500 uS, motor still
   // 70-110 gives range of 1280 - 1680 uS
 
@@ -74,6 +74,6 @@ void loop()
 //  mymotoL.write(valL);             // sets the servo position (or motor speed) according to the scaled value
 //
 //  prevAvgL = newAvgL;
-  delay(100);                           // smaller delay = gets there faster
+  delay(50);                           // smaller delay = gets there faster
 }  // end loop
 
