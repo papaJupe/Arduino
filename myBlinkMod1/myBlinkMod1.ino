@@ -7,14 +7,14 @@
 // Pin 13 wired to LED on most Arduino boards;
 // give it a name:
 int led = 13;     // on Mega A1 is 55, A3 57
-int blinkDelay = 1500;
+int blinkDelay = 500;
 
 // the setup routine runs once when you power up, press reset
 // or open new Serial Monitor window:
 
 void setup() 
 { 
-    pinMode(A2, INPUT);   // input for AR
+ //   pinMode(A2, INPUT);   // input for AR
 //  pinMode(A4, OUTPUT); // A4 works as ground for pot
 //  digitalWrite(A4, LOW);
 //  pinMode(A5, OUTPUT); // gives 5v for pot
@@ -47,4 +47,3 @@ void loop()
   delay(blinkDelay);         // off for this long
 
 }
-

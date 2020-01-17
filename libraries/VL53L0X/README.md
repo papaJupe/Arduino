@@ -1,8 +1,8 @@
 # VL53L0X library for Arduino
 
-Version: 1.0.2<br>
-Release date: 2017 Jun 27<br>
-[Build Status](https://travis-ci.org/pololu/vl53l0x-arduino)<br>
+Version: 1.2.0<br>
+Release date: 2019 Oct 31<br>
+[![Build Status](https://travis-ci.org/pololu/vl53l0x-arduino.svg?branch=master)](https://travis-ci.org/pololu/vl53l0x-arduino)<br>
 [www.pololu.com](https://www.pololu.com/)
 
 ## Summary
@@ -17,7 +17,7 @@ This library is designed to work with the Arduino IDE versions 1.6.x or later; w
 
 ### Hardware
 
-A [VL53L0X carrier](https://www.pololu.com/product/2490) can be purchased from Pololu's website.  Before continuing, careful reading of the [product page] (https://www.pololu.com/product/2490) as well as the VL53L0X datasheet is recommended.
+A [VL53L0X carrier](https://www.pololu.com/product/2490) can be purchased from Pololu's website.  Before continuing, careful reading of the [product page](https://www.pololu.com/product/2490) as well as the VL53L0X datasheet is recommended.
 
 Make the following connections between the Arduino and the VL53L0X board:
 
@@ -54,7 +54,7 @@ If you are using version 1.6.2 or later of the [Arduino software (IDE)](http://w
 
 If this does not work, you can manually install the library:
 
-1. Download the [latest release archive from GitHub] (https://github.com/pololu/vl53l0x-arduino/releases) and decompress it.
+1. Download the [latest release archive from GitHub](https://github.com/pololu/vl53l0x-arduino/releases) and decompress it.
 2. Rename the folder "vl53l0x-arduino-master" to "VL53L0X".
 3. Move the "VL53L0X" folder into the "libraries" directory inside your Arduino sketchbook directory.  You can view your sketchbook location by opening the "File" menu and selecting "Preferences" in the Arduino IDE.  If there is not already a "libraries" folder in that location, you should make the folder yourself.
 4. After installing the library, restart the Arduino IDE.
@@ -72,19 +72,19 @@ This library is intended to provide a quicker and easier way to get started usin
 ## Library reference
 
 * `uint8_t last_status`<br>
-  The status of the last I2C write transmission. See the [`Wire.endTransmission()` documentation](http://arduino.cc/en/Reference/WireEndTransmission) for return values.
+  The status of the last I&sup2;C write transmission. See the [`Wire.endTransmission()` documentation](http://arduino.cc/en/Reference/WireEndTransmission) for return values.
 
 * `VL53L0X(void)`<br>
   Constructor.
 
 * `void setAddress(uint8_t new_addr)`<br>
-  Changes the I2C slave device address of the VL53L0X to the given value (7-bit).
+  Changes the I&sup2;C slave device address of the VL53L0X to the given value (7-bit).
 
 * `uint8_t getAddress(void)`<br>
-  Returns the current I2C address.
+  Returns the current I&sup2;C address.
 
 * `bool init(bool io_2v8 = true)`<br>
-  Iniitializes and configures the sensor. If the optional argument `io_2v8` is true (the default if not specified), the sensor is configured for 2V8 mode (2.8 V I/O); if false, the sensor is left in 1V8 mode. The return value is a boolean indicating whether the initialization completed successfully. 
+  Iniitializes and configures the sensor. If the optional argument `io_2v8` is true (the default if not specified), the sensor is configured for 2V8 mode (2.8 V I/O); if false, the sensor is left in 1V8 mode. The return value is a boolean indicating whether the initialization completed successfully.
 
 * `void writeReg(uint8_t reg, uint8_t value)`<br>
   Writes an 8-bit sensor register with the given value.
@@ -159,6 +159,8 @@ This library is intended to provide a quicker and easier way to get started usin
 
 ## Version history
 
+* 1.2.0 (2019 Oct 31): Incorporated some updates from ST's VL53L0X API version 1.0.2 (this library was originally based on API version 1.0.0).
+* 1.1.0 (2019 Oct 29): Improved `init()` and added a check for its return value in examples; fixed a few other issues.
 * 1.0.2 (2017 Jun 27): Fixed a typo in a register modification in `getSpadInfo()` (thanks @tridge).
 * 1.0.1 (2016 Dec 08): Fixed type error in `readReg32Bit()`.
 * 1.0.0 (2016 Aug 12): Original release.

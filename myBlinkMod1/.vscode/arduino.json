@@ -1,0 +1,6 @@
+{
+    "port": "/dev/cu.usbserial-002SADG4",
+    "programmer": "AVR ISP",
+    "board": "Simblee:Simblee:Simblee",
+    "sketch": "myBlinkMod1.ino"
+}

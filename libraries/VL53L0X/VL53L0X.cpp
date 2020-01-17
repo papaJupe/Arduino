@@ -3,7 +3,7 @@
 // or paraphrased from the API source code, API user manual (UM2039), and the
 // VL53L0X datasheet.
 
-#include <VL53L0X.h>
+#include "VL53L0X.h"
 #include <Wire.h>
 
 // Defines /////////////////////////////////////////////////////////////////////
@@ -16,7 +16,7 @@
 #define startTimeout() (timeout_start_ms = millis())
 
 // Check if timeout is enabled (set to nonzero value) and has expired
-#define checkTimeoutExpired() (io_timeout > 0 && ((uint16_t)millis() - timeout_start_ms) > io_timeout)
+#define checkTimeoutExpired() (io_timeout > 0 && ((uint16_t)(millis() - timeout_start_ms) > io_timeout))
 
 // Decode VCSEL (vertical cavity surface emitting laser) pulse period in PCLKs
 // from register value
@@ -59,6 +59,9 @@ void VL53L0X::setAddress(uint8_t new_addr)
 // mode.
 bool VL53L0X::init(bool io_2v8)
 {
+  // check model ID register (value specified in datasheet)
+  if (readReg(IDENTIFICATION_MODEL_ID) != 0xEE) { return false; }
+
   // VL53L0X_DataInit() begin
 
   // sensor uses 1V8 mode for I/O by default; switch to 2V8 mode if necessary
@@ -424,7 +427,7 @@ bool VL53L0X::setMeasurementTimingBudget(uint32_t budget_us)
   SequenceStepEnables enables;
   SequenceStepTimeouts timeouts;
 
-  uint16_t const StartOverhead      = 1320; // note that this is different than the value in get_
+  uint16_t const StartOverhead     = 1910;
   uint16_t const EndOverhead        = 960;
   uint16_t const MsrcOverhead       = 660;
   uint16_t const TccOverhead        = 590;
@@ -486,7 +489,7 @@ bool VL53L0X::setMeasurementTimingBudget(uint32_t budget_us)
     //  timeouts must be expressed in macro periods MClks
     //  because they have different vcsel periods."
 
-    uint16_t final_range_timeout_mclks =
+    uint32_t final_range_timeout_mclks =
       timeoutMicrosecondsToMclks(final_range_timeout_us,
                                  timeouts.final_range_vcsel_period_pclks);
 
@@ -513,7 +516,7 @@ uint32_t VL53L0X::getMeasurementTimingBudget(void)
   SequenceStepEnables enables;
   SequenceStepTimeouts timeouts;
 
-  uint16_t const StartOverhead     = 1910; // note that this is different than the value in set_
+  uint16_t const StartOverhead     = 1910;
   uint16_t const EndOverhead        = 960;
   uint16_t const MsrcOverhead       = 660;
   uint16_t const TccOverhead        = 590;
@@ -869,7 +872,7 @@ bool VL53L0X::timeoutOccurred()
   return tmp;
 }
 
-// Private Methods ////////////////////////////////////////////
+// Private Methods /////////////////////////////////////////////////////////////
 
 // Get reference SPAD (single photon avalanche diode) count and type
 // based on VL53L0X_get_info_from_device(),
@@ -974,9 +977,7 @@ uint16_t VL53L0X::decodeTimeout(uint16_t reg_val)
 
 // Encode sequence step timeout register value from timeout in MCLKs
 // based on VL53L0X_encode_timeout()
-// Note: the original function took a uint16_t, but the argument passed to it
-// is always a uint16_t.
-uint16_t VL53L0X::encodeTimeout(uint16_t timeout_mclks)
+uint16_t VL53L0X::encodeTimeout(uint32_t timeout_mclks)
 {
   // format: "(LSByte * 2^MSByte) + 1"
 
@@ -1004,7 +1005,7 @@ uint32_t VL53L0X::timeoutMclksToMicroseconds(uint16_t timeout_period_mclks, uint
 {
   uint32_t macro_period_ns = calcMacroPeriod(vcsel_period_pclks);
 
-  return ((timeout_period_mclks * macro_period_ns) + (macro_period_ns / 2)) / 1000;
+  return ((timeout_period_mclks * macro_period_ns) + 500) / 1000;
 }
 
 // Convert sequence step timeout from microseconds to MCLKs with given VCSEL period in PCLKs
