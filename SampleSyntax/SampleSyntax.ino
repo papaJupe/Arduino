@@ -533,7 +533,7 @@ void loop()
 FastLED color assignments
 -------------------------
 usually just: 
- leds[1]= CRGB::Red, or = 0x99ffff
+ leds[1]= CRGB::Red, or = CRGB(0x99ffff)
 but if you have to assign using a var (e.g. w/ options in setup)
 1st init CRGB C; // color to send lites, which seem to be byte triplets
 in setup: C = CRGB::Red, C = CRGB(255, 0, 0), C = CRGB(0x99ffff);

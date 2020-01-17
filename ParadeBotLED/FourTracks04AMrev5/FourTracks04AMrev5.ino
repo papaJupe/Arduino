@@ -147,7 +147,7 @@ void rightIterate()
   {
     if (digitalRead(IS_RIGHT_FORWARD_PIN) == 0) // true when pin pulls high
     {
-      if ( ((i + 14 - count) % 15) < 7 ) // make x, last #, larger to light up more lites
+      if ( ((i + 14 - count) % 15) < 7 ) // make x (last #) larger to light up more lites
       {
         leds[i] = red;
       }
@@ -253,4 +253,3 @@ void leftIterate()   // uncomment if L side lites  present
     }  // end else: L rear reversed
   }  // end for L rear string
 } // end L iterate
-

@@ -5,20 +5,20 @@ FASTLED_USING_NAMESPACE
 // Mod of DemoReel100 example: various animated patterns using FastLED built-ins
 //  mod to make Y, more random pattern shift
 //
-// Mark Kriegsman, 12/14; 1703 AM mod for  (team) Y of 2 intersecting strings
+// Mark Kriegsman, 12/14; 1703 AM mod for (team) Y of 2 intersecting strings
 
 #if defined(FASTLED_VERSION) && (FASTLED_VERSION < 3001000)
 #warning "Requires FastLED 3.1 or later; check github for latest code."
 #endif
 
-#define DATA_PIN  2
+#define DATA_PIN  15   // A1
 
-#define LED_TYPE    WS2812B  // our strings
+#define LED_TYPE    WS2812B 
 #define COLOR_ORDER GRB
-#define NUM_LEDS    48
+#define NUM_LEDS    60
 CRGB leds[NUM_LEDS];
 
-#define BRIGHTNESS    60
+#define BRIGHTNESS    40
 #define FRAMES_PER_SECOND  60
 
 void setup()
@@ -129,4 +129,3 @@ void juggle()
     dothue += 32;
   }
 }
-
