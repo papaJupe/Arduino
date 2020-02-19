@@ -4,7 +4,9 @@
     code, adds pulse option: flashes on for 'count' setting (eg 5), then off (dark)
     for 'pulse' x cycle length. Eg if count_max = 5 and pulse = 3 and cycle len =
     25 msec, then flash 5 trains for 125 ms, then dark 75 ms (95 actually)
-    v. D adds slowdown taper option
+    v. D adds slowdown taper option; edits to reduce irregular briteness changes, 
+    helped to use 4/21 for 40 hz; made pulse waits longer; no help from changing
+    data pin to 5, not doing AR, not using count, etc. 
     Wiring: BCD switch to D2,3,4; prog # LED's to D9,10,11; lites get power from board 
     gnd/5v; string controlled from A1; pot power from gnd/3.3v, center to A2
  
@@ -31,7 +33,7 @@ byte pinOuts[] = {9, 10, 11}; //  these are [1's,2's,4's] bin output pins to LED
 //  could use more for more modes; but my 3 bit switch only goes 0-7
 
 // params control loop freq, pulsing, in mS
-int liteOn;   // byte never > 255
+int liteOn;   // byte never can be > 255
 int liteOff;  // so int better here
 int pulse = 0;  // how long to pause between trains
 boolean slowdown = 0; // whether flash rate slows with time
@@ -103,28 +105,28 @@ void setup()
         tInt = 1610; // ms interval to increm liteOff
         break;
       }
-    case 3:  // 40 hz, white, no pulse
+    case 3:  // 40 hz, blu white, no pulse
       {
-        liteOn = 5;
-        liteOff = 20;
+        liteOn = 4;
+        liteOff = 21;
         C = CRGB(0x99ffff); // sl bluish
         pulse = 0;
         break;
       }
     case 4:  // 40/sec w/ pulse
       {
-        liteOn = 5;
-        liteOff = 20;
+        liteOn = 4;
+        liteOff = 21;
         C = CRGB(0x99ffff); // sl bluish
-        pulse = 2;
+        pulse = 7;
         break;
       }
     case 5: // fast w/ longer pulsing
       {
-        liteOn = 5;
-        liteOff = 20;
+        liteOn = 4;
+        liteOff = 21;
         C = CRGB(0x99ffff); // sl bluish
-        pulse = 3;
+        pulse = 14;
         break;
       }
     case 6: // 1 hz red w/o pulsing
@@ -160,25 +162,25 @@ void loop()
 
   // adjust brightness with pot
   brite = analogRead(A2);
-  brite = map(brite, 1, 666, 1, 44); // map 0-3 v pot range to briteness
+  brite = map(brite, 1, 666, 1, 48); // map 0-3 v pot range to briteness
   FastLED.setBrightness(brite);
 
   leds[0] = C; // some color set by mode
   leds[1] = C;
 
   FastLED.show();
-  delay(liteOn);  // timing set by mode
-
+  FastLED.delay(liteOn);  // timing set by mode, no help compared to plain delay()
+  
   leds[0] = CRGB::Black;
   leds[1] = CRGB::Black;
 
   FastLED.show();
-  delay(liteOff);   // timing set by mode
+  FastLED.delay(liteOff);   // timing set by mode
 
-  if (count == 5 && pulse != 0)  // if not 0, delay 'pulse#' * loop duration
+  if ( pulse != 0 && count == 5)  // if not 0, delay 'pulse#' * loop duration
   {
-    delay(pulse * (liteOn + liteOff));
-    Serial.println ("pulse " + String (pulse));
+    FastLED.delay(pulse * (liteOn + liteOff));
+    //  Serial.println ("pulse " + String (pulse));
   } // end if count
 
   EVERY_N_MILLISECONDS(tInt) // slowdown increments liteOff

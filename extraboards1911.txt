@@ -1,0 +1,3 @@
+https://raw.githubusercontent.com/sparkfun/Arduino_Boards/master/IDE_Board_Manager/package_sparkfun_index.json
+http://arduino.esp8266.com/stable/package_esp8266com_index.json
+https://github.com/mthatcher/Simblee-Build-Archive/raw/master/package_simblee166_index.json

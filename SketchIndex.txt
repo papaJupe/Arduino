@@ -273,9 +273,9 @@ ReadAnalogVavg_Dig1602 -- reads an averaged analog input on pin X, and prints th
   modif for 16x2 display
   Uses: Liquid Crystal libr, 16x2 display, DFR keypad libr, reading key value
 
-  Read_Dig_to_Lite -  reads one hi/lo input to D4 and LED displays on/off at D12 
+Read_Dig_to_Lite -  reads one hi/lo Dig input and LED displays on/off 
   -- used to test dig IR sensors et. al. Like On/OffwAnalPin above
-    Uses: device power from pins
+    Uses: device power from pins, Dig Read/Write
     
 ReadPoToPWM_A --  reads an analog input on pin A4, converts it to voltage, 
     and prints the result to the serial monitor if changed; sends scaled PWM 
