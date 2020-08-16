@@ -62,7 +62,7 @@ delay(500);
 
 void loop(){
 
-// check for serial data  (coming over BT or Ser Mon or either ???)
+// check for serial data  (coming via BT / Ser Mon / other)
 if (Serial.available() > 0) {
 // read the incoming byte:
 incomingByte = Serial.read();

@@ -9,8 +9,8 @@
  */
 
 // preprocessor directives
-#define potPin A2  // analog pin to read the potentiometer voltage, nearby can power device
-#define gndPin A0  // 14 Uno, 54 Mega
+#define potPin A3  // analog pin to read the potentiometer voltage, nearby can power device
+#define gndPin A2  // 14 Uno, 54 Mega
 #define powPin A4
 #define litePin 13  // digital pin lights LED when target distance reached
 
@@ -55,14 +55,14 @@ void loop()
   if (ARval >= 31)  // > 1 ft range, we beep on pin 8
   {
     digitalWrite(litePin,LOW);  // LED is off until we get < 1 ft
-    tone(8,toneFreq);  // on/off equal amounts, device on pin 8
+    tone(9,toneFreq);  // on/off equal amounts, device on pin 8
     delay(beepDura);
-    noTone(8);
+    noTone(9);
     delay(beepDura);
   }
   else  // we're < 1 ft distance
   { 
-    noTone(8);
+    noTone(9);
     // lite the lite
     digitalWrite(litePin,HIGH);
   }
@@ -79,9 +79,5 @@ void loop()
     }
     counter++;
     
-  delay(40);                 
+  delay(40);         
 } 
-
-
-
-

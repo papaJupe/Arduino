@@ -358,7 +358,7 @@ myVal is String var
   Str's OK
   
 // Serial.println("raw pin AR is " + sensorValue + " ticks"); // fails to compile w/ int var
-// Serial.println("raw pin AR is "+String(sensorValue) + " ticks"); //  but this works 
+// Serial.println("raw pin AR is "+ String(sensorValue) + " ticks"); //  but this works 
 OK w/ conversion to String
 
 // float not acceptable param for String constructor : v.i.

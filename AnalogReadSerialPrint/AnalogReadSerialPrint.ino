@@ -7,8 +7,19 @@
 // the setup routine runs once when you press reset
 
 void setup()
-{ pinMode(2, OUTPUT);
-  digitalWrite(2, HIGH);
+{ 
+  pinMode(3, OUTPUT);
+  // pin for indicator LED gnd (2/3)
+  pinMode(2, OUTPUT);
+  digitalWrite(2, LOW);
+
+  // pot to adjust AR
+  pinMode(A2, OUTPUT);
+  digitalWrite(A2, HIGH);
+  pinMode(A4, OUTPUT);
+  digitalWrite(A4, LOW);
+  pinMode(A3,INPUT);
+  
   // initialize serial communication at 9600 bits per second
   Serial.begin(9600);
 }
@@ -17,9 +28,9 @@ void setup()
 
 void loop()
 {
-  // read the input on analog pin 4:
-  int sensorValue = analogRead(A7);
+  // read the input on analog pin:
+  int sensorValue = analogRead(A3);
   // print out the value
   Serial.print("sensor V is "); Serial.println(sensorValue);
-  delay(2000);        // delay between reads for sanity
+  delay(1000);        // delay between reads for sanity
 }

@@ -5,7 +5,7 @@
 
 FASTLED_USING_NAMESPACE
 
-// Mark Kriegsman, 12/14; 1703 AM mod from DemoReel100 example for (team) Y 
+// Mark Kriegsman, 12/14; 1703 AM mod from DemoReel100 example for (team) Y
 //  of 2 intersecting strings;
 // mod 2001 AM mod to demo decorative and functional patterns, control options for Team 3145
 
@@ -13,10 +13,10 @@ FASTLED_USING_NAMESPACE
 #warning "Requires FastLED 3.1 or later; check github for latest code."
 #endif
 
-#define DATA_PIN  15   // A1
+#define DATA_PIN  7   // A1
 #define LED_TYPE    WS2812B
 #define COLOR_ORDER GRB
-#define NUM_LEDS    60
+#define NUM_LEDS    24
 #define SW_1        18   // push button on A4
 #define SW_2        14  // A0
 
@@ -31,12 +31,12 @@ void setup()
   delay(1000); // 1 second delay for recovery
 
   // tell FastLED about this LED strip configuration
-  FastLED.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
-
+  // FastLED.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
+  FastLED.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS);
   // set master brightness
   FastLED.setBrightness(BRIGHTNESS);
   // push button x 2 control display mode
-  pinMode(SW_1, INPUT_PULLUP);   // when pressed (value is false) lites show RED alliance color
+  pinMode(SW_1, INPUT_PULLUP);   // when pressed (value goes false) lites show RED
   pinMode(SW_2, INPUT_PULLUP);   // if pressed while SW1, lites change to BLUE;
   // SW2 alone shows target position shifted by pot input
   pinMode(A2, INPUT);  // analog input 0-3.3v from pot shifts lite segment position
@@ -54,7 +54,7 @@ void loop()
 {
   if (!digitalRead(SW_1) && !digitalRead(SW_2))  // both pressed: change lites to blue
   {
-    for (int i = 1; i < NUM_LEDS + 1; i++) {
+    for (int i = 0; i < NUM_LEDS; i++) {
       leds[i] = CRGB::Blue;
       // send the 'leds' array to the LED strip
 
@@ -63,7 +63,7 @@ void loop()
   }
 
   else if (!digitalRead(SW_1))  // show RED
-  { for (int i = 1; i < NUM_LEDS + 1; i++) {
+  { for (int i = 0; i < NUM_LEDS; i++) {
       leds[i] = CRGB::Red;
     }       // send the 'leds' array to the LED strip
     FastLED.show();
@@ -75,7 +75,7 @@ void loop()
     int targ = analogRead(A2);
     targ = map(targ, 1, 666, 6, 54); // map 0-3.3 v pot range to center of something
     // make all lites green
-    for (int i = 1; i < NUM_LEDS + 1; i++) {
+    for (int i = 0; i < NUM_LEDS; i++) {
       leds[i] = CRGB::Green;
     }
     // color the target 10 lites something else
@@ -89,50 +89,51 @@ void loop()
     FastLED.show();
   } // end SW2 alone
 
+  // default to use cycling pre-made pattern
+  // Call the current pattern function once/loop, updating the 'leds' array
+  // gPatterns[gCurrentPatternNumber]();  // array of ptrs to names of functions ?
+
+  // cycle lites in 15 lite segments in fwd/reverse direction:
+  // for each i, (i+14 - count) or (i - count for larger #s) drops 14->0 as loop increments;
+  // (I use loop count to increment the 'offset' value from segment end);
+  // so mod 15 of (i + 14 - count) or (i +/- count for large #) also cycles 14 to 0 with time;
+  // so [ < x] of the 15 lites will be [color] and 'shift forward' each offset increment;
+  // SUBTRACTING offset simulates forward movement of segments; ADDING offset simulates reverse
+
   else {   // the default pattern when no buttons pressed
-    // Call the current pattern function once/loop, updating the 'leds' array
-    // gPatterns[gCurrentPatternNumber]();  // array of ptrs to names of functions ?
-
     // for this demo, just simple white moving block on blue bkgnd
-// cycle lites in 15 lite segments in fwd/reverse direction:
-// for each i, (i+14 - count) or (i - count for larger #s) drops 14->0 as loop increments;
-// (I use loop count to increment the 'offset' value from segment end);
-// so mod 15 of (i + 14 - count) or (i +/- count for large #) also cycles 14 to 0 with time;
-// so [ < x] of the 15 lites will be [color] and 'shift forward' each offset increment;
-// SUBTRACTING offset simulates forward movement of segments; ADDING offset simulates reverse
-
-  for (int i = 1; i < NUM_LEDS+1; i++ )
-  {
-     if ( ((i + 14 - count) % 15) < 4 ) // make x (last #) larger for bigger moving segment
+    for (int i = 0; i < NUM_LEDS; i++ )
+    {
+      if ( ((i + 14 - count) % 15) < 4 ) // make x (last #) larger for bigger moving segment
       {
         leds[i] = CRGB::White;
       }
       else
       {
-        leds[i] = CRGB(0,0,40);  // dark blue
+        leds[i] = CRGB(0, 0, 40); // dark blue
       }
     }
 
   }  // end default else
-  
-//    else
-//    {
-//      // ADDING offset (count) reverses segment motion
-//      if ( ((i + 14 + count) % 15) < 7 )
-//      {
-//        leds[i] = red;
-//      }
-//      else
-//      {
-//        leds[i] = black;
-//      }
-//    }  // end else direction reversed
+
+  //    else
+  //    {
+  //      // ADDING offset (count) reverses segment motion
+  //      if ( ((i + 14 + count) % 15) < 7 )
+  //      {
+  //        leds[i] = red;
+  //      }
+  //      else
+  //      {
+  //        leds[i] = black;
+  //      }
+  //    }  // end else direction reversed
 
 
-    // send the 'leds' color array to the LED strip
-    FastLED.show();
-    count++;  // count increments each loop, cycles 1++ --> 15 --> 1
-    if (count > 14)   count = 1;
+  // send the 'leds' color array to the LED strip
+  FastLED.show();
+  count++;  // count increments each loop, cycles 1++ --> 15 --> 1
+  if (count > 14)   count = 1;
 
 
   //  //  periodic update colors and patterns
@@ -143,9 +144,9 @@ void loop()
   //    nextPattern();  // change pattern
   //  }
 
-  //  delay keeps the framerate modest, controls speed of segment movement
+  //  delay keeps the framerate down, controls speed of segment movement
   FastLED.delay(50);
-//  FastLED.delay(1000 / FRAMES_PER_SECOND); // if 50 fps this = 20 ms., pretty fast
+  //  FastLED.delay(1000 / FRAMES_PER_SECOND); // if 50 fps this = 20 ms., pretty fast
 }  // end loop
 
 
@@ -175,7 +176,7 @@ void loop()
 
   void addGlitter( fract8 chanceOfGlitter)  // larger param = more glitter
   {
-  if ( random8() < chanceOfGlitter) {
+  if ( random8() < chanceOfGlitter) {  // why += instead of =
     leds[ random16(NUM_LEDS) ] += CRGB::White;
   }
   }
@@ -215,7 +216,7 @@ void loop()
   for ( int i = 0; i < 9; i++) {
     leds[beatsin16(i + 7, 0, NUM_LEDS)] |= CHSV(dothue, 200, 255);
     dothue += 32;
-  }
-  }
+  }  // end for
+  } // end juggle
 
 */

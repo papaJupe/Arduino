@@ -1,5 +1,5 @@
 /* USsr04 avg Ser TX -- US sr04 module on Mega w/ ESP shield, send bytes
-    over Ser_ to prog like Proc on PC, also view Ardu's I/O w/ ser. mon.; test
+    over Ser_ to prog like Proc on PC, also view Ardu's I/O w/ ser. mon.; test code,
     to later send data via wifi UDP to remote program like Proc SerialDataReadGraph
 
   Uses: gets dist_avg using exp moving average, pulseIn, udp .write bytes, Ser3
@@ -30,7 +30,7 @@ void setup()
   pinMode(EP, INPUT);     // EP input pin for echo
   pinMode(39, OUTPUT);
   digitalWrite(39, HIGH); // 5 v for US module power
-    pinMode(45, OUTPUT);
+  pinMode(45, OUTPUT);
   digitalWrite(45, LOW); // gnd for US module power
 }
 
@@ -49,11 +49,11 @@ Serial1.write(distAvg % 128); // lo byte
 Serial.println(distAvg);  // ser. mon. can see what's sent
 }
 
-  uint32_t microseconds = TP_init(); // activates the pulser, gets uS back
-  delay(20); // how long to wait for value? v.i.--this is OK up to 300cm, 3m
-  uint16_t dist = Distance(microseconds, CM);
-  // calc expon MA
-  distAvg = round((distAvg * 4) + dist) / 5;
+uint32_t microseconds = TP_init(); // activates the pulser, gets uS back
+delay(20); // how long to wait for value? v.i.--this is OK up to 300cm, 3m
+uint16_t dist = Distance(microseconds, CM);  // param 2 is flag for units
+// calc expon MA
+distAvg = round((distAvg * 4) + dist) / 5;
   // print to ser. mon. at some sane interval
 //  if (timeElapsed > interval)
 //    { Serial.print("dist : ");

@@ -53,7 +53,7 @@ void setup()
   pinMode(10, OUTPUT);
   pinMode(11, OUTPUT);
 
-  delay(1500);
+  delay(1000);
   // Edit one of these lines for your led string type
   // FastLED.addLeds<WS2811, DATA_PIN, RGB>(leds, NUM_LEDS);
   // FastLED.addLeds<WS2812, DATA_PIN, RGB>(leds, NUM_LEDS);
