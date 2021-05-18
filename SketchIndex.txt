@@ -1,6 +1,6 @@
 SketchIndex.txt as of 191025
 
-2waySerial for mega -- to program BT module w/ AT cmd from Ardu IDE
+2waySerial for mega -- to program BT module w/ AT cmd from Ardu IDE;
   or Ser2 can be wired to USB-TTL dongle for I/O w/ Proc to test
   serial protocol: key or var in Proc sent variously, see how
   displayed in Ardu ser. mon. or used in sketch; ideas here used in
@@ -382,7 +382,7 @@ Servo Mega tx rx Serial -- send / recv bytes over USB-TTL serial
   servo; first got a byte for up/down to increment tilt var;
   Proc. w/ GCP lib can use joystick button & axes to send ch or #
   to Ardu sketch mega Servo Tx Rx Ser or BT; GC gui lib can also
-  sent  an int from a slider on Proc; Ardu converts chars and #'s to
+  send  an int from a slider on Proc; Ardu converts chars and #'s to
   angle change for servos. code started for tilt & pan, vals read OK
 
   Uses: USB-TTL dongle on ser2, read/write bytes, servo.write,
