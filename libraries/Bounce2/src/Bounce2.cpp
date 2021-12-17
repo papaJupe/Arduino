@@ -3,42 +3,33 @@
 
 #include "Bounce2.h"
 
-static const uint8_t DEBOUNCED_STATE = 0b00000001;
-static const uint8_t UNSTABLE_STATE  = 0b00000010;
-static const uint8_t CHANGED_STATE   = 0b00000100;
+//////////////
+// DEBOUNCE //
+//////////////
 
-
-Bounce::Bounce()
-    : previous_millis(0)
+Debouncer::Debouncer():previous_millis(0)
     , interval_millis(10)
-    , state(0)
-    , pin(0)
-{}
+    , state(0) {}
 
-void Bounce::attach(int pin) {
-    this->pin = pin;
-    state = 0;
+void Debouncer::interval(uint16_t interval_millis)
+{
+    this->interval_millis = interval_millis;
+}
+
+void Debouncer::begin() {
+	 state = 0;
     if (readCurrentState()) {
         setStateFlag(DEBOUNCED_STATE | UNSTABLE_STATE);
     }
-#ifdef BOUNCE_LOCK_OUT
+
+	#ifdef BOUNCE_LOCK_OUT
     previous_millis = 0;
 #else
     previous_millis = millis();
 #endif
 }
 
-void Bounce::attach(int pin, int mode){
-    setPinMode(pin, mode);
-    this->attach(pin);
-}
-
-void Bounce::interval(uint16_t interval_millis)
-{
-    this->interval_millis = interval_millis;
-}
-
-bool Bounce::update()
+bool Debouncer::update()
 {
 
     unsetStateFlag(CHANGED_STATE);
@@ -104,37 +95,61 @@ bool Bounce::update()
     
 #endif
 
-		return  getStateFlag(CHANGED_STATE); 
+		return  changed(); 
 
 }
-/*
+
 // WIP HELD
-unsigned long Bounce::held() {
+unsigned long Debouncer::previousDuration() const {
 	return durationOfPreviousState;
 }
-*/
-unsigned long Bounce::duration() {
+
+unsigned long Debouncer::duration() const {
 	return (millis() - stateChangeLastTime);
 }
 
-inline void Bounce::changeState() {
+inline void Debouncer::changeState() {
 	toggleStateFlag(DEBOUNCED_STATE);
 	setStateFlag(CHANGED_STATE) ;
-	// WIP HELD : durationOfPreviousState = millis() - stateChangeLastTime;
+	durationOfPreviousState = millis() - stateChangeLastTime;
 	stateChangeLastTime = millis();
 }
 
-bool Bounce::read()
+bool Debouncer::read() const
 {
     return  getStateFlag(DEBOUNCED_STATE);
 }
 
-bool Bounce::rose()
+bool Debouncer::rose() const
 {
     return getStateFlag(DEBOUNCED_STATE) && getStateFlag(CHANGED_STATE);
 }
 
-bool Bounce::fell()
+bool Debouncer::fell() const
 {
     return  !getStateFlag(DEBOUNCED_STATE) && getStateFlag(CHANGED_STATE);
 }
+
+////////////
+// BOUNCE //
+////////////
+
+
+Bounce::Bounce()
+    : pin(0)
+{}
+
+void Bounce::attach(int pin) {
+    this->pin = pin;
+    
+    // SET INITIAL STATE
+    begin();
+}
+
+void Bounce::attach(int pin, int mode){
+    setPinMode(pin, mode);
+    this->attach(pin);
+}
+
+
+

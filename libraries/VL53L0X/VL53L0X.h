@@ -2,6 +2,7 @@
 #define VL53L0X_h
 
 #include <Arduino.h>
+#include <Wire.h>
 
 class VL53L0X
 {
@@ -96,10 +97,13 @@ class VL53L0X
 
     uint8_t last_status; // status of last I2C transmission
 
-    VL53L0X(void);
+    VL53L0X();
+
+    void setBus(TwoWire * bus) { this->bus = bus; }
+    TwoWire * getBus() { return bus; }
 
     void setAddress(uint8_t new_addr);
-    inline uint8_t getAddress(void) { return address; }
+    inline uint8_t getAddress() { return address; }
 
     bool init(bool io_2v8 = true);
 
@@ -114,22 +118,22 @@ class VL53L0X
     void readMulti(uint8_t reg, uint8_t * dst, uint8_t count);
 
     bool setSignalRateLimit(float limit_Mcps);
-    float getSignalRateLimit(void);
+    float getSignalRateLimit();
 
     bool setMeasurementTimingBudget(uint32_t budget_us);
-    uint32_t getMeasurementTimingBudget(void);
+    uint32_t getMeasurementTimingBudget();
 
     bool setVcselPulsePeriod(vcselPeriodType type, uint8_t period_pclks);
     uint8_t getVcselPulsePeriod(vcselPeriodType type);
 
     void startContinuous(uint32_t period_ms = 0);
-    void stopContinuous(void);
-    uint16_t readRangeContinuousMillimeters(void);
-    uint16_t readRangeSingleMillimeters(void);
+    void stopContinuous();
+    uint16_t readRangeContinuousMillimeters();
+    uint16_t readRangeSingleMillimeters();
 
     inline void setTimeout(uint16_t timeout) { io_timeout = timeout; }
-    inline uint16_t getTimeout(void) { return io_timeout; }
-    bool timeoutOccurred(void);
+    inline uint16_t getTimeout() { return io_timeout; }
+    bool timeoutOccurred();
 
   private:
     // TCC: Target CentreCheck
@@ -149,6 +153,7 @@ class VL53L0X
       uint32_t msrc_dss_tcc_us,    pre_range_us,    final_range_us;
     };
 
+    TwoWire * bus;
     uint8_t address;
     uint16_t io_timeout;
     bool did_timeout;

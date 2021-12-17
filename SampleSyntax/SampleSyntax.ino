@@ -157,7 +157,11 @@ enum {zilch, alpo, burka, carly, darpa};
    {
     return (c * 9/5 + 32)
    }
-   
+-------------------------------
+ enhanced if, ternary, conditional operator: from SFM RooCoom v0.3
+     // gentler turns if going fast c.f. C prog p 116
+    int spd = (speed > 160) ? round(speed * 0.8) : speed;
+------------------------------------------------------------------------ 
 C ternary operator
 ------------------
 IsLEDOn = !IsLEDOn; // toggle value of IsLEDOn
@@ -400,10 +404,6 @@ reading a char string one by one using pointer to it
  doSomething(c);  // doesSometg to each c in string until c=*p goes false when out of chars
  
  // does c need a type? no
------------------------------------------------------------------------- 
- enhanced if, ternary, conditional operator: from SFM RooCoom v0.3
-     // gentler turns if going fast c.f. C prog p 116
-    int spd = (speed > 160) ? round(speed * 0.8) : speed;
 ------------------------------------------------------------------------ 
 
 using flash memory to store some program data like strings that doesn't change much

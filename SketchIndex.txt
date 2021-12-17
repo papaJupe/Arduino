@@ -27,7 +27,20 @@ ADXL345_test2
     ADXL345_test2 (to read single register from accelerometer) amended to scan 0-127 for 
     address of active device, then get its ID from reg 0x00
     Uses: I2C, Wire
-    
+   
+Anal_Digi_VL53L0X_LCD shows use of continuous mode to take range
+  measurement with the VL53L0X I2C TOF rangefinder. Based on
+  vl53L0x_ContinuousRanging_Example.c from the VL53L0X API.
+  polo lib works w/ adafrut sensor, better than their lib.
+  The range readings are in mm., good to ~ 1200 mm w/
+  white wall, normal room lite
+  Now has input & display for 1 digital or 1 analog sensor w/
+  power from digital pin 11, dig read 2, anal read A3, display mV
+  on LCD ln 2, under range display; LED on 13 goes ON when 2
+  pullup pulled low
+  
+  Uses: LCD 16x2 display, wire lib for I2C, elapsedMillis
+   
 AnalInputMap2ToneA-B-C
  input analog voltage, from pot or sonar, map to useful values, activate toner using beep
  rate and frequency to indicate distance (inversely); when target distance reached, stop tone and
@@ -389,7 +402,7 @@ Servo Mega tx rx Serial -- send / recv bytes over USB-TTL serial
   elapsedMillis for timed print, convert incoming data to change angle
   for servo
 
-SFM Beest Comm 1  -- 2 motor strandbeest control from iOS/Andr Simb app
+SFM Beest Comm 1 -- 2 motor strandbeest control from iOS/Andr Simb app
    Red Spark board hard wired to control, so this is code being used
   v. 0.1 mods of SFM RoomComm for dual motor control from 6 simblee pins,
   read batt V on one analog pin
@@ -498,7 +511,7 @@ SiblDigitalReadLED -- non BLE, board test of button controlling LED
  Reads digital input on pin 3 (of Spark BOB), prints to the serial monitor 
 
 
-SR04+VL53L LCD uno uses polo's code vl53l0x_ContinuousRanging TOF
+SR04+VL53L LCD uno uses polo's code vl53L0x_ContinuousRanging TOF
   (on adafrut board) + SR04 US module for demo of 2 rangefinders 
   on 1 LCD display
   Uses: polo vl53lox lib, elapsedMillis, liquidCrystal, wire lib,

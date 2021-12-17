@@ -17,17 +17,17 @@
 #include <LiquidCrystal.h>
 
 VL53L0X sensor;
+
+//#define LONG_RANGE
 // Uncomment this line to use long range mode. This
 // increases the sensitivity of the sensor and extends its
 // potential range, but increases the likelihood of getting
 // an inaccurate reading because of reflections from objects
 // other than the intended target. It works best in dark
 // conditions.
-
-//#define LONG_RANGE
 // my test --> worse range in normal room lite
 
-// Uncomment ONE of these two lines to get
+// Uncomment ONE of next two lines to get
 // - higher speed at the cost of lower accuracy OR
 // - higher accuracy at the cost of lower speed
 
@@ -37,7 +37,8 @@ VL53L0X sensor;
 elapsedMillis timeElapsed; // declare global so not reset every loop
 unsigned int interval = 2000;  // ms for local ser mon print
 
-LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
+LiquidCrystal lcd(8, 9, 4, 5, 6, 7); // used for 16/2 shield
+
 
 void setup() 
 {
@@ -76,7 +77,7 @@ void setup()
 
 
 void loop()
-{
+{  // start laser distance code
   static int avgRng = 100;
   int range = sensor.readRangeContinuousMillimeters();
   // was Serial.print(sensor.readRangeContinuousMillimeters());
@@ -94,7 +95,8 @@ void loop()
     lcd.clear();
     // lcd.setCursor(0, 0);
     lcd.print("range mm: ");
-    lcd.print(avgRng);
+    if (avgRng >= 1201) lcd.print(">1200");
+    else lcd.print(avgRng);
   
   // print to ser. mon. at sane interval
   if (timeElapsed > interval)
@@ -103,6 +105,10 @@ void loop()
     Serial.println(avgRng);    
     timeElapsed = 0;
   }  // end if time elapsed
+// end VL53L0 code
+
+
+
 
   delay(100);
 }  // end loop

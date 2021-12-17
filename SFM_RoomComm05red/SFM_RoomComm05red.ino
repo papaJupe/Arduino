@@ -123,7 +123,7 @@ void loop() {  // loop farms out all action to update(), ? speedier
 
   count++;
   if (count == 10) digitalWrite(led, LOW);
-  if (count > 99) count = 0; // delay + count ==> get data every 2 sec
+  if (count > 99) count = 0; // delay x count ==> gets data every 2 sec
   delay(20);
 
   // SFM.process must be called in the loop

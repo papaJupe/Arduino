@@ -39,7 +39,7 @@ void setup()
   // Serial.begin(9600);   // for printout of values, NB bad nano can't handle both Serial & servo
      //   attach(pin, min, max) - Attaches to a pin, setting min and max values in microseconds
   // R motor goes one way only, making finer speed control
-  mymotoR.attach(3, 540, 1500);   // attach some dig pin to servo (needs PWM pin? - no), 
+  mymotoR.attach(3, 544, 1500);   // attach some dig pin to servo (needs PWM pin? - no), 
      // or e.g. (pin,default min 544,max 2400)
 
   mymotoL.attach(10);
