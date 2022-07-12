@@ -7,7 +7,9 @@
     v. D adds slowdown taper option; edits to reduce irregular briteness changes, 
     helped to use for 40 hz; made pulse waits longer; no help from changing
     data pin to 5, not doing AR, not using count, etc. v. E enables any number
-    of lite as long as <=4 levels (leds array holds 4 elements] 
+    of lite as long as <=4 levels (leds array holds 4 elements]; changed #3 to 38 
+    hz. (study says sl. more effective, #4 to 40 hz, and redden both;
+     
     Wiring: BCD switch to D2,3,4; prog # LED's to D9,10,11; lites get power from board 
     gnd/5v; string controlled from A1; pot power from gnd/3.3v, center to A2
  
@@ -28,19 +30,19 @@ int brite = 0; // sets brightness from pot input during looping
 byte mode = 0;   // variable's 8 bits (max) can be read from switches or other input
 // then used to set n LEDs on/off to display val as binary; I only use 0-7, 3 LEDs
 
-byte pinIns[] = {2, 3, 4};      // input pins for n bit binary switch
+byte pinIns[] = {2, 3, 4};      // input pins for 3 bit binary switch
 // binary led display of mode is optional;
 byte pinOuts[] = {9, 10, 11}; //  these are [1's,2's,4's] bin output pins to LEDs
 //  could use more for more modes; but my 3 bit switch only goes 0-7
 
 // params control loop freq, pulsing, in mS
-int liteOn;   // byte never can be > 255
+int liteOn;   // byte never > 255
 int liteOff;  // so int better here
 int pulse = 0;  // how long to pause between trains
 boolean slowdown = 0; // whether flash rate slows with time
 int tInt = 0;  // slowdown interval; large for slow slowdown
 
-CRGB C; // color that mode sets, ? byte triplets
+CRGB C; // color that mode sets, byte triplets
 // create color array for leds
 CRGB leds[NUM_LEDS];
 
@@ -106,27 +108,27 @@ void setup()
         tInt = 1610; // ms interval to increm liteOff
         break;
       }
-    case 3:  // 40 hz, blu white, no pulse
+    case 3:  // 37-38 hz, reddish, no pulse
       {
-        liteOn = 4;
-        liteOff = 21;
-        C = CRGB(0x99ffff); // sl bluish
+        liteOn = 5;
+        liteOff = 22;
+        C = CRGB(0xff6666);
         pulse = 0;
         break;
       }
-    case 4:  // 40/sec w/ pulse
+    case 4:  // 40/sec, reddish, no pulse
       {
         liteOn = 4;
         liteOff = 21;
-        C = CRGB(0x99ffff); // sl bluish
-        pulse = 7;
+        C = CRGB(0xff6666);
+        pulse = 0;
         break;
       }
-    case 5: // 40 hz, array of 6, for now same as case 3
+    case 5: // 40 hz, same as case 4 but bluish
       { 
         liteOn = 4;
         liteOff = 21;
-        C = CRGB(0xccffff); // more blu-whitish
+        C = CRGB(0xccffff);
         pulse = 0;
         break;
       }
@@ -173,7 +175,7 @@ void loop()
   leds[3] = C;
 
   FastLED.show();
-  FastLED.delay(liteOn);  // timing set by mode, no help compared to plain delay()
+  FastLED.delay(liteOn);  // timing set by mode, no better than plain delay()
   
   leds[0] = CRGB::Black;
   leds[1] = CRGB::Black;
@@ -183,20 +185,20 @@ void loop()
   FastLED.show();
   FastLED.delay(liteOff);   // timing set by mode
 
-  if ( pulse != 0 && count == 5)  // if not 0, delay 'pulse#' * loop duration
-  {
-    FastLED.delay(pulse * (liteOn + liteOff));
-    //  Serial.println ("pulse " + String (pulse));
-  } // end if count
-
-  EVERY_N_MILLISECONDS(tInt) // slowdown increments liteOff to taper rate
-  { if (slowdown)
-    {
-      liteOff += 1;
-     // Serial.println ("liteOff " + String (liteOff));
-    }
-    // else Serial.println ("liteOff " + String (liteOff));
-  }  // end EVERY-N for tapering rate
+//  if ( pulse != 0 && count == 5)  // if not 0, delay 'pulse#' * loop duration
+//  {
+//    FastLED.delay(pulse * (liteOn + liteOff));
+//    //  Serial.println ("pulse " + String (pulse));
+//  } // end if count
+//
+//  EVERY_N_MILLISECONDS(tInt) // slowdown increments liteOff to taper rate
+//  { if (slowdown)
+//    {
+//      liteOff += 1;
+//     // Serial.println ("liteOff " + String (liteOff));
+//    }
+//    // else Serial.println ("liteOff " + String (liteOff));
+//  }  // end EVERY-N for tapering rate
   
   count++;
 }  // end loop

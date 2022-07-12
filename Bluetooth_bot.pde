@@ -1,12 +1,14 @@
-/* Bluetooth-bot v1 -- Ardu code but has .pde extension for no clear reason
->   appears serial input could come from BT on loose bot, or just Ser Mon if
->   wired to PC
+/* Bluetooth-bot v1 -- Ardu code but has  ¿ .pde extension for no clear reason;
+>  appears serial input could come via BT bd (HC06) wired to rx/tx of Ardu
+> on loose bot, paired to BT on PC running Proc, or BT 2 phone app; or just Ardu 
+> Ser Mon if bot's Ardu  USB wired to PC;
 >  Arduino Robotics unofficial chapter 14
->  use Bluetooth Mate serial adapter to receive commands from PC (classic BT)
+>  use Bluetooth serial adapter to receive commands from PC (classic BT)
 >  Arduino decodes commands into motor movements
 >  Creates high-speed wireless serial link for robot control using keyboard
 >  Uses keys "i" = forward, "j" = left, "k" = reverse, and "l" = right
 >  speed control is also implemented using "," = speed down, "." = speed up, and "/" = max speed.
+> or rewrite in Proc w/ joystick input as I did for Roo control
 */
 
 // L298 motor control pins

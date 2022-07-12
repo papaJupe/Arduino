@@ -6,8 +6,8 @@
 
 // Pin 13 wired to LED on most Arduino boards;
 // give it a name:
-int led = 13;     // on Mega A1 is 55, A3 57
-int blinkDelay = 500;
+int led = 11;     // on Mega A1 is 55, A3 57
+int blinkDelay = 1000;
 
 // the setup routine runs once when you power up, press reset
 // or open new Serial Monitor window:

@@ -16,11 +16,11 @@ FASTLED_USING_NAMESPACE
 #define DATA_PIN  14   // A0
 #define LED_TYPE    WS2812B
 #define COLOR_ORDER GRB
-#define NUM_LEDS    30
-#define SW_1        10   // push button
-// #define SW_2        14  // A0
+#define NUM_LEDS    50
+#define SW_1        8   // push button
+#define SW_2        7  // 
 
-int count = 0;   // used by loop to control segment movement
+int count = 0;   // used by loop to control segment movement et al
 CRGB leds[NUM_LEDS];
 
 #define BRIGHTNESS  30
@@ -36,12 +36,14 @@ void setup()
   // set master brightness
   FastLED.setBrightness(BRIGHTNESS);
   // push button x 2 control display mode
-  pinMode(SW_1, INPUT_PULLUP);   // when pressed (value goes false) lites show RED
-  // pinMode(SW_2, INPUT_PULLUP);   // if pressed while SW1, lites change to BLUE;
-  // SW2 alone shows target position shifted by pot input
-  //pinMode(A2, INPUT);  // analog input 0-3.3v from pot shifts lite segment position
-  pinMode(10, OUTPUT);
-}
+  pinMode(SW_1, INPUT_PULLUP);   // when pressed (value goes false) lites show blue
+  pinMode(SW_2, INPUT_PULLUP);   // if pressed (grounded), lites show pattern;
+
+  pinMode(12, OUTPUT); // ground for LED proxy
+  pinMode(13, OUTPUT); // pwr for LED proxy on defective board
+  digitalWrite(12, LOW);
+  digitalWrite(13, HIGH);
+}  // end setup
 
 //// init variable for pattern options
 //// List of library patterns to loop thru.  Each is defined as a separate function below.
@@ -54,44 +56,16 @@ void setup()
 void loop()
 {
   if (!digitalRead(SW_1)) // change lites to blue
-  // if (!digitalRead(SW_1) && !digitalRead(SW_2))  // both pressed: change lites to blue
   {
     for (int i = 0; i < NUM_LEDS; i++) {
       leds[i] = CRGB::Blue;
       // send the 'leds' array to the LED strip
 
     }
-  //  FastLED.show();
   }
 
-  else   // show RED
-  { for (int i = 0; i < NUM_LEDS; i++) {
-      leds[i] = CRGB::Red;
-    }       // send the 'leds' array to the LED strip
-    // FastLED.show();
-  } // end SW1 alone
 
-//  else if (!digitalRead(SW_2))  // show position of something (under pot control)
-//  {
-//    // pot adjusts 'target' position along string
-//    int targ = analogRead(A2);
-//    targ = map(targ, 1, 666, 6, 54); // map 0-3.3 v pot range to center of something
-//    // make all lites green
-//    for (int i = 0; i < NUM_LEDS; i++) {
-//      leds[i] = CRGB::Green;
-//    }
-//    // color the target 10 lites something else
-//
-//    for (int j = targ - 5; j < targ + 6; j++)
-//    {
-//      leds[j] = CRGB::Purple;
-//    }
-//
-//    // send the 'leds' array colors to the LED strip
-//    FastLED.show();
-//  } // end SW2 alone
-
-  // default to use cycling pre-made pattern
+  // use cycling pre-made pattern
   // Call the current pattern function once/loop, updating the 'leds' array
   // gPatterns[gCurrentPatternNumber]();  // array of ptrs to names of functions ?
 
@@ -102,40 +76,49 @@ void loop()
   // so [ < x] of the 15 lites will be [color] and 'shift forward' each offset increment;
   // SUBTRACTING offset simulates forward movement of segments; ADDING offset simulates reverse
 
-//  else {   // the default pattern when no buttons pressed
-//    // for this demo, just simple white moving block on blue bkgnd
-//    for (int i = 0; i < NUM_LEDS; i++ )
-//    {
-//      if ( ((i + 14 - count) % 15) < 4 ) // make x (last #) larger for bigger moving segment
-//      {
-//        leds[i] = CRGB::White;
-//      }
-//      else
-//      {
-//        leds[i] = CRGB(0, 0, 40); // dark blue
-//      }
-//    }
-//
-//  }  // end default else
+  else if (!digitalRead(SW_2))  // show moving pattern
+  {
+    // for this demo, just simple red moving block on blue bkgnd
+    for (int i = 0; i < NUM_LEDS; i++ )
+    {
+      if ( ((i + 14 - count) % 15) < 7 ) // make x (last #) larger for bigger moving segment
+      {
+        leds[i] = CRGB::Red;
+      }
+      else
+      {
+        leds[i] = CRGB(0, 0, 40); // dark blue
+      }
+    }
 
-  //    else
-  //    {
-  //      // ADDING offset (count) reverses segment motion
-  //      if ( ((i + 14 + count) % 15) < 7 )
-  //      {
-  //        leds[i] = red;
-  //      }
+  }  // end fwd
   //      else
   //      {
-  //        leds[i] = black;
-  //      }
-  //    }  // end else direction reversed
+  //        // ADDING offset (count) reverses segment motion
+  //        if ( ((i + 14 + count) % 15) < 7 )
+  //        {
+  //          leds[i] = red;
+  //        }
+  //        else
+  //        {
+  //          leds[i] = black;
+  //        }
+  //     }  // end else direction reversed
 
+  else   // show RED
+  { for (int i = 0; i < NUM_LEDS; i++)
+      leds[i] = CRGB::Red;
+
+  } // end default to red
 
   // send the 'leds' color array to the LED strip
   FastLED.show();
+  
   count++;  // count increments each loop, cycles 1++ --> 15 --> 1
-  // if (count > 14)   count = 1;
+  if (count > 14)   count = 1;
+  // pulse board LED to avoid overcurrent
+  if (count > 7) digitalWrite(12, LOW);
+  else digitalWrite(12, HIGH);
 
 
   //  //  periodic update colors and patterns
