@@ -37,7 +37,7 @@ byte(x) converts number x to byte format
 -------------------------
 void setup()  // put your setup code here, to run once:
 {
- Serial.begin(speed);  // initialize serial port to send/receive at 9600 baud
+ Serial.begin(speed);  // initialize serial port to send/receive at [speed] baud
  pinMode(pinName, INPUT|OUTPUT|INPUT_PULLUP);  // OK for any pin
  pinMode(A0, INPUT);  // A0 same as 14
  pinMode(15, INPUT_PULLUP);   // same as A1, makes high until pulled low
@@ -83,7 +83,7 @@ void loop()
                           // can get # of elements w/ (sizeof(myInts)/sizeof(int)) if myInts holds ints
     
     // char out[8];  // re-declar (w/o init) puts null in all slots? -- no, leaves what's there 
-    // char out[8] = {'0'}; // new declar puts ch 0 in [0], null others, sizeof()=8, since
+    // char out[8] = {'0'}; // new declar puts ch 0 in [0], null in others, sizeof()=8, since
     each ch slot=1 byte
     char out[8] = {0};   // new declar puts #0 (null), in all slots, sizeof() = 8 bytes, 
        // since each ch = 1 byte
@@ -107,15 +107,16 @@ enum {zilch, alpo, burka, carly, darpa};
       brightness = brightness + 2; // count up after dropping down to 1
     }  // end else if
     
-  for (byte i=0; i < 4; i++)  //why use int when it fits in byte?
+  for (byte i=0; i < 4; i++) //why use int when # fits in byte?(may be same sz in mem)
     {              // brackets needed for more than one line
                 // write the brightness value to the LEDs
          analogWrite(pinOut[i], brightness);
-         if(some condx you want to end for loop) break; // exits
+         if(some condx you want to end for loop) break; // exits loop
      } // end for
      
      // can send PWM also to A0 et al? if you pinMode(A0-?others, OUTPUT) and aW(A0,0-255) 
      // or for some boards w/ 10 bit DAC on A0: aW(A0,1022) -- may be steady dc for latter
+     // need to look w/ oscilloscope
      
    while (Serial.available()) // do stuff while at least one character is available
   {    
@@ -165,7 +166,7 @@ enum {zilch, alpo, burka, carly, darpa};
 C ternary operator
 ------------------
 IsLEDOn = !IsLEDOn; // toggle value of IsLEDOn
-digitalWrite(LEDPin, IsLEDOn ? HIGH : LOW)
+digitalWrite(LEDpin, IsLEDOn ? HIGH : LOW)
 
  ----------------------------------------------------
  //use of WHILE to hold action, and/or make looping function
@@ -201,7 +202,7 @@ digitalWrite(LEDPin, IsLEDOn ? HIGH : LOW)
     }  // end while, presumably only after an x comes
  
 -------------------------------------------------------
-  // works in basic C, also in Arduino (can, doesn't always, why?)
+  // works in basic C, also in Arduino (can, doesn't always, why?) try some delay?
   
     // This executes the code in the while loop 5 times,
   int i = 5;
@@ -354,16 +355,17 @@ void loop()
 
   // convert the int to a String object var, not same as char string (a plain C array)
   String myValue = String(sensorValue,DEC);  // optional DEC formatter for int/flt
-  // Serial.println("raw pin AR is " + myValue + " ticks"); // prints OK since 
-myVal is String var
- can parse Str obj with charAt, setCharAt - v. String refs
-//  this works too but is unnecessary
-  Serial.println (String ("raw pin AR is " + myValue + " ticks"));  // concat of 
-  Str's OK
-  
-// Serial.println("raw pin AR is " + sensorValue + " ticks"); // fails to compile w/ int var
-// Serial.println("raw pin AR is "+ String(sensorValue) + " ticks"); //  but this works 
-OK w/ conversion to String
+  // Serial.println("raw pin AR is " + myValue + " ticks"); 
+  // prints OK since myVal is String var
+ can parse Str obj with charAt, setCharAt -- v. String refs
+//  this works too but is unnecessary if already String val,
+  Serial.println (String ("raw pin AR is " + myValue + " ticks"));  
+  // i.e. concat of Str's OK
+
+  // fails to compile w/ int var
+// Serial.println("raw pin AR is " + sensorValue + " ticks");
+//  but this works w/ cast to String 
+// Serial.println("raw pin AR is "+ String(sensorValue) + " ticks"); 
 
 // float not acceptable param for String constructor : v.i.
 
@@ -396,8 +398,8 @@ Serial << "outstr= " << out << '\n';  // OK to insert single char too
 Serial << "and flot2 = " << vFlt << " volts" << endl; 
 // float print defaults to 2 digits; for 3 digit precision use _FLOAT(vFlt,3)  
 // other formatting prefixes for numbers: _BIN, _HEX, _DEC defined in the streaming.h
-float vFlt = analogRead(A0)/5.0;  this prints to lcd with 1 # after decimal
-lcd << "raw AR " << _FLOAT(vFlt,1);
+float vFlt = analogRead(A0)/5.0;  
+lcd << "raw AR " << _FLOAT(vFlt,1); this prints to lcd with 1 # after decimal
 ------------------------------------------------------------------------ 
 reading a char string one by one using pointer to it
  for(const char *p = "some string\n"; c = *p; p++)  // not sure if const type needed or why
@@ -443,7 +445,7 @@ header.h (text) file in sketchFldr/Libraries/ which you then #include
 @ top of sketch
 ----------------------------------------
 debounce an Interrupt signal inside the ISR
-   << from turrentInterruptC
+   << from turretInterruptC
 void my_interrupt_handler()
 {
  static unsigned long last_interrupt_time = 0;  // static is set once, not changed by 

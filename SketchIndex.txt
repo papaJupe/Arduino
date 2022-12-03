@@ -241,7 +241,10 @@ progmem Exercises  -- various trials of ways to store large # of strings or data
   rather than SRAM when processing; F() macro, and PGM_P ptrs -- obscure syntax & concepts. 
   bkgnd info -- /Volumes/HD-3-data/Reference Library/Electronic-commun-device-media/
   Electronic Circuits&Devices/MakingTTerrata.txt
-  
+
+
+quadEncoder -- read A,B channel of 5 v output encoder, display on 8x2 lcd and/or print
+
 RCpulSense, pulSensePulseIn  -- mod  from  cookbook text
 // Code Example 1-3 Using an Interrupt pin to capture an R/C pulse length
 // mead mod for 16x2 lcd display, different LED output pin, etc

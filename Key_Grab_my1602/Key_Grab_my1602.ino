@@ -60,15 +60,15 @@ void loop()
   */
   
   localKey = keypad.getKey();   // comes back from .cpp processing
-//  int anal = analogRead(A0);  use to tune params to your particular values for switches
+  int anal = analogRead(A0);  // use to tune params to your particular values for switches
   if (localKey != SAMPLE_WAIT)
   {
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("Current Key:");
     lcd.setCursor(0, 1);
-    lcd.print(localKey);  // for tuning put analogRead(A0) here
+    lcd.print(anal); // for tuning, or for other sketch's use of V
+    // lcd.print(localKey);  
   }
   delay (20);
 }
-

@@ -14,8 +14,9 @@
 // include the library code for the LCD
 //#include <LiquidCrystal.h>
 //// initialize new 8x2 display with the Arduino pins
-//LiquidCrystal lcd(12,11,4,5,6,7);  //lib is smart enough to know if you're using 4 pins or 8
-
+//lib is smart enough to know if you're using 4 pins or 8
+//LiquidCrystal lcd(12,11,4,5,6,7); 
+ 
 void setup()
 {
   // initialize serial communication at 9600 bits per second:
@@ -41,24 +42,25 @@ void loop()
   // empiric multiplier at midrange; varies some from pin to pin, board to board
   // or use map  -- seems more accurate over range
   voltage = map(newAvg, 46, 1019, 250, 4950); // in mV, resolves ~5 mV
-  // print out the new average if different
-  if (newAvg != prevAvg)  // print only if changed
-  { //print to Ser Mon if it's on
-//    Serial.print("pin out= ");
-//    Serial.print(newAvg);
-//    Serial.print(" calc mV= ");
-//    Serial.println(voltage);
 
-    // print to 2 lines of LCD, if it's present
-//    lcd.clear();             // first clear screen and set the cursor to (0,0)
-//    lcd.print("pin=");
-//    lcd.print(newAvg);  // the averaged AR
-//    lcd.setCursor(0, 1);  // second line
-//    lcd.print("mV=");
-//    lcd.print(voltage);
-//
-//    prevAvg = newAvg;
+  // serial print the new average if different
+  // if (newAvg != prevAvg)  // print only if changed
+  // { //print to Ser Mon if it's on
+  //    Serial.print("pin out= ");
+  //    Serial.print(newAvg);
+  //    Serial.print(" calc mV= ");
+  //    Serial.println(voltage);
 
-  } // end if changed value
-  delay (100);   // ten loops / second
+  // print to 2 lines of LCD, if it's present
+  //    lcd.clear();             // first clear screen and set the cursor to (0,0)
+  //    lcd.print("pin=");
+  //    lcd.print(newAvg);  // the averaged AR
+  //    lcd.setCursor(0, 1);  // second line
+  //    lcd.print("mV=");
+  //    lcd.print(voltage);
+  //
+  //    prevAvg = newAvg;
+} // end if changed value
+
+delay (100);   // ten loops / second
 }  // end loop
