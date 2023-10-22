@@ -19,6 +19,9 @@
 
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 
+  int analDist;
+  int sensorV;
+  
 void setup()
 {
   lcd.begin(16, 2);    // 16 col, 2 row LCD
@@ -37,12 +40,13 @@ void loop()
 
   long microseconds = TP_init(); // activates the pulser, gets uS back
   unsigned int dist = Distance(microseconds, CM);
-  // calc expon MA
-  distAvg = round((distAvg * 4) + dist) / 5;
+  
+  // calc expon MA of SR04 distance
+  distAvg = round((distAvg * 0.8) + round(dist * 0.2);
 
-  // read anal distance
-  int analDist;
-  int sensorV = analogRead(PinIn);
+  // read anal distance of Maxbotix
+ 
+  sensorV = analogRead(PinIn);
   // update expon moving average of anal reads
   prevAvg = round((sensorV * 0.2) + (prevAvg * 0.8));
   //  use map from ~10mV (2 ticks) / inch, range ~ 6" to 360"
@@ -95,4 +99,3 @@ uint16_t Distance(long time, boolean flag)  // returns unsigned int
   // delay(10);
   return distance;
 }  // end Distance
-

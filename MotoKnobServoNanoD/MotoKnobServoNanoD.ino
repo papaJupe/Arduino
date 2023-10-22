@@ -7,7 +7,7 @@
   L channel normal bidir. action -- middle is off, 0 is full rev, 1024 is full fwd;
   This mod makes both pots send bidir. signal, rev - stop - fwd
 
-  round box's CH341 Nano needed new driver for hiSi, Ardu Nano, 328P old bootloader; metro
+  round box's CH341 Nano needed new driver for hiSi, Ardu Nano (ftdi), 328P, old bootloader; metro
   mini uses Uno, new SiLab driver for hiSi
 
 */

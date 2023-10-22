@@ -1,6 +1,6 @@
 /*
    quadEncoder read A,B channel of 5 v output encoder, display on 8x2 lcd and/or print
-   pin D8 button to zero encoderPos
+      ground pin D8 w/ button to zero encoderPos
 */
 #include <elapsedMillis.h>
 elapsedMillis timeElapsed; // declare global so not reset every loop
@@ -32,6 +32,8 @@ void setup()
   pinMode(encoder0PinA, INPUT);
   pinMode(encoder0PinB, INPUT);
   pinMode(zeroCountPin, INPUT_PULLUP);
+  
+  // interrupt logic:
   // encoder pinA goes to interrupt 0 (pin 2 on Uno); value change calls method A
   attachInterrupt(0, doEncoderA, CHANGE);
   // encoder pinB goes to interrupt 1 (Uno pin 3); value change calls method B
@@ -83,8 +85,9 @@ void loop() {
   } // end if
   
   oldTmp = avgPos;
-  delay(100);
-}
+  delay(50);
+  
+}  // end loop
 
 // Interrupt on A changing state; _XOR_ compares B's current state with
 // A's former state, so the XOR is always true if CW rotation, false if CCW
