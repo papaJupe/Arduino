@@ -31,12 +31,12 @@ ADXL345_test2
 Anal_Digi_VL53L0X_LCD shows use of continuous mode to take range
   measurement with the VL53L0X I2C TOF rangefinder. Based on
   vl53L0x_ContinuousRanging_Example.c from the VL53L0X API.
-  polo lib works w/ adafrut sensor, better than their lib.
+  polo lib works w/ adafrut sensor better than their lib.
   The range readings are in mm., good to ~ 1200 mm w/
   white wall, normal room lite
   Now has input & display for 1 digital or 1 analog sensor w/
   power from digital pin 11, dig read 2, anal read A3, display mV
-  on LCD ln 2, under range display; LED on 13 goes ON when 2
+  on LCD ln 2, under range display; LED on 13 goes ON when pin 2
   pullup pulled low
   
   Uses: LCD 16x2 display, wire lib for I2C, elapsedMillis

@@ -10,7 +10,7 @@
   power from digital pin 11, in addition to above range display
 
   Uses: LCD 16x2 display, wire lib for I2C, elapsedMillis,
-
+ if dig signal pulls down the input, it turns ON the LED
 */
 
 #include <Wire.h>
