@@ -20,7 +20,8 @@
 #ifndef _ADAFRUIT_SPITFT_H_
 #define _ADAFRUIT_SPITFT_H_
 
-#if !defined(__AVR_ATtiny85__) // Not for ATtiny, at all
+// Not for ATtiny, at all
+#if !defined(__AVR_ATtiny85__) && !defined(__AVR_ATtiny84__)
 
 #include "Adafruit_GFX.h"
 #include <SPI.h>
@@ -234,6 +235,7 @@ public:
   void dmaWait(void);
   // Used by writePixels() in some situations, but might have rare need in
   // user code, so it's public...
+  bool dmaBusy(void) const; // true if DMA is used and busy, false otherwise
   void swapBytes(uint16_t *src, uint32_t len, uint16_t *dest = NULL);
 
   // These functions are similar to the 'write' functions above, but with
@@ -525,5 +527,5 @@ protected:
   uint32_t _freq = 0; ///< Dummy var to keep subclasses happy
 };
 
-#endif // end __AVR_ATtiny85__
+#endif // end __AVR_ATtiny85__ __AVR_ATtiny84__
 #endif // end _ADAFRUIT_SPITFT_H_

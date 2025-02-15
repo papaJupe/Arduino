@@ -2,7 +2,7 @@
   Anal_Digi_VL53L0X_LCD shows use of continuous mode to take range
   measurements with the VL53L0X I2C TOF rangefinder. Based on
   vl53L0x_ContinuousRanging_Example.c from the VL53L0X API.
-  polo lib works w/ adafrut sensor, better than their lib.
+  polo lib works w/ adafrut sensor, better than ada's lib.
   The range readings are in mm., good to ~ 1200 mm w/
   white wall, normal room lite
 
@@ -13,7 +13,7 @@
  if dig signal pulls down the input, it turns ON the LED
 */
 
-#include <Wire.h>
+#include <Wire.h>. //i2c lib
 #include <VL53L0X.h>
 #include <elapsedMillis.h>  // to .print at interval
 #include <LiquidCrystal.h>
@@ -100,7 +100,7 @@ void loop()
   }
 
   // expon MA smoothes output; choose speed vs stability
-  avgRng = (((avgRng * 6) + range) / 7);
+  avgRng = (((avgRng * 4) + range) * 0.2); 
 
   lcd.clear();
   // lcd.setCursor(0, 0);
@@ -129,7 +129,7 @@ void loop()
 
   // read input on analog pin
   int sensorV = analogRead(ApinIn);
-  int newAvg = round((sensorV + 4 * prevAvg) / 5); // update expon moving average of AR
+  int newAvg = round((sensorV + 4 * prevAvg) * 0.2); // update expon moving average of AR
   // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 5000 mV):
   voltage = (int)(newAvg * 4.90);  // in mV, resolves +/- 2 mV; cast to int (mV)
   // set multiplier using voltmeter; varies some from pin to pin, board to board
@@ -152,5 +152,5 @@ void loop()
   prevAvg = newAvg;
   // end analog sensor code
 
-  delay(100);
+  delay(50);
 }  // end loop

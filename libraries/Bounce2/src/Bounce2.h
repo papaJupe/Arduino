@@ -63,10 +63,11 @@ class Debouncer
 {
  // Note : this is private as it migh change in the futur
 private:
-  static const uint8_t DEBOUNCED_STATE = 0b00000001;
-  static const uint8_t UNSTABLE_STATE  = 0b00000010;
-  static const uint8_t CHANGED_STATE   = 0b00000100;
+  static const uint8_t DEBOUNCED_STATE = 0b00000001; // Final returned calculated debounced state
+  static const uint8_t UNSTABLE_STATE  = 0b00000010; // Actual last state value behind the scene
+  static const uint8_t CHANGED_STATE   = 0b00000100; // The DEBOUNCED_STATE has changed since last update()
 
+// Note : this is private as it migh change in the futur
 private:
   inline void changeState();
   inline void setStateFlag(const uint8_t flag)       {state |= flag;}
@@ -127,6 +128,9 @@ public:
      @return True if the state changed on last update. Otherwise, returns false.
 */
   bool changed( ) const { return getStateFlag(CHANGED_STATE); }
+  
+  
+  
 
       /**
      @brief Returns the duration in milliseconds of the current state. 
@@ -136,7 +140,8 @@ public:
       @return The duration in milliseconds (unsigned long) of the current state.
      */
 
-  unsigned long duration() const;
+  unsigned long currentDuration() const;
+
 
   /**
      @brief Returns the duration in milliseconds of the previous state. 
@@ -146,6 +151,19 @@ public:
       @return The duration in milliseconds (unsigned long) of the previous state. 
      */
   unsigned long previousDuration() const;
+  
+      /**
+     @brief DEPRECATED (i.e. do not use). Renamed currentDuration().
+	 
+	 This member function is DEPRECATED will be removed next major version. DO NOT USE IT. USE currentDuration() INSTEAD.
+	 It was renamed to avoid confusion with previousDuration().
+	 
+	  @return The duration in milliseconds (unsigned long) of the current state.
+     */
+    [[deprecated]]
+    unsigned long duration() {
+		return currentDuration();
+	};
 
 protected:
   void begin();
@@ -160,7 +178,7 @@ protected:
 
 
 /**
-@brief The Debouncer:Bounce class. Links the Deboucing class to a hardware pin.
+@brief The Debouncer:Bounce class. Links the Deboucing class to a hardware pin.  This class is odly named, but it will be kept that so it stays compatible with previous code.
      
      */
 class Bounce : public Debouncer
@@ -201,6 +219,16 @@ public:
     attach(pin);
     interval(interval_millis);
   }
+ 
+
+ /**
+  @brief Return pin that this Bounce is attached to
+  
+  @return integer identifier of the coupled pin
+  */
+  inline int getPin() const {
+      return this->pin;
+  };
 
   ////////////////
   // Deprecated //
@@ -209,10 +237,12 @@ public:
      /**
     @brief Deprecated (i.e. do not use). Included for partial compatibility for programs written with Bounce version 1
     */
+	[[deprecated]]
 	bool risingEdge() const { return rose(); }
      /**
     @brief Deprecated (i.e. do not use). Included for partial compatibility for programs written with Bounce version 1
     */
+	[[deprecated]]
 	bool fallingEdge() const { return fell(); }
      /**
     @brief Deprecated (i.e. do not use). Included for partial compatibility for programs written with Bounce version 1

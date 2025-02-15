@@ -490,8 +490,9 @@ uint32_t VL53L0X_calc_timeout_mclks(VL53L0X_DEV Dev, uint32_t timeout_period_us,
   macro_period_ps = VL53L0X_calc_macro_period_ps(Dev, vcsel_period_pclks);
   macro_period_ns = (macro_period_ps + 500) / 1000;
 
-  timeout_period_mclks = (uint32_t)(
-      ((timeout_period_us * 1000) + (macro_period_ns / 2)) / macro_period_ns);
+  timeout_period_mclks =
+      (uint32_t)(((timeout_period_us * 1000) + (macro_period_ns / 2)) /
+                 macro_period_ns);
 
   return timeout_period_mclks;
 }
@@ -870,7 +871,7 @@ VL53L0X_set_vcsel_pulse_period(VL53L0X_DEV Dev,
      * using the new VCSEL period.
      *
      * For the MSRC timeout, the same applies - this timeout being
-     * dependant on the pre-range vcsel period.
+     * dependent on the pre-range vcsel period.
      */
     switch (VcselPeriodType) {
     case VL53L0X_VCSEL_PERIOD_PRE_RANGE:

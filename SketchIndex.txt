@@ -506,7 +506,7 @@ SFM Ser Volt Read ==>  Ardu reads voltage on some pin, sends string
 SFM temp read demonstrates how to make a Bluetooth Low Energy 4
   Advertisement connection with the Simblee, then see its CPU temp
   updates 2x / second on the SimbleeForMobile phone app.
-
+ 
  Uses: subdomain for cache, float print, updateText, updateRect, remote
  deviceType, setVisible
  

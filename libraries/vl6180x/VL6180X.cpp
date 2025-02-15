@@ -5,15 +5,16 @@
 
 // The Arduino two-wire interface uses a 7-bit number for the address,
 // and sets the last bit correctly based on reads and writes
-#define ADDRESS_DEFAULT 0b0101001   // 41
+#define ADDRESS_DEFAULT 0b0101001
 
 // RANGE_SCALER values for 1x, 2x, 3x scaling - see STSW-IMG003 core/src/vl6180x_api.c (ScalerLookUP[])
 static uint16_t const ScalerValues[] = {0, 253, 127, 84};
 
 // Constructors ////////////////////////////////////////////////////////////////
 
-VL6180X::VL6180X(void)
-  : address(ADDRESS_DEFAULT)
+VL6180X::VL6180X()
+  : bus(&Wire)
+  , address(ADDRESS_DEFAULT)
   , scaling(0)
   , ptp_offset(0)
   , io_timeout(0) // no timeout
@@ -29,8 +30,8 @@ void VL6180X::setAddress(uint8_t new_addr)
   address = new_addr;
 }
 
-// Initialize sensor with settings from ST application note AN4545, section 9 -
-// "Mandatory : private registers"
+// Initialize sensor with settings from ST application note AN4545, section
+// "SR03 settings" - "Mandatory : private registers"
 void VL6180X::init()
 {
   // Store part-to-part range offset so it can be adjusted if scaling is changed
@@ -44,8 +45,8 @@ void VL6180X::init()
     writeReg(0x208, 0x01);
     writeReg(0x096, 0x00);
     writeReg(0x097, 0xFD); // RANGE_SCALER = 253
-    writeReg(0x0E3, 0x00);
-    writeReg(0x0E4, 0x04);
+    writeReg(0x0E3, 0x01);
+    writeReg(0x0E4, 0x03);
     writeReg(0x0E5, 0x02);
     writeReg(0x0E6, 0x01);
     writeReg(0x0E7, 0x03);
@@ -98,21 +99,20 @@ void VL6180X::init()
 // Note that this function does not set up GPIO1 as an interrupt output as
 // suggested, though you can do so by calling:
 // writeReg(SYSTEM__MODE_GPIO1, 0x10);
-void VL6180X::configureDefault(void)
+void VL6180X::configureDefault()
 {
   // "Recommended : Public registers"
 
   // readout__averaging_sample_period = 48
   writeReg(READOUT__AVERAGING_SAMPLE_PERIOD, 0x30);
 
-  // sysals__analogue_gain_light = 6 (ALS gain = 1 nominal, actually 1.01 according to Table 14 in datasheet)
+  // sysals__analogue_gain_light = 6 (ALS gain = 1 nominal, actually 1.01 according to table "Actual gain values" in datasheet)
   writeReg(SYSALS__ANALOGUE_GAIN, 0x46);
 
   // sysrange__vhv_repeat_rate = 255 (auto Very High Voltage temperature recalibration after every 255 range measurements)
   writeReg(SYSRANGE__VHV_REPEAT_RATE, 0xFF);
 
   // sysals__integration_period = 99 (100 ms)
-  // AN4545 incorrectly recommends writing to register 0x040; 0x63 should go in the lower byte, which is register 0x041.
   writeReg16Bit(SYSALS__INTEGRATION_PERIOD, 0x0063);
 
   // sysrange__vhv_recalibrate = 1 (manually trigger a VHV recalibration)
@@ -146,35 +146,35 @@ void VL6180X::configureDefault(void)
 // Writes an 8-bit register
 void VL6180X::writeReg(uint16_t reg, uint8_t value)
 {
-  Wire.beginTransmission(address);
-  Wire.write((reg >> 8) & 0xff);  // reg high byte
-  Wire.write(reg & 0xff);         // reg low byte
-  Wire.write(value);
-  last_status = Wire.endTransmission();
+  bus->beginTransmission(address);
+  bus->write((uint8_t)(reg >> 8)); // reg high byte
+  bus->write((uint8_t)(reg >> 0)); // reg low byte
+  bus->write(value);
+  last_status = bus->endTransmission();
 }
 
 // Writes a 16-bit register
 void VL6180X::writeReg16Bit(uint16_t reg, uint16_t value)
 {
-  Wire.beginTransmission(address);
-  Wire.write((reg >> 8) & 0xff);  // reg high byte
-  Wire.write(reg & 0xff);         // reg low byte
-  Wire.write((value >> 8) & 0xff);  // value high byte
-  Wire.write(value & 0xff);         // value low byte
-  last_status = Wire.endTransmission();
+  bus->beginTransmission(address);
+  bus->write((uint8_t)(reg >> 8)); // reg high byte
+  bus->write((uint8_t)(reg >> 0)); // reg low byte
+  bus->write((uint8_t)(value >> 8)); // value high byte
+  bus->write((uint8_t)(value >> 0)); // value low byte
+  last_status = bus->endTransmission();
 }
 
 // Writes a 32-bit register
 void VL6180X::writeReg32Bit(uint16_t reg, uint32_t value)
 {
-  Wire.beginTransmission(address);
-  Wire.write((reg >> 8) & 0xff);  // reg high byte
-  Wire.write(reg & 0xff);         // reg low byte
-  Wire.write((value >> 24) & 0xff); // value highest byte
-  Wire.write((value >> 16) & 0xff);
-  Wire.write((value >> 8) & 0xff);
-  Wire.write(value & 0xff);         // value lowest byte
-  last_status = Wire.endTransmission();
+  bus->beginTransmission(address);
+  bus->write((uint8_t)(reg >> 8)); // reg high byte
+  bus->write((uint8_t)(reg >> 0)); // reg low byte
+  bus->write((uint8_t)(value >> 24)); // value highest byte
+  bus->write((uint8_t)(value >> 16));
+  bus->write((uint8_t)(value >>  8));
+  bus->write((uint8_t)(value >>  0)); // value lowest byte
+  last_status = bus->endTransmission();
 }
 
 // Reads an 8-bit register
@@ -182,14 +182,13 @@ uint8_t VL6180X::readReg(uint16_t reg)
 {
   uint8_t value;
 
-  Wire.beginTransmission(address);
-  Wire.write((reg >> 8) & 0xff);  // reg high byte
-  Wire.write(reg & 0xff);         // reg low byte
-  last_status = Wire.endTransmission();
+  bus->beginTransmission(address);
+  bus->write((uint8_t)(reg >> 8)); // reg high byte
+  bus->write((uint8_t)(reg >> 0)); // reg low byte
+  last_status = bus->endTransmission();
 
-  Wire.requestFrom(address, (uint8_t)1);
-  value = Wire.read();
-  Wire.endTransmission();
+  bus->requestFrom(address, (uint8_t)1);
+  value = bus->read();
 
   return value;
 }
@@ -199,15 +198,14 @@ uint16_t VL6180X::readReg16Bit(uint16_t reg)
 {
   uint16_t value;
 
-  Wire.beginTransmission(address);
-  Wire.write((reg >> 8) & 0xff);  // reg high byte
-  Wire.write(reg & 0xff);         // reg low byte
-  last_status = Wire.endTransmission();
+  bus->beginTransmission(address);
+  bus->write((uint8_t)(reg >> 8)); // reg high byte
+  bus->write((uint8_t)(reg >> 0)); // reg low byte
+  last_status = bus->endTransmission();
 
-  Wire.requestFrom(address, (uint8_t)2);
-  value = (uint16_t)Wire.read() << 8; // value high byte
-  value |= Wire.read();               // value low byte
-  Wire.endTransmission();
+  bus->requestFrom(address, (uint8_t)2);
+  value  = (uint16_t)bus->read() << 8; // value high byte
+  value |=           bus->read();      // value low byte
 
   return value;
 }
@@ -217,17 +215,16 @@ uint32_t VL6180X::readReg32Bit(uint16_t reg)
 {
   uint32_t value;
 
-  Wire.beginTransmission(address);
-  Wire.write((reg >> 8) & 0xff);  // reg high byte
-  Wire.write(reg & 0xff);         // reg low byte
-  last_status = Wire.endTransmission();
+  bus->beginTransmission(address);
+  bus->write((uint8_t)(reg >> 8)); // reg high byte
+  bus->write((uint8_t)(reg >> 0)); // reg low byte
+  last_status = bus->endTransmission();
 
-  Wire.requestFrom(address, (uint8_t)4);
-  value = (uint32_t)Wire.read() << 24;  // value highest byte
-  value |= (uint32_t)Wire.read() << 16;
-  value |= (uint16_t)Wire.read() << 8;
-  value |= Wire.read();                 // value lowest byte
-  Wire.endTransmission();
+  bus->requestFrom(address, (uint8_t)4);
+  value  = (uint32_t)bus->read() << 24; // value highest byte
+  value |= (uint32_t)bus->read() << 16;
+  value |= (uint16_t)bus->read() << 8;
+  value |=           bus->read();       // value lowest byte
 
   return value;
 }
@@ -281,7 +278,7 @@ uint16_t VL6180X::readAmbientSingle()
 // (10 ms resolution; defaults to 100 ms if not specified).
 //
 // The period must be greater than the time it takes to perform a
-// measurement. See section 2.4.4 ("Continuous mode limits") in the datasheet
+// measurement. See section "Continuous mode limits" in the datasheet
 // for details.
 void VL6180X::startRangeContinuous(uint16_t period)
 {
@@ -296,7 +293,7 @@ void VL6180X::startRangeContinuous(uint16_t period)
 // (10 ms resolution; defaults to 500 ms if not specified).
 //
 // The period must be greater than the time it takes to perform a
-// measurement. See section 2.4.4 ("Continuous mode limits") in the datasheet
+// measurement. See section "Continuous mode limits" in the datasheet
 // for details.
 void VL6180X::startAmbientContinuous(uint16_t period)
 {
@@ -315,7 +312,7 @@ void VL6180X::startAmbientContinuous(uint16_t period)
 // continuous modes simultaneously (i.e. asynchronously)".
 //
 // The period must be greater than the time it takes to perform both
-// measurements. See section 2.4.4 ("Continuous mode limits") in the datasheet
+// measurements. See section "Continuous mode limits" in the datasheet
 // for details.
 void VL6180X::startInterleavedContinuous(uint16_t period)
 {
@@ -346,7 +343,9 @@ void VL6180X::stopContinuous()
 uint8_t VL6180X::readRangeContinuous()
 {
   uint16_t millis_start = millis();
-  while ((readReg(RESULT__INTERRUPT_STATUS_GPIO) & 0x04) == 0)
+  // While computation is not finished
+  // only watching if bits 2:0 (mask 0x07) are set to 0b100 (0x04)
+  while ((readReg(RESULT__INTERRUPT_STATUS_GPIO) & 0x07) != 0x04)
   {
     if (io_timeout > 0 && ((uint16_t)millis() - millis_start) > io_timeout)
     {
@@ -367,7 +366,9 @@ uint8_t VL6180X::readRangeContinuous()
 uint16_t VL6180X::readAmbientContinuous()
 {
   uint16_t millis_start = millis();
-  while ((readReg(RESULT__INTERRUPT_STATUS_GPIO) & 0x20) == 0)
+  // While computation is not finished
+  // only watching if bits 5:3 (mask 0x38) are set to 0b100 (0x20)
+  while ((readReg(RESULT__INTERRUPT_STATUS_GPIO) & 0x38) != 0x20)
   {
     if (io_timeout > 0 && ((uint16_t)millis() - millis_start) > io_timeout)
     {
@@ -389,4 +390,11 @@ bool VL6180X::timeoutOccurred()
   bool tmp = did_timeout;
   did_timeout = false;
   return tmp;
+}
+
+// Get ranging success/error status code (Use it before using a measurement)
+// Return error code; One of possible VL6180X_ERROR_* values
+uint8_t VL6180X::readRangeStatus()
+{
+  return (readReg(RESULT__RANGE_STATUS) >> 4);
 }

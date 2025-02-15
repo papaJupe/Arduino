@@ -2,6 +2,22 @@
 #define VL6180X_h
 
 #include <Arduino.h>
+#include <Wire.h>
+
+#define VL6180X_ERROR_NONE          0   // No error; Valid measurement
+#define VL6180X_ERROR_SYSERR_1      1   // System error; VCSEL Continuity Test; No measurement possible
+#define VL6180X_ERROR_SYSERR_2      2   // System error; VCSEL Watchdog Test; No measurement possible
+#define VL6180X_ERROR_SYSERR_3      3   // System error; VCSEL Watchdog; No measurement possible
+#define VL6180X_ERROR_SYSERR_4      4   // System error; PLL1 Lock; No measurement possible
+#define VL6180X_ERROR_SYSERR_5      5   // System error; PLL2 Lock; No measurement possible
+#define VL6180X_ERROR_ECEFAIL       6   // Early Convergence Estimate; Check fail
+#define VL6180X_ERROR_NOCONVERGE    7   // Max convergence; System didn't converge before the specified time limit
+#define VL6180X_ERROR_RANGEIGNORE   8   // Range ignore; No Target Ignore; Ignore threshold check failed
+#define VL6180X_ERROR_SNR           11  // Max Signal To Noise Ratio; Ambient conditions too high
+#define VL6180X_ERROR_RAWUFLOW      12  // Raw Range underflow; Target too close
+#define VL6180X_ERROR_RAWOFLOW      13  // Raw Range overflow; Target too far
+#define VL6180X_ERROR_RANGEUFLOW    14  // Range underflow; Target too close
+#define VL6180X_ERROR_RANGEOFLOW    15  // Range overflow; Target too far
 
 class VL6180X
 {
@@ -83,13 +99,17 @@ class VL6180X
 
     uint8_t last_status; // status of last I2C transmission
 
-    VL6180X(void);
+    VL6180X();
+
+    void setBus(TwoWire * bus) { this->bus = bus; }
+    TwoWire * getBus() { return bus; }
 
     void setAddress(uint8_t new_addr);
+    uint8_t getAddress() { return address; }
 
-    void init(void);
+    void init();
 
-    void configureDefault(void);
+    void configureDefault();
 
     void writeReg(uint16_t reg, uint8_t value);
     void writeReg16Bit(uint16_t reg, uint16_t value);
@@ -99,29 +119,32 @@ class VL6180X
     uint32_t readReg32Bit(uint16_t reg);
 
     void setScaling(uint8_t new_scaling);
-    inline uint8_t getScaling(void) { return scaling; }
+    inline uint8_t getScaling() { return scaling; }
 
-    uint8_t readRangeSingle(void);
-    inline uint16_t readRangeSingleMillimeters(void) { return (uint16_t)scaling * readRangeSingle(); }
-    uint16_t readAmbientSingle(void);
+    uint8_t readRangeSingle();
+    inline uint16_t readRangeSingleMillimeters() { return (uint16_t)scaling * readRangeSingle(); }
+    uint16_t readAmbientSingle();
 
     void startRangeContinuous(uint16_t period = 100);
     void startAmbientContinuous(uint16_t period = 500);
     void startInterleavedContinuous(uint16_t period = 500);
     void stopContinuous();
 
-    uint8_t readRangeContinuous(void);
-    inline uint16_t readRangeContinuousMillimeters(void) { return (uint16_t)scaling * readRangeContinuous(); }
-    uint16_t readAmbientContinuous(void);
+    uint8_t readRangeContinuous();
+    inline uint16_t readRangeContinuousMillimeters() { return (uint16_t)scaling * readRangeContinuous(); }
+    uint16_t readAmbientContinuous();
 
     inline void setTimeout(uint16_t timeout) { io_timeout = timeout; }
-    inline uint16_t getTimeout(void) { return io_timeout; }
-    bool timeoutOccurred(void);
+    inline uint16_t getTimeout() { return io_timeout; }
+    bool timeoutOccurred();
+
+    uint8_t readRangeStatus();
 
   private:
+    TwoWire *bus;
     uint8_t address;
     uint8_t scaling;
-    uint8_t ptp_offset;
+    int8_t ptp_offset;
     uint16_t io_timeout;
     bool did_timeout;
 };

@@ -1,8 +1,5 @@
 # VL6180X library for Arduino
 
-Version: 1.2.0<br>
-Release date: 2016 May 18<br>
-[![Build Status](https://travis-ci.org/pololu/vl6180x-arduino.svg?branch=master)](https://travis-ci.org/pololu/vl6180x-arduino)<br/>
 [www.pololu.com](https://www.pololu.com/)
 
 ## Summary
@@ -71,10 +68,19 @@ Several example sketches are available that show how to use the library. You can
 * `VL6180X(void)`<br>
   Constructor.
 
+* `void setBus(TwoWire * bus)`<br>
+  Configures this object to use the specified I&sup2;C bus. `bus` should be a pointer to a `TwoWire` object; the default bus is `Wire`, which is typically the first or only I&sup2;C bus on an Arduino. If your Arduino has more than one I&sup2;C bus and you have the VL6180X connected to the second bus, which is typically called `Wire1`, you can call `sensor.setBus(&Wire1);`.
+
+* `TwoWire * getBus()`<br>
+  Returns a pointer to the I&sup2;C bus this object is using.
+
 * `void setAddress(uint8_t new_addr)`<br>
   Changes the I&sup2;C slave device address of the VL6180X to the given value (7-bit).
 
-* `void init(void)`<br>
+* `uint8_t getAddress()`<br>
+  Returns the current I&sup2;C address.
+
+* `void init()`<br>
   Loads required settings onto the VL6180X to initialize the sensor.
 
 * `void configureDefault(void)`<br>
@@ -119,7 +125,7 @@ Several example sketches are available that show how to use the library. You can
 * `void startRangeContinuous(uint16_t period)`<br>
   Starts continuous ranging measurements with the given period in milliseconds (10 ms resolution; defaults to 100 ms if not specified).
 
-  In all continuous modes, the period must be greater than the time it takes to perform the measurement(s). See section 2.4.4 ("Continuous mode limits") in the datasheet for details.
+  In all continuous modes, the period must be greater than the time it takes to perform the measurement(s). See section "Continuous mode limits" in the datasheet for details.
 
 * `void startAmbientContinuous(uint16_t period)`<br>
   Starts continuous ambient light measurements with the given period in milliseconds (10 ms resolution; defaults to 500 ms if not specified).
@@ -137,7 +143,7 @@ Several example sketches are available that show how to use the library. You can
 
 * `uint16_t readRangeContinuousMillimeters(void)`<br>
   Returns a range reading in millimeters, taking the range scaling setting into account, when continuous mode is active.
-  
+
 * `uint16_t readAmbientContinuous(void)`<br>
   Returns an ambient light reading when continuous mode is active.
 
@@ -150,9 +156,14 @@ Several example sketches are available that show how to use the library. You can
 * `bool timeoutOccurred(void)`<br>
   Indicates whether a read timeout has occurred since the last call to `timeoutOccurred()`.
 
-## Version history
+* `uint8_t readRangeStatus()`<br>
+  Get ranging success/error status code (Use it before using a measurement).
 
-* 1.2.0 (2016 May 18): Added functions for reading range in millimeters, taking range scaling factor into account. Changed example sketches to use these functions.
-* 1.1.0 (2016 May 12): Added functions to set range scaling factor and example sketch to demonstrate scaling.
-* 1.0.1 (2016 Mar 14): Added missing `Serial.begin()` to examples and changed `configureDefault()` to reset some additional registers to power-on defaults.
-* 1.0.0 (2015 Sep 24): Original release.
+## Version history
+* 1.4.0 (2024-01-26): Fixed issue with scaling factor being applied to negative offsets improperly. Improved timeout behavior and added `readRangeStatus()` (thanks celestinmetral and ysard).
+* 1.3.1 (2021-06-29): Fixed compilation errors with Arduino mbed core.
+* 1.3.0 (2021-01-12): Added support for alternative I²C buses (thanks mjs513) and `getAddress()`. Fixed some minor code and documentation issues.
+* 1.2.0 (2016-05-18): Added functions for reading range in millimeters, taking range scaling factor into account. Changed example sketches to use these functions.
+* 1.1.0 (2016-05-12): Added functions to set range scaling factor and example sketch to demonstrate scaling.
+* 1.0.1 (2016-03-14): Added missing `Serial.begin()` to examples and changed `configureDefault()` to reset some additional registers to power-on defaults.
+* 1.0.0 (2015-09-24): Original release.
