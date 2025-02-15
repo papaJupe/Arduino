@@ -2,7 +2,8 @@
 /*
   TOF ranging test adapted from Wave's demo sketch
 
-  Receives from serial port 1, print to the main serial (Serial 0).
+  Receives data from serial port 1, print to the main serial (Serial 0)
+  monitor and/or LCD display.
 
   This example works with boards with more than one serial like Arduino Mega, 
   Due, Zero etc.  Also with softwareSerial for Uno et al, as below
@@ -27,7 +28,7 @@ unsigned long TOF_system_time = 0;
 unsigned long TOF_distance = 0;
 unsigned char TOF_status = 0;
 unsigned int TOF_signal = 0;
-unsigned char TOF_check = 0;
+unsigned char sum_check = 0;
 
 SoftwareSerial Serial1(2, 3);  //ardu RX=2,TX=3, Serial1 connect to TOF's Serial：3<-->RX, 2<-->TX
 
@@ -46,13 +47,13 @@ void setup() {
 }  // end setup
 
 bool verifyCheckSum(unsigned char data[], unsigned char len) {
-  TOF_check = 0;
+  sum_check = 0;
   // this function will print data OK
   for (int k = 0; k < len - 1; k++) {
-    TOF_check += data[k];  // sum of array values
+    sum_check += data[k];  // sum of array values
   }
 
-  if (TOF_check == data[len - 1])  // final frame value is checksum
+  if (sum_check == data[len - 1])  // final frame value is checksum
   {
     Serial.println("TOF data OK!");
     Serial.println("");
@@ -139,5 +140,5 @@ void loop() {
     }  // end for loop reading 2 frame content
 
   }  //  end Ser1 avail
-  delay(200);
+  delay(200); // slow enough to allow LCD updates
 }  // end loop
