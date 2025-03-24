@@ -316,6 +316,7 @@ void loop() // expon MA automatically averages last N values, with older values 
   int voltOut;  // the averaged value you will output
           // read the input on analog pin 
   int sensorV = analogRead(PinIn);
+  //probably faster to multiply here
   int newAvg = round((sensorV + 4*prevAvg)/5);  // updates expon moving average of sensor reading; may be faster to multiply than divide
   
   // use map fx to convert 0-1023 to voltage it corresponds to 0-5000 mV
