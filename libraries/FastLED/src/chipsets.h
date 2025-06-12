@@ -1,12 +1,15 @@
+#pragma once
+
 #ifndef __INC_CHIPSETS_H
 #define __INC_CHIPSETS_H
 
 #include "pixeltypes.h"
-#include "five_bit_hd_gamma.h"
+#include "fl/five_bit_hd_gamma.h"
 #include "fl/force_inline.h"
 #include "pixel_iterator.h"
 #include "crgb.h"
 #include "eorder.h"
+#include "fl/namespace.h"
 
 
 
@@ -103,6 +106,7 @@ FASTLED_NAMESPACE_END
 // a side buffer dedicated for the RGBW data. The RGB data is then converted to RGBW
 // and sent to the delegate controller for rendering as if it were RGB data.
 FASTLED_NAMESPACE_BEGIN
+
 template <
 	typename CONTROLLER,
 	EOrder RGB_ORDER = GRB>  // Default on WS2812>
@@ -364,7 +368,7 @@ template <
 	// "just works" over "fastest possible" here.
 	// https://www.pjrc.com/why-apa102-leds-have-trouble-at-24-mhz/
 	uint32_t SPI_SPEED = DATA_RATE_MHZ(6),
-	FiveBitGammaCorrectionMode GAMMA_CORRECTION_MODE = kFiveBitGammaCorrectionMode_Null,
+	fl::FiveBitGammaCorrectionMode GAMMA_CORRECTION_MODE = fl::kFiveBitGammaCorrectionMode_Null,
 	uint32_t START_FRAME = 0x00000000,
 	uint32_t END_FRAME = 0xFF000000
 >
@@ -425,11 +429,11 @@ protected:
 	/// @copydoc CPixelLEDController::showPixels()
 	virtual void showPixels(PixelController<RGB_ORDER> & pixels) override {
 		switch (GAMMA_CORRECTION_MODE) {
-			case kFiveBitGammaCorrectionMode_Null: {
+			case fl::kFiveBitGammaCorrectionMode_Null: {
 				showPixelsDefault(pixels);
 				break;
 			}
-			case kFiveBitGammaCorrectionMode_BitShift: {
+			case fl::kFiveBitGammaCorrectionMode_BitShift: {
 				showPixelsGammaBitShift(pixels);
 				break;
 			}
@@ -452,7 +456,13 @@ private:
 				return (delta * rise) / run + out_min;
 			}
 		};
-		*out_brightness = Math::map(brightness, 0, 255, 0, 31);
+		// *out_brightness = Math::map(brightness, 0, 255, 0, 31);
+		uint16_t bri = Math::map(brightness, 0, 255, 0, 31);
+		if (bri == 0 && brightness != 0) {
+			// Fixes https://github.com/FastLED/FastLED/issues/1908
+			bri = 1;
+		}
+		*out_brightness = static_cast<uint8_t>(bri);
 		return;
 #else
 		uint8_t s0, s1, s2;
@@ -531,7 +541,7 @@ class APA102ControllerHD : public APA102Controller<
 	CLOCK_PIN, 
 	RGB_ORDER,
 	SPI_SPEED,
-	kFiveBitGammaCorrectionMode_BitShift,
+	fl::kFiveBitGammaCorrectionMode_BitShift,
 	uint32_t(0x00000000),
 	uint32_t(0x00000000)> {
 public:
@@ -555,7 +565,7 @@ class SK9822Controller : public APA102Controller<
 	CLOCK_PIN,
 	RGB_ORDER,
 	SPI_SPEED,
-	kFiveBitGammaCorrectionMode_Null,
+	fl::kFiveBitGammaCorrectionMode_Null,
 	0x00000000,
 	0x00000000
 > {
@@ -577,7 +587,7 @@ class SK9822ControllerHD : public APA102Controller<
 	CLOCK_PIN,
 	RGB_ORDER,
 	SPI_SPEED,
-	kFiveBitGammaCorrectionMode_BitShift,
+	fl::kFiveBitGammaCorrectionMode_BitShift,
 	0x00000000,
 	0x00000000
 > {
@@ -596,7 +606,7 @@ class HD107Controller : public APA102Controller<
 	CLOCK_PIN,
 	RGB_ORDER,
 	SPI_SPEED,
-	kFiveBitGammaCorrectionMode_Null,
+	fl::kFiveBitGammaCorrectionMode_Null,
 	0x00000000,
 	0x00000000
 > {};

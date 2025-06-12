@@ -14,9 +14,9 @@
   Code here is uploaded to Simblee board for Serial comm w/ Roomba port.
   Simblee phone app (iOS / Android) makes BLE connection to the Simblee,
   with the app displaying the user interface created here for control &
-  display sensor data from R. To operate, Enable R by grnding DD somehow,
+  display of sensor data To operate, Enable Roo by grnding DD somehow,
   open app, connect to Simb, press Power square, then drive or other. Stop
-  square stops anything; Red Rs: always Power Down w/ Power square. Grays
+  square stops anything; Red Roo: always Power Down w/ Power square. Grays
   can disable w/ button. Or lift wheel then button may work.
   To see params while charging, power up then down w/ Power sq.
 
@@ -26,7 +26,6 @@
   load .h images, serial.write(byte array,len), drawText, _Rect, _Slider
   byte constants in lib, sprintf to make # and text into displayable str,
   enhanced if (ternary operator) to adjust turn speed
-
 */
 
 #include <SimbleeForMobile.h>
@@ -51,10 +50,9 @@ char cont[62];  // string to show current control commands in top box
 char data[52] = "";  // string to show sensor data as text in 2nd frame
 char sensIn[26];  // byte array to recv sensor data
 
-uint8_t textData;  // field for select sensor feedback data
-volatile bool needsUpdate;  // volatile -- depends on event input, set in
-// ui-event -- if true loop calls update() to do stuff
-
+volatile bool needsUpdate = true;  // volatile -- depends on event input, set in
+                  // ui-event -- if true loop calls update() to do stuff
+uint8_t textData;  // types field for sensor feedback data as char?
 uint8_t eventId;
 
 void setup() {
@@ -96,7 +94,7 @@ void loop() {  // loop farms out all action to update(), ? speedier
   }
 
   if (count == 2) // get sensor data once in a while
-  {
+  {  // led slow flash from this block
     memset(sensIn, 0, 26); // clear the byte array for data
 
     // request SENSORS, then process response
@@ -138,7 +136,6 @@ void loop() {  // loop farms out all action to update(), ? speedier
 
 // ids of objects to be created in ui for screen interface
 uint8_t textControl;  // reports current control var
-//uint8_t textData;  // reports sensor data, declared before loop
 uint8_t textStop; // STOP label for center square
 
 uint8_t dataRect;  // white frame around textControl & textData fields
@@ -175,7 +172,7 @@ void ui() // this may just set up the initial graphics, no role in
 #define upRt 6
   // only allowed 6-7 img, adding more crashes app; might help to
   // add 'const' before 'unsigned char' in the .h files as suggested
-  // in SFM programming pdf
+  // in SFM programming pdf -- did, unknown help
   //  #define downLeft 7
 
   SimbleeForMobile.beginScreen(medblu);
@@ -329,7 +326,7 @@ void update() // loop calls this fx, when loop sees needsUpdate = true
     powerMode = 1;
   }
 
-  // power OFF
+  // to power OFF
   else if (eventId == rectPower &&  powerMode == 1)
   { // if power up already, stop and power down
     memset(cont, 0, 62);
@@ -463,7 +460,7 @@ void drive(int velo, int radi)
 }  // end drive
 
 String sensorsAsString()
-{ // to display more data , would need bigger data[]
+{ // to display more data, would need bigger data[]
   return
     //      "bump:" + // need to put in constant call instead of these aliases
     //      (bumpLeft()?"l":"_") +
@@ -493,6 +490,6 @@ String sensorsAsString()
      " temp: " + String(sensIn[TEMPERATURE] & 0xff) );
   //      " chrg:" + charge() +
   //      " capa:" + capacity() +
-  // current needs cast back to signed int, + = charge, - = discharge mA
+  // current needs cast back to signed int, + = charge _, - = discharge mA
 }  // end sensAsStr
 

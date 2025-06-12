@@ -4,7 +4,7 @@ import subprocess
 from pathlib import Path
 from threading import Lock
 
-from ci.boards import Board
+from ci.boards import Board  # type: ignore
 from ci.locked_print import locked_print
 
 ERROR_HAPPENED = False
@@ -18,6 +18,12 @@ USE_FIRST_BUILD_LOCK = IS_GITHUB
 def errors_happened() -> bool:
     """Return whether any errors happened during the build."""
     return ERROR_HAPPENED
+
+
+def _fastled_js_is_parent_directory(p: Path) -> bool:
+    """Check if fastled_js is a parent directory of the given path."""
+    # Check if fastled_js is a parent directory of p
+    return "fastled_js" in str(p.absolute())
 
 
 def compile_for_board_and_example(
@@ -44,13 +50,16 @@ def compile_for_board_and_example(
     # Remove the previous *.ino file if it exists, everything else is recycled
     # to speed up the next build.
     if srcdir.exists():
-        subprocess.run(["rm", "-rf", srcdir.as_posix()], check=True)
+        shutil.rmtree(srcdir, ignore_errors=False)
     locked_print(f"*** Building example {example} for board {board_name} ***")
     cwd: str | None = None
     shell: bool = False
     # Copy all files from the example directory to the "src" directory
     for src_file in example.rglob("*"):
         if src_file.is_file():
+            if _fastled_js_is_parent_directory(src_file):
+                # Skip the fastled_js folder, it's not needed for the build.
+                continue
             src_dir = src_file.parent
             path = src_dir.relative_to(example)
             dst_dir = srcdir / path

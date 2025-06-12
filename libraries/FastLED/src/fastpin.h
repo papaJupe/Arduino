@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef __INC_FASTPIN_H
 #define __INC_FASTPIN_H
 
@@ -75,6 +77,8 @@ public:
 	/// Set the pin mode as `INPUT`
 	inline void setInput() { pinMode(mPin, INPUT); }
 
+	inline void setInputPullup() { pinMode(mPin, INPUT_PULLUP); }
+
 	/// Set the pin state to `HIGH`
 	inline void hi() __attribute__ ((always_inline)) { *mPort |= mPinMask; }
 	/// Set the pin state to `LOW`
@@ -112,11 +116,11 @@ public:
 	port_t mask() __attribute__ ((always_inline)) { return mPinMask; }
 
 	/// @copydoc Pin::hi()
-	virtual void select() { hi(); }
+	virtual void select() override { hi(); }
 	/// @copydoc Pin::lo()
-	virtual void release() { lo(); }
+	virtual void release() override { lo(); }
 	/// Checks if the pin is currently `HIGH`
-	virtual bool isSelected() { return (*mPort & mPinMask) == mPinMask; }
+	virtual bool isSelected() override { return (*mPort & mPinMask) == mPinMask; }
 };
 
 /// I/O pin initially set to OUTPUT
@@ -164,6 +168,7 @@ public:
 
 	inline void setOutput() { /* TODO: Set pin output */ }
 	inline void setInput() { /* TODO: Set pin input */ }
+	inline void setInputPullup() { /* TODO: Set pin input pullup */ }
 
 	inline void hi() __attribute__ ((always_inline)) { *mPort |= mPinMask; }
 	inline void lo() __attribute__ ((always_inline)) { *mPort &= ~mPinMask; }

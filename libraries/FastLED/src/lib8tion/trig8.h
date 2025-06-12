@@ -1,5 +1,10 @@
+#pragma once
+
 #ifndef __INC_LIB8TION_TRIG_H
 #define __INC_LIB8TION_TRIG_H
+
+#include <stdint.h>
+#include "lib8tion/lib8static.h"
 
 /// @file trig8.h
 /// Fast, efficient 8-bit trigonometry functions specifically
@@ -20,7 +25,14 @@
 /// the 8-bit approximation is more than 20X faster.
 /// @{
 
-#if defined(__AVR__)
+#if defined(USE_SIN_32)
+
+#define sin16 fl::sin16lut
+#define cos16 fl::cos16lut
+
+#include "fl/sin32.h"
+
+#elif defined(__AVR__)
 
 /// Platform-independent alias of the fast sin implementation
 #define sin16 sin16_avr
@@ -132,7 +144,9 @@ LIB8STATIC int16_t sin16_C(uint16_t theta) {
 ///
 /// @param theta input angle from 0-65535
 /// @returns cos of theta, value between -32767 to 32767.
+#ifndef USE_SIN_32
 LIB8STATIC int16_t cos16(uint16_t theta) { return sin16(theta + 16384); }
+#endif
 
 ///////////////////////////////////////////////////////////////////////
 // sin8() and cos8()

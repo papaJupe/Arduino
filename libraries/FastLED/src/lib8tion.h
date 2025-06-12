@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef __INC_LIB8TION_H
 #define __INC_LIB8TION_H
 
@@ -15,6 +17,7 @@
 #include <stdint.h>
 #include "lib8tion/lib8static.h"
 #include "lib8tion/qfx.h"
+#include "lib8tion/memmove.h"
 
 
 #if !defined(__AVR__)
@@ -412,27 +415,6 @@ LIB8STATIC sfract15 floatToSfract15( float f)
 
 
 
-///////////////////////////////////////////////////////////////////////
-///
-/// @defgroup FastMemory Fast Memory Functions for AVR
-/// Alternatives to memmove, memcpy, and memset that are
-/// faster on AVR than standard avr-libc 1.8. 
-/// @{
-
-#if defined(__AVR__) || defined(FASTLED_DOXYGEN)
-extern "C" {
-void * memmove8( void * dst, const void * src, uint16_t num );  ///< Faster alternative to memmove() on AVR
-void * memcpy8 ( void * dst, const void * src, uint16_t num )  __attribute__ ((noinline));  ///< Faster alternative to memcpy() on AVR
-void * memset8 ( void * ptr, uint8_t value, uint16_t num ) __attribute__ ((noinline)) ;  ///< Faster alternative to memset() on AVR
-}
-#else
-// on non-AVR platforms, these names just call standard libc.
-#define memmove8 memmove
-#define memcpy8 memcpy
-#define memset8 memset
-#endif
-
-/// @} FastMemory
 
 
 ///////////////////////////////////////////////////////////////////////
@@ -1207,6 +1189,47 @@ public:
 };
 /// @} CEveryNTime Base Classes
 
+
+
+// ————————————————————————————————————————————————
+// Random‐interval version of EVERY_N_MILLISECONDS:
+// on each trigger, pick the next period randomly in [MIN..MAX].
+// ————————————————————————————————————————————————
+class CEveryNMillisRandom {
+public:
+    uint32_t mPrevTrigger;
+    uint32_t mPeriod;
+    uint32_t mMinPeriod;
+    uint32_t mMaxPeriod;
+
+    CEveryNMillisRandom(uint32_t minPeriod, uint32_t maxPeriod)
+      : mMinPeriod(minPeriod), mMaxPeriod(maxPeriod)
+    {
+        computeNext();
+        reset();
+    }
+
+    void computeNext() {
+        // random16(x) returns [0..x-1], so this yields MIN..MAX
+        uint32_t range = mMaxPeriod - mMinPeriod + 1;
+        mPeriod = mMinPeriod + random16(range);
+    }
+
+    uint32_t getTime() const { return GET_MILLIS(); }
+
+    bool ready() {
+        uint32_t now = getTime();
+        if (now - mPrevTrigger >= mPeriod) {
+            mPrevTrigger = now;
+            computeNext();
+            return true;
+        }
+        return false;
+    }
+
+    void reset() { mPrevTrigger = getTime(); }
+};
+
 #else
 
 // Under C++11 rules, we would be allowed to use not-external
@@ -1327,6 +1350,15 @@ typedef CEveryNTimePeriods<uint8_t,hours8> CEveryNHours;
     static CEveryNMillisDynamic NAME(1); \
     NAME.setPeriod(PERIOD_FUNC); \
     if( NAME )
+
+
+#define EVERY_N_MILLISECONDS_RANDOM(MIN, MAX)                                 \
+    EVERY_N_MILLISECONDS_RANDOM_I(                                           \
+        CONCAT_MACRO(_permRand, __COUNTER__), MIN, MAX)
+
+#define EVERY_N_MILLISECONDS_RANDOM_I(NAME, MIN, MAX)                        \
+    static CEveryNMillisRandom NAME(MIN, MAX);                               \
+    if (NAME.ready())
 
 /// @} Every_N
 /// @} Timekeeping

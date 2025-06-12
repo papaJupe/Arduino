@@ -136,7 +136,7 @@ void loop() {  // loop farms out all action to update(), ? speedier
 
 // ids of objects to be created in ui for screen interface
 uint8_t textControl;  // reports current control var
-//uint8_t textData;  // report sensor data in, declared above, before loop
+//uint8_t textData;  // report sensor data - declared as global before loop
 uint8_t textStop; // STOP label for center square
 
 uint8_t dataRect;  // white frame around textControl & textData fields

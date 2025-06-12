@@ -15,6 +15,7 @@
 
 namespace fl {
 class Str;
+class XYMap;
 }
 
 FASTLED_NAMESPACE_BEGIN
@@ -76,7 +77,12 @@ struct CRGB {
     };
 
     static CRGB blend(const CRGB& p1, const CRGB& p2, fract8 amountOfP2);
+    static CRGB blendAlphaMaxChannel(const CRGB& upper, const CRGB& lower);
 
+    /// Downscale an CRGB matrix (or strip) to the smaller size.
+    static void downscale(const CRGB* src, const fl::XYMap& srcXY, CRGB* dst, const fl::XYMap& dstXY);
+    static void upscale(const CRGB* src, const fl::XYMap& srcXY, CRGB* dst, const fl::XYMap& dstXY);
+    
     /// Array access operator to index into the CRGB object
     /// @param x the index to retrieve (0-2)
     /// @returns the CRGB::raw value for the given index
@@ -206,7 +212,7 @@ struct CRGB {
 
 
     /// Add one CRGB to another, saturating at 0xFF for each channel
-    FASTLED_FORCE_INLINE CRGB& operator+= (const CRGB& rhs);
+    CRGB& operator+= (const CRGB& rhs);
 
     /// Add a constant to each channel, saturating at 0xFF.
     /// @note This is NOT an operator+= overload because the compiler
@@ -296,7 +302,7 @@ struct CRGB {
 
     /// fadeToBlackBy is a synonym for nscale8(), as a fade instead of a scale
     /// @param fadefactor the amount to fade, sent to nscale8() as (255 - fadefactor)
-    FASTLED_FORCE_INLINE CRGB& fadeToBlackBy (uint8_t fadefactor );
+    CRGB& fadeToBlackBy (uint8_t fadefactor );
 
     /// "or" operator brings each channel up to the higher of the two values
     FASTLED_FORCE_INLINE CRGB& operator|= (const CRGB& rhs )
@@ -371,7 +377,9 @@ struct CRGB {
 
     /// Get the "luma" of a CRGB object. In other words, roughly how much
     /// light the CRGB pixel is putting out (from 0 to 255).
-    FASTLED_FORCE_INLINE uint8_t getLuma() const;
+    uint8_t getLuma() const;
+
+
 
     /// Get the average of the R, G, and B values
     FASTLED_FORCE_INLINE uint8_t getAverageLight() const;
@@ -403,7 +411,7 @@ struct CRGB {
     static CRGB computeAdjustment(uint8_t scale, const CRGB & colorCorrection, const CRGB & colorTemperature);
 
     /// Return a new CRGB object after performing a linear interpolation between this object and the passed in object
-    FASTLED_FORCE_INLINE CRGB lerp8( const CRGB& other, fract8 frac) const;
+    CRGB lerp8( const CRGB& other, fract8 amountOf2) const;
 
     /// @copydoc lerp8
     FASTLED_FORCE_INLINE CRGB lerp16( const CRGB& other, fract16 frac) const;

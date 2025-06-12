@@ -7,8 +7,6 @@
   white wall, normal room lite
 
   Uses: LCD 16x2 display, wire lib for I2C, elapsedMillis,
-  
-
 */
 
 #include <Wire.h>
@@ -107,8 +105,5 @@ void loop()
   }  // end if time elapsed
 // end VL53L0 code
 
-
-
-
-  delay(100);
+  delay(50);
 }  // end loop
