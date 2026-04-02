@@ -1,7 +1,10 @@
-/* ESP82shield mega UDP tx rx --  Mega w/ ESP shield, send / recv bytes
+/* ESP82shield mega UDP tx rx --  for Mega w/ ESP shield, send / recv bytes
    over wifi UDP to prog like Proc on PC, also view Ardu's I/O w/ ser. mon.
    mod from UDPsendreceive in wifiESP examples
-
+   
+   unsure how shield switchs set for this, if shield pins to bd used for serial
+   or bypassed w/ debug port or if still good p coding to shield
+    
   [US data on Ardu--> wifi shield sends UDP--> wifi AP (can be on PC)-->]
   Proc running UDP lib sends control bytes  --> Ardu for servo; first got
   a byte for up/down to increment tilt var; this adds getting an int
@@ -21,23 +24,22 @@
 #include <WiFiEspUdp.h>
 
 // Emulate Serial1 on pins 6/7 if hardware serial (like Mega) not present
-#ifndef HAVE_HWSERIAL1
+#ifndef HAVE_HWSERIAL1  // 
 #include "SoftwareSerial.h"
 SoftwareSerial Serial1(6, 7); // RX, TX
 #endif
 
 //char ssid[] = "hny_Trp";        // your network SSID (name) 2.4ghz only
 //char pass[] = "hunniBunch69";   // your network password
-char ssid[] = "dap15";        // freestanding router works too
+char ssid[] = "dap15";        // freestanding router works too (as AP)
 char pass[] = "hunniBranch69";
-
 int status = WL_IDLE_STATUS;    // the Wifi radio's status
 
 unsigned int localPort = 8888;  // local port to listen on, any unused #
 
 char packetBuffer[10];     // buffer to hold incoming packet, can't be small
 // byte replyBuffer[] = "ACK";   // acknowl string to send back, char/byte?
-byte replyBuffer[] = "30";  // must be byte array ?<- string, final null sent too
+byte replyBuffer[] = "30";  // must be byte array ?<- string, final null sent too; or char array as pointer to the string value?
 
 elapsedMillis timeElapsed; // declare global so not reset every loop
 unsigned int interval = 1500;  // ms for ser mon printing prn
@@ -48,7 +50,6 @@ int posiT = 90; // default neutral position, or motor stop
 
 void setup()
 {
-  // on mega servo pwr must come from VR not D pins, unclear why
   tiltServ.attach(2);  // signal for servo on D2
 
   pinMode(40, OUTPUT);
@@ -106,12 +107,15 @@ void loop()
 //    Serial.print(", port ");
 //    Serial.println(remoteP); //see only last 3 digits, really 4
 
-    // read the packet into packetBufffer, does this clear as well? Y
+    // read the packet into packetBufffer, does this clear it as well? Y
     int len = Udp.read(packetBuffer, packetSize);
     if (len > 0)  // puts a null at end of data; ? now char[] same as string
-      packetBuffer[len] = 0;
+      packetBuffer[len] = 0; // ? need to put '\0' null char in array
+      // instead of char 0 to make a C string. Or not matter to .print cmd
+      // or to servo cmd which converts char[] to int anyway
+      
     Serial.print("Contents:");
-    Serial.println(packetBuffer);  // chars from remote, stops @ null
+    Serial.println(packetBuffer);  // chars from remote, stops @ null, ? 0 too
 
     // udp reply to IP addr & port (manually enter #) that sent the packet
     // Udp.remotePort() not read correctly, enter # from Proc sketch
@@ -123,18 +127,20 @@ void loop()
     // math looks reversed because 40 is full up, 150 full down tilt
     // seems like 'key' bytes still work as second byte of string
     // but only if draw loop is not sending # continuously
-    if (packetBuffer[1] == 'u' && posiT > 40) posiT -= 10;
+    // if not fully up and cmd is up, use cmd to increment, likewise down
+    if (packetBuffer[1] == 'u' && posiT > 40) posiT -= 10; // vs. +=
     else if (packetBuffer[1] == 'd' && posiT < 150) posiT += 10;
-    else   // parse string input to int, and send to servo as posiT
+    // else cmd is number, go to that angle, within limit
+    else   // parse string input to int, and send it to servo as posiT
     {   // possibly use udp.parseInt()?
       int posiPoss = atoi(packetBuffer);  // conv buffer char[] to int
-      if ((posiPoss - 40) >= 1 && (posiPoss - 40) <= 109)
+      if ((posiPoss - 40) >= 1 && (posiPoss - 40) <= 109) // not at limit now
         posiT = posiPoss;  // in 41-149 range, use the new value
     }
 
   }  // end if pktsiz, respond to incoming data
 
-  tiltServ.write(posiT); // write current # to servo
+  tiltServ.write(posiT); // write current value to servo
   // print to ser. mon. at some sane interval prn
   if (timeElapsed > interval)
   {

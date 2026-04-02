@@ -12,9 +12,9 @@ and print to ser. mon. window
 #include <SoftwareSerial.h>
    // if mega, just use Serial1.begin(9600), et al methods
    
-SoftwareSerial esp8266(2,3); // set Arduino receive Rx to pin 2,  Arduino send Tx to pin 3.
-            // --> you need to connect the TX line from the esp to Arduino pin 2
-            // and the RX input of the esp to Arduino Tx pin 3 (using v. divider)
+SoftwareSerial esp8266(2,3); // set Arduino receive Rx to pin 2, Arduino send Tx to pin 3.
+        // --> you need to connect the TX line from the esp to Arduino pin 2
+         // and the RX input of the esp to Arduino Tx pin 3 (using v. divider)
             
 void setup()
 {
@@ -29,7 +29,7 @@ void loop()
   {
     while(esp8266.available())
     {
-      // The esp has data so display its output to the serial mon. window 
+      // esp send data so display its output to the serial mon. window 
       char c = esp8266.read(); // read the next character.
       Serial.write(c);
     }  
@@ -39,7 +39,7 @@ void loop()
   if(Serial.available()) // get Ser. mon. input, send to shield via soft ser
   {  // not sure if if needed here, maybe to bracket the buffered input printout?
     // some delay good but orig code was wrong, had 1000
-    delay(10); 
+    delay(100); 
     
     String command="";
     

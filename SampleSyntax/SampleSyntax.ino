@@ -566,3 +566,23 @@ in loop()
 if (timeElapsed > interval) 
   do stuff @ interval ... reset var
   timeElapsed = 0;
+
+reading Serial input from stream, from Ardu--ESP82 core doc
+-----------------------
+//check clients for data (of server on ESP), use while vs if
+//get data from the telnet client and push it to the UART
+while (serverClient.available()) {
+  Serial.write(serverClient.read());
+}
+
+//check UART for data, store for packet send
+if (Serial.available()) {
+  size_t len = Serial.available();
+  uint8_t sbuf[len];
+  Serial.readBytes(sbuf, len);
+  //push UART data to all connected telnet clients
+  if (serverClient && serverClient.connected()) {
+    serverClient.write(sbuf, len);
+  }
+}
+One will notice that in the network to serial direction, data are transferred byte by byte while data are available. In the other direction, a temporary buffer is created on stack, filled with available serial data, then transferred to network.

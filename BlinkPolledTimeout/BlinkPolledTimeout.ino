@@ -1,0 +1,73 @@
+/*
+  ESP8266 Blink with polledTimeout by Daniel Salazar
+
+  Copyright (c) 2018 Daniel Salazar. All rights reserved.
+  This file is part of the esp8266 core for Arduino environment.
+
+
+  Note that this sketch uses LED_BUILTIN to find the pin with the internal LED
+*/
+
+
+#include <PolledTimeout.h>
+
+void ledOn() {
+  digitalWrite(LED_BUILTIN, LOW);  // Turn the LED on (Note that LOW is the voltage level
+}
+
+void ledOff() {
+  digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off by making the voltage HIGH
+}
+
+void ledToggle() {
+  digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));  // Change the state of the LED
+}
+
+
+esp8266::polledTimeout::periodicFastUs halfPeriod(500000);  // use fully qualified type and avoid importing all ::esp8266 namespace to the global namespace
+
+// the setup function runs only once at start
+void setup() {
+  Serial.begin(115200);
+
+  Serial.println();
+  Serial.printf("periodic/oneShotMs::timeMax()     = %u ms\n", (uint32_t)esp8266::polledTimeout::periodicMs::timeMax());
+  Serial.printf("periodic/oneShotFastMs::timeMax() = %u ms\n", (uint32_t)esp8266::polledTimeout::periodicFastMs::timeMax());
+  Serial.printf("periodic/oneShotFastUs::timeMax() = %u us\n", (uint32_t)esp8266::polledTimeout::periodicFastUs::timeMax());
+  Serial.printf("periodic/oneShotFastNs::timeMax() = %u ns\n", (uint32_t)esp8266::polledTimeout::periodicFastNs::timeMax());
+
+#if 0  // 1 for debugging polledTimeout
+  Serial.printf("periodic/oneShotMs::rangeCompensate     = %u\n", (uint32_t)esp8266::polledTimeout::periodicMs::rangeCompensate);
+  Serial.printf("periodic/oneShotFastMs::rangeCompensate = %u\n", (uint32_t)esp8266::polledTimeout::periodicFastMs::rangeCompensate);
+  Serial.printf("periodic/oneShotFastUs::rangeCompensate = %u\n", (uint32_t)esp8266::polledTimeout::periodicFastUs::rangeCompensate);
+  Serial.printf("periodic/oneShotFastNs::rangeCompensate = %u\n", (uint32_t)esp8266::polledTimeout::periodicFastNs::rangeCompensate);
+#endif
+
+  pinMode(LED_BUILTIN, OUTPUT);  // Initialize the LED_BUILTIN pin as an output
+
+  using esp8266::polledTimeout::oneShotMs;  // import the type to the local namespace
+
+  // STEP1; turn the led ON
+  ledOn();
+
+  // STEP2: wait for ON timeout
+  oneShotMs timeoutOn(2000);
+  while (!timeoutOn) { yield(); }
+
+  // STEP3: turn the led OFF
+  ledOff();
+
+  // STEP4: wait for OFF timeout to assure the led is kept off for (n))
+  oneShotMs timeoutOff(2000);
+  while (!timeoutOff) { yield(); }
+
+  // Done with STEPs, do other stuff
+  halfPeriod.reset();  // halfPeriod is global, so it gets init on sketch start. 
+  // Clear it here to make it ready for loop, where it's actually used.
+}
+
+
+// the loop function runs over and over again forever
+void loop() {
+  if (halfPeriod) { ledToggle(); }
+}

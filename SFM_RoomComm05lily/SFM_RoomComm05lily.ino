@@ -14,9 +14,9 @@
   Code here is uploaded to Simblee board for Serial comm w/ Roomba port.
   Simblee phone app (iOS / Android) makes BLE connection to the Simblee,
   with the app displaying the user interface created here for control &
-  display of sensor data To operate, Enable Roo by grnding DD somehow,
+  display sensor data from R. To operate, Enable R by grnding DD somehow,
   open app, connect to Simb, press Power square, then drive or other. Stop
-  square stops anything; Red Roo: always Power Down w/ Power square. Grays
+  square stops anything; Red Rs: always Power Down w/ Power square. Grays
   can disable w/ button. Or lift wheel then button may work.
   To see params while charging, power up then down w/ Power sq.
 
@@ -26,6 +26,7 @@
   load .h images, serial.write(byte array,len), drawText, _Rect, _Slider
   byte constants in lib, sprintf to make # and text into displayable str,
   enhanced if (ternary operator) to adjust turn speed
+
 */
 
 #include <SimbleeForMobile.h>
@@ -50,9 +51,10 @@ char cont[62];  // string to show current control commands in top box
 char data[52] = "";  // string to show sensor data as text in 2nd frame
 char sensIn[26];  // byte array to recv sensor data
 
-volatile bool needsUpdate = true;  // volatile -- depends on event input, set in
-                  // ui-event -- if true loop calls update() to do stuff
-uint8_t textData;  // types field for sensor feedback data as char?
+uint8_t textData;  // field for select sensor feedback data
+volatile bool needsUpdate;  // volatile -- depends on event input, set in
+// ui-event -- if true loop calls update() to do stuff
+
 uint8_t eventId;
 
 void setup() {
@@ -63,18 +65,15 @@ void setup() {
   //  Serial.printf("faux send power down: %d \n", POWER);
   // if really sent, would set powerMode true (on)
 
-  // set the onboard led as output
+  // set the onboard led pin as output
   pinMode(led, OUTPUT);  // flash indicates serial request sent
-
-  // set initial color
-  //analogWrite(led, red);
 
   // this is the data that appears in the advertisement of device
   // (if deviceName and advertisementData are too long to fit the 15 byte
   // BLE advert packet allowance, then the advertData is truncated from end,
   // down to a single byte, then it truncates the deviceName)
   SimbleeForMobile.deviceName = "SimRooLily";
-  SimbleeForMobile.advertisementData = "v 0.5"; // total 15 ch allowed
+  SimbleeForMobile.advertisementData = "0.5"; // total 15 ch allowed
 
   // use a shared cache -- help Android reliability to cache ?
   SimbleeForMobile.domain = "simblee.com";
@@ -82,7 +81,7 @@ void setup() {
   SimbleeForMobile.begin();
 }   // end setup
 
-void loop() {  // loop farms out all action to update(), ? speedier
+void loop() { // loop farms out all cmd action to update(), ? speedier
   static int count = 0;
   if (SimbleeForMobile.updatable)
   {
@@ -94,7 +93,7 @@ void loop() {  // loop farms out all action to update(), ? speedier
   }
 
   if (count == 2) // get sensor data once in a while
-  {  // led slow flash from this block
+  {
     memset(sensIn, 0, 26); // clear the byte array for data
 
     // request SENSORS, then process response
@@ -116,12 +115,12 @@ void loop() {  // loop farms out all action to update(), ? speedier
       //      if (i > 25) break;  // i=25 is last good byte
       while (Serial.read() != -1); // clear the input buffer, should be already
 
-    }  // end if ser avail
+    }  // end if seria avail
 
     // send parsed/selected data to text field
     memset(data, 0, 52);
-    sensorsAsString().toCharArray(data, 52); //sAs massages sensIn-->data
-    SimbleeForMobile.updateText(textData, data);
+    sensorsAsString().toCharArray(data, 52); // sAs massages sensIn-->data
+    SimbleeForMobile.updateText(textData, data); // put into display
   }  // end get/report sensor data
 
   count++;
@@ -134,14 +133,15 @@ void loop() {  // loop farms out all action to update(), ? speedier
 
 }   // end loop
 
-// ids of objects to be created in ui for screen interface
+// byte ids of objects to be created in ui for screen interface
 uint8_t textControl;  // reports current control var
+//uint8_t textData;  // reports sensor data, declared before loop
 uint8_t textStop; // STOP label for center square
 
 uint8_t dataRect;  // white frame around textControl & textData fields
 uint8_t speedSlide;  // control abs value of speed, used in all drive() cmd
 
-// 9 rects underlay arrow image for drive control
+// 9 rects underlay arrow image on drive control panel
 uint8_t rectA, rectB, rectC;
 uint8_t rectD, rectE, rectF;
 uint8_t rectG, rectH, rectI;
@@ -153,7 +153,8 @@ uint8_t textBrush, textPower, textClean;
 
 void ui() // this may just set up the initial graphics, no role in
 // updating values. Screen params print once @ first update event.
-{ // where could printf print ? C editor console ?
+{
+  //where could printf print ? C editor console ?
   // printf("UI screen size: %dx%d", SimbleeForMobile.screenWidth,
   // SFM.screenHeight); --> same 320w x 568h in Andr/iOS
   //  Serial.printf("ScreenW: %d \n", SimbleeForMobile.screenWidth);
@@ -165,20 +166,20 @@ void ui() // this may just set up the initial graphics, no role in
   color_t ltred = rgb(255, 99, 99);
 
 #define upArro 1
-#define bott3 2
+#define bott3 2 // one image for 3 butt, v.i. reason
 #define leftArro 3
 #define rtArro 4
 #define upLeft 5
 #define upRt 6
   // only allowed 6-7 img, adding more crashes app; might help to
   // add 'const' before 'unsigned char' in the .h files as suggested
-  // in SFM programming pdf -- did, unknown help
-  //  #define downLeft 7
+  // in SFM programming pdf -- did; didn't test to see change
+
 
   SimbleeForMobile.beginScreen(medblu);
 
   // drwTexFld's 4th param for value is soon overwritten by update(), but
-  // type is used (int vs. str) to configure field as Text or Numeric
+  // type is used (int vs. str) to configure field as Numeric or Text
   dataRect = SimbleeForMobile.drawRect(4, 24, 312, 88, WHITE);
   textControl = SimbleeForMobile.drawTextField(5, 26, 310, cont,
                 "    cmd display", WHITE, medblu);
@@ -326,7 +327,7 @@ void update() // loop calls this fx, when loop sees needsUpdate = true
     powerMode = 1;
   }
 
-  // to power OFF
+  // power OFF
   else if (eventId == rectPower &&  powerMode == 1)
   { // if power up already, stop and power down
     memset(cont, 0, 62);
@@ -460,7 +461,7 @@ void drive(int velo, int radi)
 }  // end drive
 
 String sensorsAsString()
-{ // to display more data, would need bigger data[]
+{ // to display more data , would need bigger data[]
   return
     //      "bump:" + // need to put in constant call instead of these aliases
     //      (bumpLeft()?"l":"_") +
@@ -490,6 +491,5 @@ String sensorsAsString()
      " temp: " + String(sensIn[TEMPERATURE] & 0xff) );
   //      " chrg:" + charge() +
   //      " capa:" + capacity() +
-  // current needs cast back to signed int, + = charge _, - = discharge mA
+  // current needs cast back to signed int, + = charge, - = discharge mA
 }  // end sensAsStr
-

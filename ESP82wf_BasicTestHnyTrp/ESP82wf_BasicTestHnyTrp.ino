@@ -1,5 +1,6 @@
 /*
- WiFiEsp test: BasicTest -- mod for Mega from wifiESP lib/ exampl/ test/
+ WiFiEsp test: esp82 on shield as client connecting to AP on mac
+   -- mod for Mega from wifiESP lib/ exampl/ test/
  hardware: ESP shield wired to Mega Serial2 pins, RX pin 17 to shield TX,
  TX pin 16 w/ voltage divider to shield RX (shield has 3.3 max safe input)
  grnd end to pin 40
@@ -7,13 +8,14 @@
  Performs basic connectivity test and checks.  must enter firmware 
  vers. you expect, IP for this device, wifi net's AP's SSID, password, baud
  rates for your setup. all works as it should; not clear if I need to set
- static IP or if it would get DHCP from my iMac AP
+ static IP or if it auto-gets DHCP from my iMac AP doing dhcp by default?
  
 */
 
-#include "WiFiEsp.h"
+#include "WiFiEsp.h" // lib for ardu bd code to com w/ esp over ser2
+// as well as do stuff on ardu itself
 
-// Emulate Serial1 on pins 7/6 if not present 
+// Emulate Serial1 on pins 7/6 if not present already on Mega
 //#ifndef HAVE_HWSERIAL1 <-- expect MEGA would have this
 //#include "SoftwareSerial.h"
 //SoftwareSerial Serial1(6, 7); // RX, TX can't do 115200
@@ -28,9 +30,9 @@ char pwdErr[] = "xxxx";   // wrong password, is supposed to FAIL
 void setup()
 {
   Serial.begin(115200);  // these work fine on MEGA
-  Serial2.begin(115200);  // soft. serial needs slower
+  Serial2.begin(115200);  // soft. serial to ESP needs slower
   WiFi.init(&Serial2);
-  pinMode(40, OUTPUT);
+  pinMode(40, OUTPUT);  // need this 5v shifted to 3
   digitalWrite(40, LOW);  // ground for level shift resistor
   
 }
@@ -49,7 +51,7 @@ void loop()
   Serial.println(ip);
   
   byte mac[6]={0,0,0,0,0,0};
-  WiFi.macAddress(mac);
+  WiFi.macAddress(mac);  // load local esp MAC addr to fill array
 
   Serial.print("MAC: ");
   Serial.print(mac[5], HEX);
@@ -64,18 +66,19 @@ void loop()
   Serial.print(":");
   Serial.println(mac[0], HEX);
   Serial.println();
-  
+    // does this effect a disconnect, then test it is ?
   assertEquals("Disconnect", WiFi.disconnect(), WL_DISCONNECTED);
   assertEquals("Check status (WL_DISCONNECTED)", WiFi.status(), WL_DISCONNECTED);
   assertEquals("IP Address", WiFi.localIP(), 0);
   assertEquals("Check SSID", WiFi.SSID(), "");
   assertEquals("Wrong pwd", WiFi.begin(ssid, pwdErr), WL_CONNECT_FAILED);
 
-  IPAddress localIp(192, 168, 2, 80);  // static IP to assign this device
+// this should not be needed
+ //  IPAddress localIp(192, 168, 2, 80);  // static IP to assign this device
   // -- its device # on wifi LAN or its AP if that mode?
   // imac as AP is 192.168.2.1, serves DHCP; I may be able to
   // set only last #; ? if others work here, not other sketches?
-  // once set statically, seems to hold on to it
+  // once set statically, seems to hold on to it despite DHCP
   WiFi.config(localIp);    // consistent w/ iMac AP's IP / subnet, yes
   
   assertEquals("Connect", WiFi.begin(ssid, pwd), WL_CONNECTED);
@@ -85,7 +88,7 @@ void loop()
   assertNotEquals("Check IP Address", ip[0], 0);  // should pass
 
   Serial.println("END OF TESTS");
-  delay(30000);  // repeats 3/min
+  delay(30000);  // repeats 2/min
 }  // end loop
 
 /////////////////////////////////

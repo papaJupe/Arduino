@@ -10,13 +10,12 @@ SketchIndex.txt as of 191025
   blocking, Serial.flush, readBytes
   
 ADXL345-FRCada 
-      adapted from Adafruit's _345 code for FRC accel breakout board to display 3 axis accel-
-      erometer values (tilt).
+      adapted from Adafruit's _345 code for FRC accel breakout board to display 3 axis accelerometer values (tilt).
       Uses: I2C, Wire lib, Adafruit unified lib, switch/case
       
 ADXL345_FRCrow
-    demo of I2C device (I2Cdev) and ADXL345 accelerometer classes by Rowberg, adapted for
-    FRC board by AM. Read 3 axis accel values over I2C.
+    demo of I2C device (I2Cdev) and ADXL345 accelerometer classes by Rowberg,
+    adapted for FRC board by AM. Read 3 axis accel values over I2C.
     Uses: I2C, Wire, I2Cdev, ADXL345 lib, anal pins to power device
     
 ADXL345_test
@@ -42,14 +41,7 @@ Anal_Digi_VL53L0X_LCD shows use of continuous mode to take range
   Uses: LCD 16x2 display, wire lib for I2C, elapsedMillis
    
 AnalInputMap2ToneA-B-C
- input analog voltage, from pot or sonar, map to useful values, activate toner using beep
- rate and frequency to indicate distance (inversely); when target distance reached, stop tone and
- turn on a light; set adjacent analog pins (gnd, 5v, signal) to 0 and 5 v to power pot or US device
- mod A worked fine but long delays make loop execute very slowly when AR big;
- mod B uses timed event method to eliminate loop delays; much more complex logic, and tone 
- quality suffers from beat frequency I guess
- mod C uses timedAction lib to make beeps run in their own thread so loop rate not affected; tone 
- quality is fine, and I can modulate beep rate in loop, and freq by setting it in beep().
+	input analog voltage, from pot or sonar, map to useful values, activate toner using beep rate and frequency to indicate distance (inversely); when target distance reached, stop tone and turn on a light; set adjacent analog pins (gnd, 5v, signal) to 0 and 5 v to power pot or US device mod A worked fine but long delays make loop execute very slowly when AR big; mod B uses timed event method to eliminate loop delays; much more complex logic, and tone quality suffers from beat frequency I guess mod C uses timedAction lib to make beeps run in their own thread so loop rate not affected; tone quality is fine, and I can modulate beep rate in loop, and freq by setting it in beep().
  
  Uses (A,B,C): analogRead, tone, timing events w/ millis, print w/ String concat, sane print @ 
  count interval, TimedAction lib, map, constrain variable
@@ -105,32 +97,29 @@ DigitalReadSerialOut
 DigitRead2StringOut
  read a bunch of binary buttons, convert to string of 0/1's, output to Serial
 
-ESPwf -- WiFiEsp example: UdpNTPClient -- various tests of wifiESP w/ shields
-  mod by AM to use 2 serial channels of MEGA and display to LCD. all
-  wifiESP code is for Ardu with ESP shield attached
-  setup: ESP shield gets pwr from Ardu, its TX,RX wired to Mega Ser2 pins
+ESP -- WiFiEsp example: UdpNTPClient -- various tests of wifiESP w/ shields
+  mod by AM to use 2 serial channels of MEGA and display to LCD. 
+  ALL wifiESP code is for Ardu with ESP shield attached
+  setup: ESP shield gets pwr from Ardu, its TX,RX wire to Mega Ser2 pins
   w/ shield RX input level shifted w/ voltage divider
   Gets the time from a Network Time Protocol (NTP) server.
   Demonstrates use of UDP to send and receive data packets
   
-ESPrimUDP GPS time (stub) aka
-   Tardis Time Server by: M. Ray Burnette 20150910 -- code for programming primary
-    ESP board in Ardu IDE; orig got time from GPS, sends over wifi, this seems like test
-    stub, no GPS input, etc; may work to test various I/O. More code in TardisTimeServ.ino
-    
-   Create a private 10. network and capture all DNS requests to the Tardis Time server
-   Respond to both UDP and HTML requests
+ESPrimUDP GPS time (stub) aka Tardis Time Server by: M. Ray Burnette 20150910 
+
+-- code for programming primary ESP board in Ardu IDE; orig got time from GPS, sends over wifi, this seems like test stub, no GPS input, etc; may work to test various I/O. More code in TardisTimeServ.ino
+		
+ Create a private 10. network and capture all DNS requests to the Tardis Time server. Respond to both UDP and HTML requests
    
-ESP primary UDP, send/recv UDP data
-  from https://thearduinoandme.wordpress.com/tutorials/esp8266-send-receive-binary-data/
-  load to primary ESP board -- uses Serial() to comm with PC hosting the ESP board, view
-   tx/rx messages that it sends and gets from Processing app over wifi, on same or other
-   PC; works as modif with Feather-Huzz, turns LED on/off in response to incoming message
+ESP as primary, UDP, send/recv UDP data from
+   thearduinoandme.wordpress.com/tutorials/esp8266-send-receive-binary-data
+ALL ESP8266WiFi.h using sketches are for ESP-1 and ESP-12 as microcontroller -
+  load to primary ESP board -- uses Serial() to comm with PC hosting the ESP board, view tx/rx messages that it sends and gets from Processing app over wifi, on same or other PC; works as modif with Feather-Huzz, turns LED on/off in response to incoming message
 
 ESP82 shield Uno Mega serial and UDP various comm tests to receive / send
-  data & control to/from Proc on PC over serial and wifi-UDP. Proc sketches called
-  Serial data read graph and UDP Mega ... things, v.i. Ardu sketches sending US
-  data called USsr04 avg LCD Ser / UDP ... or mega w/ ESP shield
+  data & control to/from Proc on PC over serial and wifi-UDP. Proc sketches
+  called  Serial data read graph and UDP Mega ... things, v.i. Ardu sketches
+  sending US data called USsr04 avg LCD Ser / UDP ... or mega w/ ESP shield
   
 ESP82 shield mega UDP tx rx --  Mega w/ ESP shield, send / recv bytes
    over wifi UDP to prog like Proc on PC, also view Ardu's I/O w/ ser. mon.
@@ -157,18 +146,19 @@ FastLEDWaveTrainA-B-C-D
 	 B adds mode input switch to vary freq/color; C simplified code, adds
 	 train+pulse option; D adds slowdown mode option
 
-	Wiring: BCD switch to D2,3,4; LED's to D9,10,11; 2 LEDs power from board gnd/5v;
-	string controlled from A1; pot power from gnd/3.3v, center to A2
+	Wiring: BCD switch to D2,3,4; LED's to D9,10,11; 2 LEDs power from board
+	gnd/5v;	string controlled from A1; pot power from gnd/3.3v, center to A2
 	
-	Uses: FastLED, analogRead, map, setBrightness, rotary BCD to switch/case mode,
-	binary LED output, I/O pin arrays, bitWrite/Read, digitalRead/Write,
+	Uses: FastLED, analogRead, map, setBrightness, rotary BCD to switch/case
+	mode, binary LED output, I/O pin arrays, bitWrite/Read, digitalRead/Write,
 	EVERY_N_MILLISECONDS(tInt) for timed event (FastLED lib fx)
 
 FastRainbo1 - 160 -- rainbow color shift w/ one lite and many
 
 Gyro_Accel
-  FRC anal. Gyro & _345 Accel devices code combined; first calibrate in their own sketch
- displays Temp and Angle on LCD and Ser. Mon., accel on Ser. Mon.
+  FRC anal. Gyro & _345 Accel devices code combined; first calibrate in their
+  own sketch displays Temp and Angle on LCD and Ser. Mon., accel on Ser. Mon.
+  
   Uses: (I2Cdev) and ADXL345 accelerometer class libs, LiqCrystal lib, reZeroing fx
 
 GyroADWa
@@ -234,12 +224,10 @@ On Off with Anal Pin, used as digital input to turn LED on / off
     mod2 uses boolean var, 2 in/outs
     
 ParadeBotLED
-   series of mods build up control of LEDs that change pattern/color with motor direction; orig 
-   code very faulty; AMrevs fix problems and greatly simplify and explain pattern logic
+   series of mods build up control of LEDs that change pattern/color with motor direction; orig code very faulty; AMrevs fix problems and greatly simplify and explain pattern logic
    
-progmem Exercises  -- various trials of ways to store large # of strings or data in PROGMEM
-  rather than SRAM when processing; F() macro, and PGM_P ptrs -- obscure syntax & concepts. 
-  bkgnd info -- /Volumes/HD-3-data/Reference Library/Electronic-commun-device-media/
+progmem Exercises  -- various trials of ways to store large # of strings or data in PROGMEM rather than SRAM when processing; F() macro, and PGM_P ptrs -- obscure syntax & concepts. 
+  bkgnd info -- ~/InfoStor/Electronic-commun-device-media/
   Electronic Circuits&Devices/MakingTTerrata.txt
 
 
@@ -260,33 +248,26 @@ ReadAnalogCalMap --  (moving) averages analog pin input, 0-5 v. (as from batt
   if it's changed; use to get V map params for other sketches.
     
 ReadAnalCurrMap - prints averaged analog pin reading when it changes; 
-    from this calculates current across R-curr; if calib wrong, can find new params
-    to use for map function.  Reads an analog input on pin X, and prints the result
-    to the serial monitor if it has changed; uses mapping values to map pin AR to
-    actual current (voltage/ 2 ohm) going to op-ampA. Use to calib mA before loading
-    voltageSamplerB6 to Ardu then Proc2 app SerStringRead6 to graph dc chart. 
-    based
+    from this calculates current across R-curr; if calib wrong, can find new params to use for map function.  Reads an analog input on pin X, and prints the result to the serial monitor if it has changed; uses mapping values to map pin AR to  actual current (voltage/ 2 ohm) going to op-ampA. Use to calib mA before loading voltageSamplerB6 to Ardu then Proc2 app SerStringRead6 to graph dc chart. 
     Uses: analRead, expon moving averag, map, round
         
-ReadAnalogVaverage_3 -- averages (same) analog input to 3 pins X Y Z, and prints the result to 
-    the serial monitor if it has changed.
-    Used to calibrate and check op amp I/O params, compare accuracy of different AR pins
-    based on: ReadAnalogVaverage - but using (same) voltage to 3 pins; 
-    and here we're finding the multiplier for the op-amp part of batt discharger
+ReadAnalogVaverage_3 -- averages (same) analog input to 3 pins X Y Z, and prints the result to the serial monitor if it has changed.  Used to calibrate and check op amp I/O params, compare accuracy of different AR pins based on: ReadAnalogVaverage - but using (same) voltage to 3 pins;  and here we're finding the multiplier for the op-amp part of batt discharger
 
-ReadAnalogVaverage_Dig -  reads an averaged analog input on pin X, and prints the result 0-5000mV
-    (+ ser. mon. + lcd if present) if it has changed.  Attach the center pin of a potentiometer 
-    to PinIn, and the outside pins to +5V and ground; or any analog source. 
-    Also takes one hi/lo input to D3 and LED displays on/off from D8 -- used to test anal and dig
-    IR sensors et. al.
+ReadAnalogVaverage_Dig -  reads an averaged analog input on pin X, and prints
+     the result 0-5000mV (+ ser. mon. + lcd if present) if it has
+     changed.  Attach the center pin of a potentiometer to PinIn, and
+     the outside pins to +5V and ground; or any analog source. Also
+     takes one hi/lo input to D3 and LED displays on/off from D8 -- used
+     to test anal and dig IR sensors et. al.
+
     Uses: Liquid Crystal lcd, round, expon moving avg, flt to int cast, map
     
-ReadAnalogVavg_Dig1602 -- reads an averaged analog input on pin X, and prints the result 
-  0-5000mV (+/- ser. mon. +/- lcd if present) if it has changed. Attach the center pin of a 
-  potentiometer to PinIn, and the outside pins to +5V and ground, or any analog input.
-  Uncomment key stuff to use keys.
-  Also takes one hi/lo input to D3 and LED displays on/off from D11. Like ReadAnalVavgDig, 
-  modif for 16x2 display
+ReadAnalogVavg_Dig1602 -- reads an averaged analog input on pin X, and prints
+    the result 0-5000mV (+/- ser. mon. +/- lcd if present) if it has
+    changed. Attach the center pin of a potentiometer to PinIn, and the
+    outside pins to +5V and ground, or any analog input. Uncomment key
+    stuff to use keys. Also takes one hi/lo input to D3 and LED displays
+    on/off from D11. Like ReadAnalVavgDig, modif for 16x2 display
   Uses: Liquid Crystal libr, 16x2 display, DFR keypad libr, reading key value
 
 Read_Dig_to_Lite -  reads one hi/lo Dig input and LED displays on/off 
@@ -346,11 +327,11 @@ Sensor Reader0/4 from Igoe MTT,ch.2,proj.2, added if block for handshaking w/ Pr
 Serial Input 2 LCD -- to get serial data from Proc, print to LCD -- ? if ever worked right
 
 SerialParseInt 
-  // uses .parseInt to read # from Ser. Mon., handles minus temps, not mixed char
- // v. ReadSerialIntB/C for more  soln
+  // uses .parseInt to read # from Ser. Mon., handles minus temps, not mixed
+  char. v. ReadSerialIntB/C for more  soln
 
 serialReadWriteAM1 -- AM revision of PY's for Ardu <-> SmartDesktop comm;
-    digi and anal inputs & reading ser bool input to display; my 2nd version added 
+    digi and anal inputs & reading ser bool input to display; my 2nd v. added 
     code for strcat of float var; many questions about array use here
     Uses: char/string array, boolean input/output, Serial.readBytes
     dtostrf (vFlt,4,3,vStr) converts float to string,
@@ -364,8 +345,9 @@ SerialReadWriteAM2   -- AM 2nd revision of PY's for Ardu <-> SmartDesktop comm
    ? still have questions about what char arrays actually contain after strcat, sprintf
 
 serialReadWriteAM3 -- AM 3rd revision of PY's for Ardu <-> SmartDesktop comm;
-    digi & anal inputs & reading ser bool input to control leds; uses readBytes()
-    to put full input string into char[], then for loop to read it, turn lites on/off
+    digi & anal inputs & reading ser bool input to control leds; use readBytes()
+    to put full input string into char[], then for loop to read it, turn lites
+    on/off
     my v. 2 added code for strcat of float var;  
     v. 3 tests various ways to re-init/clear the 'out' array each loop
     Uses: char/string array, boolean input/output, Serial.readBytes
@@ -374,10 +356,8 @@ serialReadWriteAM3 -- AM 3rd revision of PY's for Ardu <-> SmartDesktop comm;
     same for number to str: sprintf(tempstr,"%d", someInt);
     strcat(out,tempstr)          // add buffer string to array
        
-SeriPrintWrite -- to show output of ser.mon. using .write vs .print for a byte argument; 
-      both show same char output in ser. mon. when the argument is a string;
-      .write probably sends binary to serial port, but hard to see with ser.mon. or terminal
-     as they both show the binary input as char's
+SeriPrintWrite -- to show output of ser.mon. using .write vs .print for a byte
+ argument; both show same char output in ser. mon. when the argument is a string; .write probably sends binary to serial port, but hard to see with ser.mon. or terminal as they both show the binary input as char's
       Uses: serial.write, serial.print
 
 Servo Mega tx rx BT -- Mega w/ BT/BTE? module, send / recv bytes
